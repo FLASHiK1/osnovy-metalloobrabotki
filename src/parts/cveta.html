@@ -1,0 +1,92 @@
+<title>Цвета побежалости и каления</title>
+<meta name="description" content="Температура стали по цвету: цвета побежалости при отпуске (200–330 °C) и цвета каления при нагреве под закалку и ковку (530–1300 °C). Шкала с температурами и применением.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: две шкалы-ленты (побежалость и каление) с температурами; поле «введите температуру» подсвечивает цвет; ниже таблица применения */
+.scale{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.sw{min-height:110px;padding:8px 6px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;cursor:pointer;border:0;font:inherit;text-align:left;position:relative}
+.sw b{font-family:var(--f-num);font-size:14px}
+.sw span{font-size:11px;line-height:1.25}
+.sw.on{outline:3px solid var(--ink);outline-offset:-3px;z-index:1}
+.sel{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:center}
+.chip{width:120px;height:80px;border-radius:6px;border:1px solid var(--line)}
+@media (max-width:760px){ .scale{grid-auto-flow:row;grid-auto-columns:auto} .sw{min-height:44px;flex-direction:row;justify-content:space-between;align-items:center} .sel{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Цвета побежалости и каления</h1>
+      <p>Как определить температуру стали на глаз: по цвету плёнки окислов при отпуске — побежалости — и по свечению металла при нагреве — калению. Введите температуру или нажмите на цвет.</p>
+    </div>
+    <div class="std">углеродистые и низколегированные стали<br>ориентировочно, ±10–20 °C</div>
+  </header>
+
+  <section class="sheet">
+    <div class="field" style="max-width:320px"><label for="t"><span>Температура</span><i>°C</i></label><input type="text" id="t" inputmode="numeric"></div>
+    <div class="sel" id="sel" aria-live="polite"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Цвета побежалости — отпуск</h2><span class="hint">плёнка окислов на зачищенной до блеска стали</span></div>
+    <div class="scale" id="sTemper"></div>
+    <p class="hint" style="margin:0">Деталь зачищают до металлического блеска и нагревают; цвет «бежит» от нагретого места. Цвет зависит и от времени выдержки: при долгом нагреве тот же цвет появляется при более низкой температуре.</p>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Цвета каления — закалка, ковка, отжиг</h2><span class="hint">свечение нагретого металла, смотреть в затенённом месте</span></div>
+    <div class="scale" id="sHeat"></div>
+    <p class="hint" style="margin:0">На ярком свету металл кажется холоднее, в темноте — горячее. Для точной закалки пользуйтесь термопарой или пирометром, а цвет — как быструю проверку.</p>
+  </section>
+
+  <section class="sheet">
+    <h2>Для чего какая температура</h2>
+    <div class="tbl"><table><thead><tr><th>Температура</th><th>Операция</th><th>Типичные детали и инструмент</th></tr></thead><tbody>
+      <tr><td class="n">180–220 °C</td><td>низкий отпуск, светло-соломенный</td><td>режущий и мерительный инструмент: максимальная твёрдость, снимаются закалочные напряжения</td></tr>
+      <tr><td class="n">220–250 °C</td><td>низкий отпуск, соломенный — коричневый</td><td>метчики, плашки, развёртки, пуансоны и матрицы</td></tr>
+      <tr><td class="n">250–280 °C</td><td>коричнево-пурпурный</td><td>ударный инструмент: зубила, керны, бородки — нужна вязкость</td></tr>
+      <tr><td class="n">280–330 °C</td><td>синий</td><td>пружины, отвёртки, ножи по дереву; синий цвет — защитное «воронение»</td></tr>
+      <tr><td class="n">350–500 °C</td><td>средний отпуск (цвета уже нет — серый)</td><td>рессоры, пружины, мембраны: высокая упругость</td></tr>
+      <tr><td class="n">500–650 °C</td><td>высокий отпуск (тёмно-коричневое свечение в темноте)</td><td>улучшение конструкционных сталей: валы, шестерни, шатуны</td></tr>
+      <tr><td class="n">760–860 °C</td><td>закалка углеродистых и низколегированных сталей — вишнёво-красный — светло-красный</td><td>точная температура зависит от марки: чем больше углерода, тем ниже</td></tr>
+      <tr><td class="n">850–950 °C</td><td>нормализация, отжиг — светло-красный — оранжевый</td><td>снятие напряжений, выравнивание структуры перед обработкой</td></tr>
+      <tr><td class="n">1100–1250 °C</td><td>ковка — жёлтый</td><td>начало ковки углеродистой стали; заканчивают ковку на тёмно-красном (≈ 800 °C)</td></tr>
+    </tbody></table></div>
+    <p class="hint" style="margin:0">Режимы ориентировочные. Для конкретной марки температуру закалки и отпуска берите из марочника или ГОСТ на сталь. Нержавеющие и высоколегированные стали дают другие цвета побежалости.</p>
+  </section>
+
+  <footer><span>Цвета на экране — приближение: они зависят от настроек монитора. Шкалы — по справочным таблицам для углеродистой стали.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// [от, до, название, цвет, текст тёмный?]
+const TEMPER=[[200,210,"Светло-жёлтый","#f2e7b0",1],[210,225,"Соломенно-жёлтый","#e9d07a",1],[225,235,"Золотисто-жёлтый","#d8ae4c",1],[235,245,"Коричнево-жёлтый","#bf8a3e",0],[245,255,"Красно-коричневый","#a5603a",0],[255,270,"Пурпурно-красный","#8b3a5c",0],[270,285,"Фиолетовый","#663a8e",0],[285,295,"Васильково-синий","#384ea6",0],[295,315,"Светло-синий","#4f7fc2",0],[315,340,"Серый","#8b9298",0]];
+const HEAT=[[530,580,"Тёмно-коричневый","#3a1d10",0],[580,650,"Коричнево-красный","#6a1d0e",0],[650,730,"Тёмно-красный","#8f1a0c",0],[730,770,"Тёмно-вишнёвый","#b0200c",0],[770,800,"Вишнёво-красный","#c9260d",0],[800,830,"Светло-вишнёвый","#dc3a10",0],[830,900,"Светло-красный","#ef5a16",0],[900,1050,"Оранжевый","#f7871f",1],[1050,1150,"Тёмно-жёлтый","#fbb53a",1],[1150,1250,"Светло-жёлтый","#fde27a",1],[1250,1300,"Ярко-белый","#fff7e4",1]];
+const USE=t=>t<=220?"низкий отпуск режущего и мерительного инструмента":t<=250?"низкий отпуск метчиков, плашек, штампов":t<=280?"отпуск ударного инструмента":t<=340?"отпуск пружин, воронение":t<530?"средний отпуск — цвета побежалости уже не видно, свечения ещё нет":t<=650?"высокий отпуск (улучшение)":t<=760?"ниже температуры закалки большинства сталей; подогрев":t<=860?"закалка углеродистых и низколегированных сталей":t<=950?"нормализация, отжиг; закалка некоторых легированных":t<=1100?"ковка, завершение горячей деформации":"начало ковки";
+function sw(list,id){ $(id).innerHTML=list.map((c,i)=>`<button type="button" class="sw" data-t="${Math.round((c[0]+c[1])/2)}" style="background:${c[3]};color:${c[4]?"#1b2125":"#fff"}"><b>${c[0]}–${c[1]}</b><span>${c[2]}</span></button>`).join(""); }
+sw(TEMPER,"sTemper"); sw(HEAT,"sHeat");
+document.querySelectorAll(".scale").forEach(s=>s.addEventListener("click",e=>{ const b=e.target.closest("[data-t]"); if(!b) return; $("t").value=b.dataset.t; st.t=b.dataset.t; run(); }));
+const KEY="cveta-v1"; let st={t:"220"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+$("t").value=st.t; $("t").addEventListener("input",()=>{ st.t=$("t").value; run(); });
+function run(){
+  save();
+  const t=+String(st.t).replace(",",".");
+  document.querySelectorAll(".sw").forEach(b=>b.classList.remove("on"));
+  if(!(t>0)){ $("sel").innerHTML=""; return; }
+  const all=TEMPER.map(c=>[...c,"побежалость"]).concat(HEAT.map(c=>[...c,"каление"]));
+  const hit=all.find(c=>t>=c[0]&&t<c[1]+ (c===all[all.length-1]?1:0));
+  const idx=hit?all.indexOf(hit):-1;
+  if(idx>=0) document.querySelectorAll(".sw")[idx].classList.add("on");
+  $("sel").innerHTML=hit?`<div class="chip" style="background:${hit[3]}"></div><div><div class="hint">${hit[5]==="побежалость"?"Цвет побежалости":"Цвет каления"} при ${t} °C</div><div style="font-size:22px;font-weight:700">${hit[2]}</div><div style="margin-top:4px">${USE(t)}</div></div>`
+   :`<div class="chip" style="background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 8px,var(--line) 8px,var(--line) 16px)"></div><div><div class="hint">${t} °C</div><div style="font-size:20px;font-weight:700">${t<200?"Цвета побежалости ещё нет":t<530?"Между побежалостью и свечением — цвет не виден":"Выше 1300 °C — ослепительно белый, пережог"}</div><div style="margin-top:4px">${USE(t)}</div></div>`;
+}
+run();
+})();
+</script>

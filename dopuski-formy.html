@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/dopuski-formy.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Допуски формы и расположения — Основы металлообработки">
+<meta property="og:description" content="Знаки допусков формы и расположения на чертеже: прямолинейность, плоскостность, круглость, цилиндричность, параллельность, перпендикулярность, соосность, позиционный допуск, биение. Как читать рамку и чем контролировать.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/dopuski-formy.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="dopforma-v1">
+<script src="assets/early.js"></script>
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Допуски формы и расположения</title>
+<meta name="description" content="Знаки допусков формы и расположения на чертеже: прямолинейность, плоскостность, круглость, цилиндричность, параллельность, перпендикулярность, соосность, позиционный допуск, биение. Как читать рамку и чем контролировать.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: сетка знаков по группам; выбранный знак — карточка с примером рамки и способом контроля; ниже конструктор рамки и правила */
+.grpT{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;margin:4px 0 2px}
+.syms{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.sym{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--line-strong);border-radius:5px;background:var(--paper);cursor:pointer;font-size:13px;text-align:center}
+.sym svg{width:34px;height:34px;color:var(--ink)}
+.sym[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.sym[aria-pressed="true"] svg{color:var(--accent)}
+.detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.kv2{display:flex;flex-direction:column;gap:8px;font-size:14px}
+.kv2 b{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.frame svg{display:block;max-width:100%;height:auto}
+.build{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:end}
+@media (max-width:860px){ .detail{grid-template-columns:1fr} .build{grid-template-columns:repeat(2,minmax(0,1fr))} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Допуски формы и расположения</h1>
+      <p>Выберите знак — справочник объяснит, что он ограничивает, как выглядит поле допуска, нужна ли база и чем это проверить в цеху. Ниже — как читать рамку на чертеже и конструктор рамки.</p>
+    </div>
+    <div class="std">ГОСТ 2.308-2011<br>ГОСТ Р 53442, ISO 1101</div>
+  </header>
+
+  <section class="sheet">
+    <div id="syms"></div>
+  </section>
+
+  <section class="sheet detail" aria-live="polite">
+    <div class="kv2" id="info"></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="hint">Пример записи на чертеже</div>
+      <div class="frame" id="exFrame"></div>
+      <div class="kv2" id="exText"></div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Конструктор рамки</h2><span class="hint">для подсказки себе или в техзадание</span></div>
+    <div class="build">
+      <div class="field"><label for="bSym">Знак</label><select id="bSym"></select></div>
+      <div class="field"><label for="bVal"><span>Допуск</span><i>мм</i></label><input type="text" id="bVal" inputmode="decimal" value="0,02"></div>
+      <div class="field"><label for="bDia">Форма поля</label><select id="bDia"><option value="">Ширина (две линии/плоскости)</option><option value="Ø">Ø — цилиндр, круг</option><option value="R">R — радиус</option><option value="SØ">SØ — шар</option></select></div>
+      <div class="field"><label for="bBase">Базы</label><input type="text" id="bBase" value="А" style="font-family:var(--f-num)"></div>
+      <div class="field"><label for="bMod">Зависимый допуск</label><select id="bMod"><option value="">Нет</option><option value="M">Ⓜ — максимум материала</option><option value="L">Ⓛ — минимум материала</option></select></div>
+    </div>
+    <div class="frame" id="bFrame"></div>
+    <div class="hint" id="bText"></div>
+  </section>
+
+  <section class="sheet">
+    <h2>Как читать рамку</h2>
+    <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px;max-width:80ch">
+      <li><b>Первая клетка</b> — знак допуска. <b>Вторая</b> — значение в мм; знак Ø перед числом значит, что поле допуска — цилиндр или круг, без него — пространство между двумя параллельными линиями или плоскостями.</li>
+      <li><b>Третья и следующие</b> — базы буквами. Порядок важен: первая база — главная (деталь прилегает к ней по трём точкам), вторая — направляющая, третья — опорная.</li>
+      <li>Стрелка от рамки упирается в поверхность (контур или выносную линию) — допуск относится к поверхности. Если стрелка стоит на продолжении размерной линии — к оси или плоскости симметрии.</li>
+      <li>База обозначается зачернённым треугольником с буквой в рамке. Треугольник на контуре — база поверхность, на продолжении размерной линии — ось.</li>
+      <li>Ⓜ после значения — зависимый допуск: его можно увеличить на величину, на которую размер детали отклонился от предела максимума материала. Так проверяют комплексным калибром.</li>
+      <li>Допуски формы (прямолинейность, плоскостность, круглость, цилиндричность) баз не имеют. Допуски расположения и биения всегда указывают базу.</li>
+    </ul>
+  </section>
+
+  <section class="sheet">
+    <h2>Допуск формы и допуск размера</h2>
+    <p style="margin:0;font-size:14px;max-width:80ch">Если допуск формы не указан, отклонения формы ограничены полем допуска размера. Отдельный допуск формы ставят, когда нужна точность выше. По ГОСТ 24643 уровни относительной геометрической точности ориентировочно такие:</p>
+    <div class="tbl"><table><thead><tr><th>Уровень</th><th class="n">Плоские поверхности, % от допуска размера</th><th class="n">Цилиндрические, % от допуска размера</th><th>Когда</th></tr></thead><tbody>
+      <tr><td>A — нормальный</td><td class="n">≈ 60 %</td><td class="n">≈ 30 %</td><td>большинство деталей</td></tr>
+      <tr><td>B — повышенный</td><td class="n">≈ 40 %</td><td class="n">≈ 20 %</td><td>подвижные посадки, уплотнения</td></tr>
+      <tr><td>C — высокий</td><td class="n">≈ 25 %</td><td class="n">≈ 12 %</td><td>точные пары, подшипниковые шейки</td></tr>
+    </tbody></table></div>
+    <p class="hint" style="margin:0">Для цилиндров доля вдвое меньше: допуск размера задаётся на диаметр, а отклонение формы — на радиус. Точные числовые значения допусков по степеням точности — в таблицах ГОСТ 24643.</p>
+  </section>
+
+  <footer><span>Обозначения по ГОСТ 2.308-2011 (соответствует ISO 1101). Числовые значения допусков по степеням точности — ГОСТ 24643.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const P={
+ str:'<path d="M3 12H21"/>',
+ flat:'<path d="M4 17L9 7H20L15 17Z"/>',
+ round:'<circle cx="12" cy="12" r="7.5"/>',
+ cyl:'<circle cx="12" cy="12" r="5.5"/><path d="M3 19L9 5M15 19L21 5"/>',
+ lprof:'<path d="M3 17A9 9 0 0 1 21 17"/>',
+ sprof:'<path d="M3 17A9 9 0 0 1 21 17Z"/>',
+ par:'<path d="M6 19L12 5M12 19L18 5"/>',
+ perp:'<path d="M12 4V19M4 19H20"/>',
+ ang:'<path d="M4 19H20M4 19L17 7"/>',
+ pos:'<circle cx="12" cy="12" r="5.5"/><path d="M12 3V21M3 12H21"/>',
+ coax:'<circle cx="12" cy="12" r="3.5"/><circle cx="12" cy="12" r="8"/>',
+ sym:'<path d="M3 12H21M7 7.5H17M7 16.5H17"/>',
+ run:'<path d="M6 19L17 6M12.5 6H17V10.5"/>',
+ trun:'<path d="M3 19L12 7M9 19L18 7M8.5 7H12V10.5M14.5 7H18V10.5M3 19H12"/>'
+};
+// [id, группа, название, что ограничивает, поле допуска, база, контроль, пример значения, пример текста, форма поля]
+const D=[
+ ["str","Форма","Прямолинейность","отклонение образующей или оси от прямой линии","две параллельные прямые на расстоянии T (для оси — цилиндр ØT)","не нужна","поверочная (лекальная) линейка и щуп; индикатор на стойке вдоль образующей; для оси — индикатор при перемещении вдоль вала","0,02","Образующая отклоняется от прямой не больше чем на 0,02 мм на всей длине",""],
+ ["flat","Форма","Плоскостность","отклонение поверхности от плоскости","две параллельные плоскости на расстоянии T","не нужна","поверочная плита и индикатор (деталь на трёх опорах); лекальная линейка «на просвет»; краска по плите","0,05","Вся поверхность лежит между двумя плоскостями на расстоянии 0,05 мм",""],
+ ["round","Форма","Круглость","отклонение поперечного сечения от окружности (овальность, огранка)","две концентрические окружности с разностью радиусов T","не нужна","кругломер; приближённо — индикатор в призме (90° для чётной огранки, 120°/60° для нечётной) или микрометр в нескольких направлениях (только овальность)","0,005","В любом поперечном сечении профиль между двумя окружностями с разностью радиусов 0,005 мм",""],
+ ["cyl","Форма","Цилиндричность","комплексно: круглость + прямолинейность + конусообразность","два соосных цилиндра с разностью радиусов T","не нужна","кругломер по нескольким сечениям; приближённо — измерение диаметров по длине и в разных направлениях","0,01","Вся поверхность между двумя соосными цилиндрами с разностью радиусов 0,01 мм",""],
+ ["lprof","Форма","Профиль линии","отклонение линии от номинального профиля (кулачки, лекала)","две эквидистанты номинального профиля на расстоянии T","не обязательна","шаблон и щуп, проектор, КИМ","0,05","Профиль в любом сечении между эквидистантами с шириной поля 0,05 мм",""],
+ ["sprof","Форма","Профиль поверхности","отклонение поверхности от номинальной формы (штампы, лопатки)","две эквидистантные поверхности на расстоянии T","не обязательна","КИМ, 3D-сканер, контрольный шаблон","0,1","Поверхность лежит между эквидистантами с шириной поля 0,1 мм",""],
+ ["par","Ориентация","Параллельность","отклонение от параллельности относительно базы","две плоскости (прямые), параллельные базе, на расстоянии T","обязательна","деталь базой на плиту, индикатор на стойке по поверхности — разность показаний","0,02","Поверхность параллельна базе А с точностью 0,02 мм",""],
+ ["perp","Ориентация","Перпендикулярность","отклонение от угла 90° к базе","две плоскости, перпендикулярные базе, на расстоянии T (для оси — цилиндр ØT)","обязательна","поверочный угольник и щуп; индикатор на угольнике или на стойке; для отверстий — оправка и индикатор","0,03","Торец перпендикулярен оси А с точностью 0,03 мм",""],
+ ["ang","Ориентация","Наклон","отклонение от заданного угла к базе (кроме 0° и 90°)","две плоскости под номинальным углом к базе на расстоянии T","обязательна","синусная линейка и индикатор; угломер; КИМ","0,05","Поверхность под заданным углом к базе А с допуском 0,05 мм",""],
+ ["pos","Местоположение","Позиционный допуск","смещение оси (центра) элемента от номинального положения","цилиндр ØT вокруг номинального положения оси","обязательна (кроме группы отверстий без базы)","КИМ; калибр с пробками по расположению; координатный стол и индикатор","0,1","Ось каждого отверстия — в цилиндре Ø0,1 мм вокруг номинального положения от баз А, Б","Ø"],
+ ["coax","Местоположение","Соосность (концентричность)","смещение оси поверхности от оси базы","цилиндр ØT, соосный с базовой осью","обязательна","индикатор при вращении детали в центрах или призмах на базовых шейках: показание индикатора ≈ 2 × смещение оси","0,02","Ось шейки — в цилиндре Ø0,02 мм вокруг оси А","Ø"],
+ ["sym","Местоположение","Симметричность","смещение плоскости симметрии (паза, выступа) от базы","две плоскости, симметричные базе, на расстоянии T","обязательна","индикатор: замер с двух сторон с поворотом детали на 180°; калибр","0,05","Плоскость симметрии паза — между плоскостями на расстоянии 0,05 мм, симметричными оси А",""],
+ ["run","Биение","Радиальное / торцевое биение","размах показаний индикатора за оборот в одном сечении — сумма отклонений формы и расположения","для радиального — две окружности с разностью радиусов T в каждом сечении; для торцевого — две плоскости на окружности","обязательна (ось вращения)","индикатор при вращении детали в центрах или на базовых шейках — проще всего контролировать в цеху","0,03","При вращении вокруг оси А размах показаний индикатора в любом сечении не больше 0,03 мм",""],
+ ["trun","Биение","Полное биение","то же, но по всей поверхности при перемещении индикатора вдоль оси","два соосных цилиндра (для торца — две плоскости) на расстоянии T","обязательна","индикатор, перемещаемый вдоль образующей при вращении детали","0,04","Размах показаний по всей поверхности при вращении вокруг оси А не больше 0,04 мм",""]
+];
+const KEY="dopforma-v1";
+let st={sel:"run",bSym:"pos",bVal:"0,1",bDia:"Ø",bBase:"А Б",bMod:""};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+const icon=(id,sz)=>`<svg viewBox="0 0 24 24" width="${sz||34}" height="${sz||34}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[id]}</svg>`;
+const groups=[...new Set(D.map(d=>d[1]))];
+$("syms").innerHTML=groups.map(g=>`<div class="grpT">${g==="Форма"?"Допуски формы":g==="Ориентация"?"Допуски ориентации (расположения)":g==="Местоположение"?"Допуски местоположения":"Биение"}</div><div class="syms">${D.filter(d=>d[1]===g).map(d=>`<button type="button" class="sym" data-s="${d[0]}" aria-pressed="false">${icon(d[0])}${d[2]}</button>`).join("")}</div>`).join("");
+$("syms").addEventListener("click",e=>{ const b=e.target.closest("[data-s]"); if(!b) return; st.sel=b.dataset.s; show(); });
+function frameSVG(symId,val,dia,mod,bases){
+  const cells=[{w:44,svg:true},{w:Math.max(64,(dia.length+val.length+(mod?2:0))*10+18),t:(dia?dia+"":"")+val,mod},...bases.map(b=>({w:30,t:b}))];
+  const H=36, W=cells.reduce((a,c)=>a+c.w,0)+2;
+  let x=1, s=`<svg viewBox="0 0 ${W+60} ${H+30}" width="${W+60}" height="${H+30}" role="img" aria-label="Рамка допуска">`;
+  s+=`<line x1="${W+1}" y1="${H/2+1}" x2="${W+46}" y2="${H/2+1}" stroke="var(--ink)" stroke-width="1.2"/><path d="M${W+46} ${H/2+1} L${W+46} ${H+24}" stroke="var(--ink)" stroke-width="1.2" fill="none"/><path d="M${W+41} ${H+16} L${W+46} ${H+26} L${W+51} ${H+16} Z" fill="var(--ink)"/>`;
+  cells.forEach((c,i)=>{ s+=`<rect x="${x}" y="1" width="${c.w}" height="${H}" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.4"/>`;
+    if(c.svg) s+=`<g transform="translate(${x+(c.w-26)/2},6)" color="var(--ink)">${icon(symId,26).replace('width="26" height="26"','width="26" height="26"')}</g>`;
+    else { s+=`<text x="${x+c.w/2}" y="${H/2+7}" text-anchor="middle" font-family="var(--f-num)" font-size="17" fill="var(--ink)">${c.t}${c.mod?(c.mod==="M"?" Ⓜ":" Ⓛ"):""}</text>`; }
+    x+=c.w; });
+  return s+`</svg>`;
+}
+function show(){
+  save();
+  document.querySelectorAll(".sym").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===st.sel?"true":"false"));
+  const d=D.find(x=>x[0]===st.sel);
+  $("info").innerHTML=`<div style="display:flex;align-items:center;gap:12px"><span style="color:var(--accent)">${icon(d[0],48)}</span><div><div class="hint">${d[1]}</div><div style="font-size:22px;font-weight:700">${d[2]}</div></div></div>
+    <div><b>Что ограничивает</b>${d[3]}</div><div><b>Поле допуска</b>${d[4]}</div><div><b>База</b>${d[5]}</div><div><b>Чем контролировать</b>${d[6]}</div>`;
+  const base=d[5].startsWith("не")?[]:(d[0]==="pos"?["А","Б"]:["А"]);
+  $("exFrame").innerHTML=frameSVG(d[0],d[7],d[9],"",base);
+  $("exText").innerHTML=`<div>${d[8]}.</div>`;
+}
+$("bSym").innerHTML=D.map(d=>`<option value="${d[0]}">${d[2]}</option>`).join("");
+["bSym","bVal","bDia","bBase","bMod"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener(id==="bVal"||id==="bBase"?"input":"change",()=>{ st[id]=$(id).value; build(); }); });
+function build(){
+  save();
+  const d=D.find(x=>x[0]===st.bSym);
+  const bases=st.bBase.trim().toUpperCase().split(/[\s,;]+/).filter(Boolean).slice(0,3);
+  const val=st.bVal.trim().replace(".",",")||"0";
+  $("bFrame").innerHTML=frameSVG(d[0],val,st.bDia,st.bMod,bases);
+  const warn=d[5].startsWith("не нужна")&&bases.length?" Внимание: для допусков формы база не указывается.":(!d[5].startsWith("не")&&!bases.length?" Внимание: для этого допуска нужна база.":"");
+  $("bText").textContent=`Допуск «${d[2].toLowerCase()}» ${st.bDia?st.bDia+" ":""}${val} мм${st.bMod?(st.bMod==="M"?", зависимый (максимум материала)":", зависимый (минимум материала)"):""}${bases.length?` относительно ${bases.length>1?"баз":"базы"} ${bases.join(", ")}`:""}.${warn}`;
+}
+show(); build();
+})();
+</script>
+
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

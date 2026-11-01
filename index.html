@@ -136,6 +136,11 @@ a.card h3{font-size:18px;font-weight:600;text-transform:none;letter-spacing:0;co
 a.card p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:64ch}
 a.card .tags{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:8px;font-family:var(--f-num);font-size:12px;color:var(--muted)}
 a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
+.hsearch{margin-top:16px;max-width:560px;position:relative}
+.hsearch input{width:100%;font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink)}
+.hres{display:flex;flex-direction:column;margin-top:6px}
+.hres a{padding:8px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);display:flex;flex-direction:column}
+.hres a span{font-size:12px;color:var(--muted)}
 .why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .why div{border-top:2px solid var(--ink);padding-top:10px;font-size:14px}
 .why b{display:block;margin-bottom:4px}
@@ -151,9 +156,10 @@ a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
       <div class="eyebrow">Справочник-калькулятор для технологов, конструкторов и станочников</div>
       <h1>Основы металло&shy;обработки</h1>
       <p>Расчёты, которые нужны каждый день у чертежа и у станка: допуски и посадки, размерные цепи, шероховатость, режимы резания, резьбы, конусы, G-коды, момент затяжки, зубчатые колёса, сборка с натягом, гибка и раскрой листа, расход на сварку, масса заготовки, аналоги марок, дюймы и себестоимость. Всё по ГОСТ, с переводом из ISO, китайских GB и старых ОСТ. Бесплатно, без регистрации.</p>
+      <div class="hsearch"><input type="search" id="hq" placeholder="Найти: посадка H7, резьба M10, 40Х, подшипник 180205…" aria-label="Поиск по сайту" autocomplete="off"><div id="hres" class="hres"></div></div>
     </div>
     <div class="facts">
-      <div><b>19</b><span>калькуляторов</span></div>
+      <div><b>23</b><span>инструмента</span></div>
       <div><b>ГОСТ</b><span>ISO · GB · ОСТ</span></div>
       <div><b>0 ₽</b><span>без регистрации</span></div>
     </div>
@@ -183,6 +189,10 @@ a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
       <a class="card" href="vybor-instrumenta.html"><div><h3>Выбор режущего инструмента</h3><p>Мастер подбора токарной пластины: форма, радиус, стружколом, сплав и покрытие. Справочник по группам ISO и марками Т15К6, ВК8, покрытиям, фрезам, свёрлам, метчикам и СОЖ.</p><div class="tags"><span>ISO P M K N S H</span><span>мастер подбора</span></div></div><span class="go" aria-hidden="true">→</span></a>
       <a class="card" href="plastiny.html"><div><h3>Обозначение пластин и державок</h3><p>Расшифровка CNMG 120408-PM и PCLNR 2525M12 по каждой букве, с рисунком формы. Сборка обозначения из параметров.</p><div class="tags"><span>ISO 1832</span><span>ISO 5608</span></div></div><span class="go" aria-hidden="true">→</span></a>
       <a class="card" href="gkody.html"><div><h3>G-коды и M-коды</h3><p>Справочник кодов Fanuc для токарных и фрезерных станков с аналогами Siemens и заметками для GSK и KND. Разбор кадра программы по словам, примеры программ.</p><div class="tags"><span>Fanuc · Siemens · GSK</span><span>разбор кадра</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="marki-staley.html"><div><h3>Расшифровка марки стали</h3><p>Что значат буквы и цифры в 12Х18Н10Т, 40Х, ШХ15, Р6М5, СЧ20, Д16Т, Л63: состав, группа, чем обрабатывать.</p><div class="tags"><span>ГОСТ 4543, 5632</span><span>стали, чугуны, цветные</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="podshipniki.html"><div><h3>Расшифровка подшипников</h3><p>180205 ↔ 6205-2RS: тип, серия, диаметр, уплотнения, перевод ГОСТ ↔ ISO, размеры ходовых серий.</p><div class="tags"><span>ГОСТ 3189</span><span>ISO</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="dopuski-formy.html"><div><h3>Допуски формы и расположения</h3><p>Все знаки на чертеже: что ограничивают, как читать рамку, базы и чем контролировать в цеху. Конструктор рамки.</p><div class="tags"><span>ГОСТ 2.308</span><span>ISO 1101</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="cveta-pobezhalosti.html"><div><h3>Цвета побежалости и каления</h3><p>Температура стали на глаз: отпуск 200–330 °C и нагрев под закалку и ковку 530–1300 °C.</p><div class="tags"><span>отпуск</span><span>закалка, ковка</span></div></div><span class="go" aria-hidden="true">→</span></a>
     </div>
   </section>
 
@@ -241,6 +251,10 @@ a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
   <footer><span>Основы металлообработки. Результаты — инженерный ориентир; для приёмки ответственных деталей сверяйтесь со стандартами.</span></footer>
 </div>
 
+<script>
+document.getElementById("hq").addEventListener("input",function(){var q=this.value,o=document.getElementById("hres");if(!q.trim()){o.innerHTML="";return;}if(!window.siteSearch)return;window.siteSearch(q).then(function(l){if(document.getElementById("hq").value!==q)return;o.innerHTML=l.length?l.map(function(p){return '<a href="'+p.u+'"><b>'+p.t.replace(/</g,"&lt;")+'</b><span>'+p.k+'</span></a>';}).join(""):'<span class="hint">Ничего не нашлось — попробуйте другое слово</span>';});});
+document.getElementById("hq").addEventListener("keydown",function(e){if(e.key==="Enter"){var a=document.querySelector("#hres a");if(a)location.href=a.getAttribute("href");}});
+</script>
 <!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
 </body>
 </html>

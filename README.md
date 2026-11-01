@@ -26,6 +26,10 @@
 | gkody.html | G-коды и M-коды |
 | vybor-instrumenta.html | Выбор режущего инструмента |
 | plastiny.html | Обозначение пластин и державок |
+| marki-staley.html | Расшифровка марки стали |
+| podshipniki.html | Расшифровка подшипников |
+| dopuski-formy.html | Допуски формы и расположения |
+| cveta-pobezhalosti.html | Цвета побежалости и каления |
 | massa-metalla.html | Масса металла |
 | analogi-staley.html | Аналоги сталей и сплавов |
 
@@ -41,4 +45,5 @@
 - `src/parts/*.html` + `src/base.css` — исходники калькуляторов; сборка: `python3 src/build.py` (собирает страницы и запускает `src/inject.py`).
 - `posadki.html`, `razmernye-cepi.html`, `rezhimy-rezaniya.html`, `index.html` правятся прямо в корне; после правки запустите `python3 src/inject.py`.
 
+- Поиск по сайту: индекс `assets/search.json` собирается в `src/inject.py` автоматически.
 - Статьи: `python3 src/articles.py`. Тесты: `node tests/run.js` (нужны Node.js и Playwright).

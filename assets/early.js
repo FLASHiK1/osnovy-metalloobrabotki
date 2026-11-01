@@ -10,7 +10,8 @@
     "gibka-lista.html": "gibka-v1", "rashod-elektrodov.html": "svarka-v1", "konusy.html": "konusy-v1",
     "raskroy-lista.html": "raskroy-v1", "sebestoimost.html": "sebest-v1", "dyuymy.html": "dyuymy-v1",
     "zatyazhka.html": "zatyazhka-v1", "shesterni.html": "shesterni-v1", "natyag.html": "natyag-v1", "gkody.html": "gkody-v1",
-    "plastiny.html": "plastiny-v1", "vybor-instrumenta.html": "vybor-v1"
+    "plastiny.html": "plastiny-v1", "vybor-instrumenta.html": "vybor-v1",
+    "marki-staley.html": "marki-v1", "podshipniki.html": "podsh-v1", "dopuski-formy.html": "dopforma-v1", "cveta-pobezhalosti.html": "cveta-v1"
   };
   function enc(obj) {
     var bytes = new TextEncoder().encode(JSON.stringify(obj)), bin = "";

@@ -125,6 +125,7 @@ $("rows").addEventListener("click",e=>{ const tr=e.target.closest("tr[data-i]");
 $("rows").addEventListener("keydown",e=>{ if(e.key==="Enter"){ const tr=e.target.closest("tr[data-i]"); if(tr) copyRow(+tr.dataset.i); } });
 let tt=null;
 function toast(s){ const el=$("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2200); }
+try{ const h=decodeURIComponent((location.hash.match(/^#q=(.+)$/)||[])[1]||""); if(h) $("q").value=h; }catch(e){}
 render();
 })();
 </script>

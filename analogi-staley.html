@@ -159,7 +159,7 @@ mark{background:var(--warn-soft);color:inherit;border-radius:2px}
     <div class="empty" id="empty" hidden>Ничего не найдено. Попробуйте ввести марку без пробелов и дефисов или напишите нам, какую марку добавить.</div>
   </section>
 
-  <footer><span>Соответствия составлены по справочным таблицам аналогов (марочники сталей и сплавов, стандарты EN 10027, ГОСТ, GB/T). Таблица будет пополняться.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a></nav></footer>
+  <footer><span>Соответствия составлены по справочным таблицам аналогов (марочники сталей и сплавов, стандарты EN 10027, ГОСТ, GB/T). Таблица будет пополняться.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a></nav></footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -241,6 +241,7 @@ $("rows").addEventListener("click",e=>{ const tr=e.target.closest("tr[data-i]");
 $("rows").addEventListener("keydown",e=>{ if(e.key==="Enter"){ const tr=e.target.closest("tr[data-i]"); if(tr) copyRow(+tr.dataset.i); } });
 let tt=null;
 function toast(s){ const el=$("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2200); }
+try{ const h=decodeURIComponent((location.hash.match(/^#q=(.+)$/)||[])[1]||""); if(h) $("q").value=h; }catch(e){}
 render();
 })();
 </script>

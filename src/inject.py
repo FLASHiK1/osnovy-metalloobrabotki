@@ -7,7 +7,9 @@ KEYS = {"posadki.html": "posadki-v1", "razmernye-cepi.html": "razm-cepi-v1", "re
         "gibka-lista.html": "gibka-v1", "rashod-elektrodov.html": "svarka-v1", "konusy.html": "konusy-v1",
         "raskroy-lista.html": "raskroy-v1", "sebestoimost.html": "sebest-v1", "dyuymy.html": "dyuymy-v1",
         "zatyazhka.html": "zatyazhka-v1", "shesterni.html": "shesterni-v1", "natyag.html": "natyag-v1", "gkody.html": "gkody-v1",
-        "plastiny.html": "plastiny-v1", "vybor-instrumenta.html": "vybor-v1"}
+        "plastiny.html": "plastiny-v1", "vybor-instrumenta.html": "vybor-v1",
+        "marki-staley.html": "marki-v1", "podshipniki.html": "podsh-v1", "dopuski-formy.html": "dopforma-v1", "cveta-pobezhalosti.html": "cveta-v1"}
+INDEX = []
 for f in sorted(glob.glob("*.html")):
     s = open(f, encoding="utf-8").read()
     s = re.sub(r"\n?<!--site:head-->.*?<!--/site:head-->", "", s, flags=re.S)
@@ -41,4 +43,10 @@ for f in sorted(glob.glob("*.html")):
     s = re.sub(r'(<meta name="viewport"[^>]*>)', lambda mm: mm.group(1) + "\n" + "\n".join(head), s, count=1)
     s = s.replace("</body>", '<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->\n</body>', 1)
     open(f, "w", encoding="utf-8").write(s)
+    heads = [re.sub(r"<[^>]+>", "", h).strip() for h in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", s, re.S)]
+    INDEX.append({"u": "./" if f == "index.html" else f, "t": html.unescape(title), "d": html.unescape(desc), "h": [html.unescape(h) for h in heads if h][:20],
+                  "k": "статья" if f.startswith("stati-") else ("главная" if f == "index.html" else "калькулятор")})
     print("ok", f)
+import json
+open("assets/search.json", "w", encoding="utf-8").write(json.dumps(INDEX, ensure_ascii=False))
+print("search index:", len(INDEX))

@@ -19,7 +19,7 @@ async function text(p, sel) { return norm(await p.textContent(sel)); }
 
 const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
   "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
-  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html",
+  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html", "marki-staley.html", "podshipniki.html", "dopuski-formy.html", "cveta-pobezhalosti.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
 
 (async () => {
@@ -199,6 +199,65 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
       check("сталь, получистовая, наружное, обычные → CNMG 120408-PM, P25", (await text(p, "#code")) === "CNMG 120408-PM" && (await text(p, "#rec")).includes("P25"), await text(p, "#code"));
       await p.click('[data-q=prof][data-v=copy]'); await p.click('[data-q=op][data-v=f]'); await settle(p);
       check("чистовое копирование → пластина V, позитивная", (await text(p, "#code")).startsWith("VC"), await text(p, "#code"));
+      await done(p); }
+
+    console.log("Марки сталей");
+    { const p = await page("marki-staley.html");
+      const chk = async (m, must) => { await p.fill("#mark", m); await settle(p); const o = await text(p, "#out"); check(m + " → " + must.join(", "), must.every(x => o.includes(x)), o.slice(0, 160)); };
+      await chk("12Х18Н10Т", ["нержавеющая аустенитная", "~0,12 %", "Хром", "~18 %", "Никель", "~10 %", "Титан"]);
+      await chk("40Х", ["легированная конструкционная", "~0,4 %", "Хром"]);
+      await chk("09Г2С", ["низколегированная", "Марганец", "~2 %", "Кремний"]);
+      await chk("30ХГСА", ["~0,3 %", "высококачественная"]);
+      await chk("ШХ15", ["шарикоподшипниковая", "~1,5 %"]);
+      await chk("Р6М5", ["быстрорежущая", "Вольфрам", "~6 %", "Молибден", "~5 %"]);
+      await chk("Х12МФ", ["инструментальная легированная", "~1 % и больше"]);
+      await chk("20Х13", ["мартенситная"]);
+      await chk("65Г", ["пружинная"]);
+      await chk("СЧ20", ["Серый чугун", "200 МПа"]);
+      await chk("ЛС59-1", ["Легированная латунь", "~59 %", "Свинец", "~40 %"]);
+      await chk("Д16Т", ["Дюралюминий"]);
+      await done(p); }
+
+    console.log("Подшипники");
+    { const p = await page("podshipniki.html");
+      const chk = async (c, must) => { await p.fill("#code", c); await settle(p); const o = await text(p, "#out"); check(c + " → " + must.join(", "), must.every(x => o.includes(x)), o.slice(0, 200)); };
+      await chk("180205", ["6205-2RS", "25 × 52 × 15", "два резиновых уплотнения"]);
+      await chk("80205", ["6205-2Z", "две металлические"]);
+      await chk("6-180206", ["6206-2RS", "класс точности 6", "30 × 62 × 16"]);
+      await chk("6205-2RS", ["180205", "25 × 52 × 15"]);
+      await chk("6204 ZZ C3", ["80204", "20 × 47 × 14", "C3"]);
+      await chk("6005", ["105", "25 × 47 × 12"]);
+      await chk("7205", ["30205", "конический"]);
+      await chk("30205", ["7205"]);
+      await chk("36206", ["7206C"]);
+      await chk("51105", ["8105"]);
+      await chk("608", ["8 × 22 × 7"]);
+      await done(p); }
+
+    console.log("Допуски формы");
+    { const p = await page("dopuski-formy.html");
+      const n = await p.$$eval(".sym", x => x.length); check("14 знаков допусков", n === 14, n);
+      await p.click('[data-s="coax"]'); await settle(p);
+      check("соосность: база обязательна, индикатор ≈ 2 × смещение", (await text(p, "#info")).includes("обязательна") && (await text(p, "#info")).includes("2 × смещение"));
+      await p.selectOption("#bSym", "flat"); await p.fill("#bBase", "А"); await settle(p);
+      check("конструктор: предупреждает, что у плоскостности базы нет", (await text(p, "#bText")).includes("база не указывается"));
+      await done(p); }
+
+    console.log("Цвета побежалости");
+    { const p = await page("cveta-pobezhalosti.html");
+      await p.fill("#t", "220"); await settle(p); check("220 °C → соломенно-жёлтый", (await text(p, "#sel")).includes("Соломенно-жёлтый"));
+      await p.fill("#t", "290"); await settle(p); check("290 °C → васильково-синий", (await text(p, "#sel")).includes("Васильково-синий"));
+      await p.fill("#t", "820"); await settle(p); check("820 °C → светло-вишнёвый, закалка", (await text(p, "#sel")).includes("Светло-вишнёвый") && (await text(p, "#sel")).includes("закалка"));
+      await done(p); }
+
+    console.log("Поиск по сайту");
+    { const p = await page("index.html");
+      await p.fill("#hq", "подшипник 180205"); await p.waitForTimeout(500);
+      check("«подшипник 180205» → страница подшипников первой", ((await p.getAttribute("#hres a", "href")) || "") === "podshipniki.html", await text(p, "#hres"));
+      await p.fill("#hq", "резьба"); await p.waitForTimeout(400);
+      check("«резьба» находит калькулятор резьб", (await text(p, "#hres")).includes("Метрическая резьба") || (await text(p, "#hres")).includes("резьб"));
+      await p.click(".sb-menu summary"); await p.fill(".sb-q", "40Х"); await p.waitForTimeout(400);
+      check("поиск в меню: «40Х» находит марки и аналоги", (await text(p, ".sb-res")).includes("марки стали") && (await text(p, ".sb-res")).includes("Аналоги"), await text(p, ".sb-res"));
       await done(p); }
 
     console.log("«Поделиться расчётом» и переходы");

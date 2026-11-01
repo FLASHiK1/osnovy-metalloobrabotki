@@ -1,0 +1,202 @@
+<title>Расшифровка подшипников</title>
+<meta name="description" content="Расшифровка обозначения подшипников по ГОСТ 3189 (180205, 80205, 7205) и международному (6205-2RS, 6205-ZZ, 30205): тип, серия, диаметр отверстия, уплотнения, перевод ГОСТ ↔ ISO, размеры серий 60, 62, 63.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: поле обозначения, разбор по позициям и карточка «аналог / размеры»; ниже таблицы ходовых подшипников и суффиксов */
+.bk input{font-size:24px;padding:10px 12px;font-family:var(--f-num);letter-spacing:.04em}
+.pos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.pc{border:1px solid var(--line);border-radius:5px;padding:10px;background:var(--paper);display:flex;flex-direction:column;gap:3px}
+.pc .k{font-family:var(--f-num);font-size:20px;font-weight:700;color:var(--accent)}
+.pc .n{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.pc .t{font-size:13px;line-height:1.4}
+.res{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px;align-items:center}
+.res svg{width:100%;max-width:220px;height:auto}
+.big{font-family:var(--f-num);font-size:clamp(22px,3vw,30px);font-weight:700}
+table.ref td{font-size:14px}
+table.ref td:first-child{font-family:var(--f-num);font-weight:700;white-space:nowrap}
+table.sz tbody tr{cursor:pointer}
+table.sz tbody tr:hover td{background:var(--accent-soft)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:860px){ .cols{grid-template-columns:1fr} .res{grid-template-columns:1fr} .res svg{max-width:180px} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Расшифровка подшипников</h1>
+      <p>Введите обозначение с корпуса — российское (180205, 6-80205, 7205) или международное (6205-2RS, 6205 ZZ C3, 30205). Калькулятор скажет тип, размеры, уплотнения и подберёт аналог в другой системе.</p>
+    </div>
+    <div class="std">ГОСТ 3189-89, ГОСТ 520-2011<br>ISO 15, ISO 355</div>
+  </header>
+
+  <section class="sheet bk">
+    <div class="field"><label for="code">Обозначение подшипника</label><input type="text" id="code" autocomplete="off" spellcheck="false"></div>
+    <div class="chips" id="ex"></div>
+    <div id="out" aria-live="polite" style="display:flex;flex-direction:column;gap:12px"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Шариковые радиальные: размеры ходовых серий</h2><span class="hint">d × D × B, мм · нажмите строку</span></div>
+    <div class="tbl" id="szTbl"></div>
+  </section>
+
+  <div class="cols">
+    <section class="sheet"><h2>Уплотнения и исполнения</h2><div class="tbl" id="sfx"></div></section>
+    <section class="sheet"><h2>Тип подшипника</h2><div class="tbl" id="typ"></div></section>
+  </div>
+
+  <details class="theory">
+    <summary>Как читать обозначения</summary>
+    <div class="tbody">
+      <p><b>Российское (ГОСТ 3189)</b> читают справа налево: две последние цифры — код внутреннего диаметра, третья справа — серия диаметров (2 — лёгкая, 3 — средняя, 4 — тяжёлая, 1 — особо лёгкая, 5 и 6 — широкие), четвёртая справа — тип, пятая и шестая — конструктивное исполнение (уплотнения, шайбы, канавки), седьмая — серия ширин. Нули слева не пишут. Цифры перед дефисом — класс точности и группа зазора: <code>6-180205</code> — класс точности 6.</p>
+      <p><b>Международное</b>: первая цифра (или буквы) — тип, следующая — серия, две последние — код диаметра. После них суффиксы: 2RS — два резиновых уплотнения, ZZ (2Z) — две металлические шайбы, C3 — увеличенный зазор, N — канавка под стопорное кольцо.</p>
+      <p><b>Код диаметра</b>: 00 — 10 мм, 01 — 12, 02 — 15, 03 — 17, от 04 до 96 — код × 5 (05 → 25 мм). Если код одна цифра (608, 625) — это диаметр в миллиметрах.</p>
+      <p>Перевод между системами — по наиболее распространённым соответствиям. Перед заменой проверяйте размеры d × D × B и исполнение.</p>
+    </div>
+  </details>
+
+  <footer><span>Размеры серий 60, 62, 63 — по ГОСТ 8338 и ISO 15. Грузоподъёмность и предельную частоту вращения берите из каталога производителя.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// d × D × B для серий 60, 62, 63 по кодам 00…12 и миниатюрных
+const S60={0:[10,26,8],1:[12,28,8],2:[15,32,9],3:[17,35,10],4:[20,42,12],5:[25,47,12],6:[30,55,13],7:[35,62,14],8:[40,68,15],9:[45,75,16],10:[50,80,16],11:[55,90,18],12:[60,95,18]};
+const S62={0:[10,30,9],1:[12,32,10],2:[15,35,11],3:[17,40,12],4:[20,47,14],5:[25,52,15],6:[30,62,16],7:[35,72,17],8:[40,80,18],9:[45,85,19],10:[50,90,20],11:[55,100,21],12:[60,110,22]};
+const S63={0:[10,35,11],1:[12,37,12],2:[15,42,13],3:[17,47,14],4:[20,52,15],5:[25,62,17],6:[30,72,19],7:[35,80,21],8:[40,90,23],9:[45,100,25],10:[50,110,27],11:[55,120,29],12:[60,130,31]};
+const MINI={"608":[8,22,7],"625":[5,16,5],"626":[6,19,6],"627":[7,22,7],"629":[9,26,8],"623":[3,10,4],"624":[4,13,5]};
+const SER={"60":S60,"62":S62,"63":S63};
+function bore(code){ const c=+code; if(code.length===1) return c; return {0:10,1:12,2:15,3:17}[c]!=null?{0:10,1:12,2:15,3:17}[c]:c*5; }
+// ГОСТ: тип (4-я справа) → описание, ISO-префикс
+const RU_TYPE={0:"шариковый радиальный",1:"шариковый радиальный сферический (самоустанавливающийся)",2:"роликовый радиальный с короткими цилиндрическими роликами",3:"роликовый радиальный сферический",4:"роликовый игольчатый",5:"роликовый с витыми роликами",6:"шариковый радиально-упорный",7:"роликовый конический",8:"шариковый упорный",9:"роликовый упорный"};
+const RU_SER={1:"особо лёгкая",2:"лёгкая",3:"средняя",4:"тяжёлая",5:"лёгкая широкая",6:"средняя широкая",7:"особо лёгкая",8:"сверхлёгкая",9:"сверхлёгкая"};
+// конструктивное исполнение для шариковых радиальных → суффикс ISO
+const RU_DES={"":["открытый, без защиты",""],"6":["одна металлическая защитная шайба","-Z"],"8":["две металлические защитные шайбы","-2Z (ZZ)"],"16":["одно резиновое уплотнение","-RS"],"18":["два резиновых уплотнения","-2RS"],"5":["канавка на наружном кольце под стопорное кольцо","-N"],"15":["канавка и стопорное кольцо","-NR"],"7":["одна шайба и канавка под стопорное кольцо","-ZN"]};
+const ANG={"36":["12°","C (15°)"],"46":["26°","AC (25°)"],"66":["36°","B (40°)"]};
+const SFX=[["2RS, 2RSH, 2RS1, LLU, DDU","два контактных резиновых уплотнения — защита от пыли и влаги, смазка на весь срок"],["RS, RSH, LU","одно резиновое уплотнение"],["ZZ, 2Z","две металлические защитные шайбы — от крупной грязи, меньше трение"],["Z","одна металлическая шайба"],["N","канавка на наружном кольце под стопорное кольцо"],["NR","канавка и стопорное кольцо в комплекте"],["C3","радиальный зазор больше нормального — для нагрева и посадок с натягом"],["C4","зазор ещё больше — для высоких температур"],["M, MA","массивный латунный сепаратор"],["TN9","сепаратор из полиамида"],["K","коническое отверстие 1:12"],["P6, P5, P4","класс точности (по ГОСТ: 6, 5, 4 перед номером)"]];
+const TYP=[["6xxx","шариковый радиальный","0xxx (без лишних цифр: 205)"],["1xxx","шариковый сферический двухрядный","1xxx"],["2xxxx","роликовый сферический","3xxx (22212 ↔ 3512)"],["3xxxx","роликовый конический","7xxx (30205 ↔ 7205)"],["5xxxx","шариковый упорный","8xxx (51105 ↔ 8105)"],["7xxx C/AC/B","шариковый радиально-упорный","36xxx, 46xxx, 66xxx"],["NU, NJ, N","роликовый цилиндрический","2xxx, 32xxx, 42xxx…"],["NA, NK, HK","игольчатый","4xxx, 74xxx…"]];
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function pc(k,n,t){ return `<div class="pc"><span class="n">${esc(n)}</span><span class="k">${esc(k)}</span><span class="t">${t}</span></div>`; }
+function sizes(ser,code){ if(code.length===1) return null; const t=SER[ser]; return t?t[+code]||null:null; }
+function draw(dims,seal){
+  if(!dims) return "";
+  const [d,D,B]=dims, W=220,H=170, sc=Math.min(150/D,90/(B*2.2)), cx=110, cy=86, ro=D/2*sc, ri=d/2*sc, w=B*sc;
+  const mid=(ro+ri)/2, ball=Math.min((ro-ri)*0.36, w*0.42);
+  const ringT=(ro-ri)*0.22;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Сечение подшипника ${d}×${D}×${B}">`;
+  [[-1],[1]].forEach(([sg])=>{
+    const y0=cy+sg*ri, y1=cy+sg*ro;
+    s+=`<rect x="${cx-w/2}" y="${Math.min(y1,y1-sg*ringT)}" width="${w}" height="${ringT}" fill="var(--accent-soft)" stroke="var(--accent)"/>`;
+    s+=`<rect x="${cx-w/2}" y="${Math.min(y0,y0+sg*ringT)}" width="${w}" height="${ringT}" fill="var(--accent-soft)" stroke="var(--accent)"/>`;
+    s+=`<circle cx="${cx}" cy="${cy+sg*mid}" r="${ball}" fill="var(--hot-soft)" stroke="var(--hot)"/>`;
+    if(seal) s+=`<line x1="${cx-w/2+1}" y1="${cy+sg*(ri+ringT)}" x2="${cx-w/2+1}" y2="${cy+sg*(ro-ringT)}" stroke="var(--ink)" stroke-width="2"/><line x1="${cx+w/2-1}" y1="${cy+sg*(ri+ringT)}" x2="${cx+w/2-1}" y2="${cy+sg*(ro-ringT)}" stroke="var(--ink)" stroke-width="${seal===2?2:0}"/>`;
+  });
+  s+=`<line x1="20" y1="${cy}" x2="${W-20}" y2="${cy}" stroke="var(--muted)" stroke-dasharray="8 3 2 3"/>`;
+  s+=`<text x="${cx}" y="${H-4}" text-anchor="middle" font-family="var(--f-num)" font-size="12" fill="var(--ink)">${d} × ${D} × ${B}</text></svg>`;
+  return s;
+}
+function decode(raw){
+  let s=raw.trim().toUpperCase().replace(/\s+/g," ");
+  if(!s) return null;
+  const parts=[], res={};
+  { const fl=s.replace(/[\s-]/g,""); const k=Object.keys(MINI).find(x=>fl.startsWith(x)); if(k&&(fl===k||/[A-Z]/.test(fl.slice(3)))){ const dims=MINI[k]; const sf=fl.slice(3); parts.push(pc(k,"Миниатюрный",`шариковый радиальный, последняя цифра — диаметр отверстия ${dims[0]} мм`)); if(sf) parts.push(pc(sf,"Суффиксы",/RS/.test(sf)?"резиновые уплотнения":/Z/.test(sf)?"металлические шайбы":"—")); res.title=fl; res.dims=dims; res.desc="миниатюрный шариковый радиальный"; res.analog="по размерам "+dims.join("×"); res.analogLbl="Аналог по ГОСТ"; res.note="Миниатюрные подшипники по ГОСТ обозначаются по-другому — подбирайте аналог по размерам d × D × B."; res.seal=/2RS|ZZ|2Z/.test(sf)?2:/RS|Z/.test(sf)?1:0; return {parts,res}; } }
+  // международное?
+  let m=s.replace(/\s/g,"").match(/^(6|1|2|3|4|5|7)(\d)(\d)(\d{2})?(?:([A-Z]{1,3}))?[-]?((?:2RS[H1]?|RS[H1]?|ZZ|2Z|Z|LLU|DDU|N|NR|ZN|C3|C4|C2|P6|P5|P4|M|MA|TN9|E|K|-)*)$/);
+  const isISOlike=/[A-Z]/.test(s)||/^6\d{3}$/.test(s.replace(/\s/g,""))||/^(30|32|22|51|12)\d{3}/.test(s.replace(/\s/g,""));
+  const flat=s.replace(/[\s-]/g,"");
+  // ISO: шариковый радиальный 6xxx / 6xx
+  if(isISOlike){
+    let mm;
+    if((mm=flat.match(/^(6[0234])(\d{2})(.*)$/))){
+      const ser=mm[1], code=mm[2], sf=mm[3];
+      const d=bore(code), dims=sizes(ser,code);
+      const seals={"2RS":2,"2RSH":2,"2RS1":2,"LLU":2,"DDU":2,"RS":1,"RSH":1,"ZZ":2,"2Z":2,"Z":1};
+      let sealTxt="открытый", ruDes="", seal=0;
+      const sfu=sf.replace(/C\d|P\d|M[A]?|TN9|E/g,"");
+      if(/2RS|LLU|DDU/.test(sfu)){ sealTxt="два резиновых уплотнения"; ruDes="18"; seal=2; }
+      else if(/RS|LU/.test(sfu)){ sealTxt="одно резиновое уплотнение"; ruDes="16"; seal=1; }
+      else if(/ZZ|2Z/.test(sfu)){ sealTxt="две металлические шайбы"; ruDes="8"; seal=2; }
+      else if(/ZN/.test(sfu)){ sealTxt="одна шайба и канавка под кольцо"; ruDes="7"; seal=1; }
+      else if(/Z/.test(sfu)){ sealTxt="одна металлическая шайба"; ruDes="6"; seal=1; }
+      else if(/NR/.test(sfu)){ sealTxt="канавка и стопорное кольцо"; ruDes="15"; }
+      else if(/N/.test(sfu)){ sealTxt="канавка под стопорное кольцо"; ruDes="5"; }
+      parts.push(pc("6","Тип","шариковый радиальный однорядный"));
+      parts.push(pc(ser[1],"Серия",{0:"особо лёгкая",2:"лёгкая",3:"средняя",4:"тяжёлая"}[ser[1]]));
+      parts.push(pc(code,"Код диаметра",`внутренний диаметр d = ${d} мм`));
+      if(sf) parts.push(pc(sf,"Суффиксы",sealTxt+(/C3/.test(sf)?"; C3 — увеличенный зазор":"")+(/C4/.test(sf)?"; C4 — большой зазор":"")+(/P\d/.test(sf)?`; класс точности ${sf.match(/P(\d)/)[1]}`:"")));
+      const ruSer=ser[1]==="0"?"1":ser[1];
+      const ru=`${ruDes}0${ruSer}${code}`.replace(/^0+/,"");
+      const ruPrefix=/P(\d)/.test(sf)?sf.match(/P(\d)/)[1]+"-":"";
+      res.title=`${ser}${code}${sf?" "+sf:""}`; res.desc=`шариковый радиальный, ${sealTxt}`; res.dims=dims; res.analog=`${ruPrefix}${ru}`; res.analogLbl="Аналог по ГОСТ"; res.seal=seal;
+      if(ser==="60"){ res.note="Серия 60 по ГОСТ — «особо лёгкая» (1): 6005 ↔ 105."; }
+      return {parts,res};
+    }
+    if((mm=flat.match(/^6(\d)(\d)(.*)$/))&&MINI[flat.slice(0,3)]){ const dims=MINI[flat.slice(0,3)]; parts.push(pc(flat.slice(0,3),"Миниатюрный",`шариковый радиальный, d = ${dims[0]} мм`)); res.title=flat; res.dims=dims; res.desc="миниатюрный шариковый радиальный (последняя цифра — диаметр отверстия)"; res.analog=flat.slice(0,3).replace(/^6/,"100")+"…"; res.analogLbl="Аналог по ГОСТ"; res.note="Миниатюрные подшипники по ГОСТ обозначают иначе (например, 608 ↔ 1000098). Проверяйте по размерам."; return {parts,res}; }
+    if((mm=flat.match(/^(30|32|31|33)(\d)(\d{2})(.*)$/))){ const ser=mm[1]+mm[2], code=mm[3], d=bore(code); const ruS={"302":"7","303":"7","322":"7","323":"7"}; const ru={"302":`72${code}`,"303":`73${code}`,"322":`75${code}`,"323":`76${code}`}[ser]; parts.push(pc(mm[1],"Тип","роликовый конический"),pc(mm[2],"Серия",{2:"лёгкая",3:"средняя"}[mm[2]]||"—"),pc(code,"Код диаметра",`d = ${d} мм`)); res.title=flat; res.desc="роликовый конический однорядный"; res.analog=ru||"—"; res.analogLbl="Аналог по ГОСТ"; res.note="Конические подшипники разборные: внутреннее кольцо с роликами и наружное кольцо."; return {parts,res}; }
+    if((mm=flat.match(/^7(2|3)(\d{2})(B|AC|C|BE|ACB|CD)?(.*)$/))){ const code=mm[2], d=bore(code), a=mm[3]||"B"; const ruP={C:"36",AC:"46",B:"66",BE:"66",CD:"36",ACB:"46"}[a]; parts.push(pc("7","Тип","шариковый радиально-упорный"),pc(mm[1],"Серия",mm[1]==="2"?"лёгкая":"средняя"),pc(code,"Код диаметра",`d = ${d} мм`),pc(a,"Угол контакта",{C:"15°",CD:"15°",AC:"25°",ACB:"25°",B:"40°",BE:"40°"}[a])); res.title=flat; res.desc="шариковый радиально-упорный"; res.analog=`${ruP}${mm[1]}${code}`; res.analogLbl="Аналог по ГОСТ (ближайший угол)"; res.note="Углы контакта в ГОСТ (12°, 26°, 36°) и ISO (15°, 25°, 40°) немного различаются — для шпинделей подбирайте по каталогу."; return {parts,res}; }
+    if((mm=flat.match(/^5(1|2)(1|2|3)(\d{2})(.*)$/))){ const code=mm[3], d=bore(code); parts.push(pc("5"+mm[1],"Тип","шариковый упорный"+(mm[1]==="2"?" двойной":"")),pc(mm[2],"Серия",{1:"особо лёгкая",2:"лёгкая",3:"средняя"}[mm[2]]),pc(code,"Код диаметра",`d = ${d} мм`)); res.title=flat; res.desc="шариковый упорный — воспринимает только осевую нагрузку"; res.analog=`8${mm[2]}${code}`; res.analogLbl="Аналог по ГОСТ"; return {parts,res}; }
+    if((mm=flat.match(/^22(2|3)(\d{2})(.*)$/))){ const code=mm[2], d=bore(code); parts.push(pc("22","Тип","роликовый сферический двухрядный"),pc(mm[1],"Серия",mm[1]==="2"?"лёгкая":"средняя"),pc(code,"Код диаметра",`d = ${d} мм`)); res.title=flat; res.desc="роликовый сферический — компенсирует перекос вала"; res.analog=(mm[1]==="2"?"35":"36")+code; res.analogLbl="Аналог по ГОСТ"; return {parts,res}; }
+    if((mm=flat.match(/^1(2|3)(\d{2})(.*)$/))){ const code=mm[2], d=bore(code); parts.push(pc("1","Тип","шариковый сферический двухрядный"),pc(mm[1],"Серия",mm[1]==="2"?"лёгкая":"средняя"),pc(code,"Код диаметра",`d = ${d} мм`)); res.title=flat; res.desc="шариковый самоустанавливающийся"; res.analog=`1${mm[1]}${code}`; res.analogLbl="Аналог по ГОСТ"; return {parts,res}; }
+  }
+  // ГОСТ 3189: [класс-]цифры
+  m=s.replace(/\s/g,"").match(/^(?:(\d{1,3})-)?(\d{3,7})$/);
+  if(m){
+    const pre=m[1]||"", num=m[2];
+    const code=num.slice(-2), ser=num.slice(-3,-2), typ=num.length>=4?num.slice(-4,-3):"0", des=num.length>=5?num.slice(0,num.length-4):"";
+    const d=bore(code);
+    if(pre) parts.push(pc(pre,"Перед дефисом",`класс точности ${pre.slice(-1)}${pre.length>1?`, группа зазора / момента ${pre.slice(0,-1)}`:""} (0 — нормальный класс)`));
+    if(des) parts.push(pc(des,"Исполнение",typ==="0"&&RU_DES[des]?RU_DES[des][0]:typ==="6"&&ANG[des+typ]?`угол контакта ${ANG[des+typ][0]}`:"конструктивная разновидность — по ГОСТ 3189 и каталогу"));
+    parts.push(pc(typ,"Тип",RU_TYPE[typ]||"—"));
+    parts.push(pc(ser,"Серия диаметров",RU_SER[ser]||"—"));
+    parts.push(pc(code,"Код диаметра",`внутренний диаметр d = ${d} мм`));
+    res.title=s.replace(/\s/g,""); res.desc=RU_TYPE[typ]||"";
+    if(typ==="0"&&"1235".includes(ser)||typ==="0"&&ser==="2"){
+      const isoSer={1:"60",2:"62",3:"63",4:"64"}[ser];
+      const dd=RU_DES[des]; res.dims=isoSer?sizes(isoSer,code):null;
+      res.analog=isoSer?`${isoSer}${code}${dd?dd[1]:""}`:"—"; res.analogLbl="Международный аналог"; res.seal=des==="18"||des==="8"?2:des==="16"||des==="6"?1:0;
+      if(dd) res.desc+=", "+dd[0];
+    } else if(typ==="7"){ const map={2:"302",3:"303",5:"322",6:"323"}; res.analog=map[ser]?`${map[ser]}${code}`:"—"; res.analogLbl="Международный аналог"; res.note="Если на подшипнике после номера стоят буквы B, AC или C (7205B) — это международный радиально-упорный шариковый, а не конический."; }
+    else if(typ==="6"&&ANG[des+typ]){ res.analog=`7${ser}${code}${ANG[des+typ][1].split(" ")[0]}`; res.analogLbl="Международный аналог (ближайший угол)"; }
+    else if(typ==="8"){ res.analog=`51${ser}${code}`; res.analogLbl="Международный аналог"; }
+    else if(typ==="3"){ res.analog=`22${ser==="5"?"2":ser==="6"?"3":ser}${code}`; res.analogLbl="Международный аналог"; }
+    else if(typ==="1"){ res.analog=`1${ser}${code}`; res.analogLbl="Международный аналог"; }
+    else { res.analog="—"; res.analogLbl="Аналог"; res.note="Для этого типа однозначного соответствия по номеру нет — подбирайте по размерам и каталогу."; }
+    return {parts,res};
+  }
+  return {err:true};
+}
+const KEY="podsh-v1";
+let st={code:"180205"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+const EX=["180205","80205","205","6-180206","6205-2RS","6204 ZZ C3","6305","608","7205","30205","36206","8105","51105"];
+$("ex").innerHTML=EX.map(e=>`<button type="button" class="pbtn" data-e="${e}">${e}</button>`).join("");
+$("ex").addEventListener("click",e=>{ const b=e.target.closest("[data-e]"); if(!b) return; $("code").value=b.dataset.e; st.code=b.dataset.e; run(); });
+$("code").addEventListener("input",()=>{ st.code=$("code").value; run(); });
+function run(){
+  save();
+  const r=decode($("code").value), out=$("out");
+  if(!r){ out.innerHTML=""; return; }
+  if(r.err){ out.innerHTML=`<div class="note warn">Не удалось разобрать обозначение. Примеры: 180205, 6-80206, 7205, 6205-2RS, 6204 ZZ C3, 30205.</div>`; return; }
+  const R=r.res;
+  out.innerHTML=`<div class="res"><div style="display:flex;flex-direction:column;gap:8px">
+      <div><div class="hint">${esc(R.title)}</div><div style="font-size:18px;font-weight:600">${esc(R.desc)}</div></div>
+      ${R.dims?`<div><div class="hint">Размеры d × D × B</div><div class="big">${R.dims.join(" × ")} мм</div></div>`:""}
+      <div><div class="hint">${R.analogLbl}</div><div class="big" style="color:var(--accent)">${esc(R.analog||"—")}</div></div>
+      ${R.note?`<div class="note">${R.note}</div>`:""}
+    </div><div>${draw(R.dims,R.seal)}</div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">${r.parts.join("")}</div>`;
+}
+const row=(ser,c,v)=>`<tr data-c="${ser}${String(c).padStart(2,"0")}" tabindex="0"><td>${ser}${String(c).padStart(2,"0")}</td><td class="n">${v[0]} × ${v[1]} × ${v[2]}</td><td class="muted">${ser==="60"?"1":ser==="62"?"":"3"}${ser==="62"?"2":""}${String(c).padStart(2,"0")}</td></tr>`;
+$("szTbl").innerHTML=`<table class="ref sz"><thead><tr><th>ISO</th><th class="n" style="text-transform:none">d × D × B, мм</th><th>ГОСТ</th></tr></thead><tbody>${["62","63","60"].map(ser=>Object.keys(SER[ser]).map(c=>row(ser,+c,SER[ser][c])).join("")).join("")}${Object.keys(MINI).map(k=>`<tr data-c="${k}" tabindex="0"><td>${k}</td><td class="n">${MINI[k].join(" × ")}</td><td class="muted">миниатюрный</td></tr>`).join("")}</tbody></table>`;
+function pick(e){ const tr=e.target.closest("tr[data-c]"); if(!tr) return; $("code").value=tr.dataset.c; st.code=tr.dataset.c; run(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); }
+$("szTbl").addEventListener("click",pick); $("szTbl").addEventListener("keydown",e=>{ if(e.key==="Enter") pick(e); });
+$("sfx").innerHTML=`<table class="ref"><thead><tr><th>Суффикс</th><th>Значение</th></tr></thead><tbody>${SFX.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}<tr><td>ГОСТ 80…, 180…</td><td>те же исполнения по ГОСТ: 6 — одна шайба, 8 — две шайбы, 16 — одно уплотнение, 18 — два уплотнения, 5 — канавка</td></tr></tbody></table>`;
+$("typ").innerHTML=`<table class="ref"><thead><tr><th>ISO</th><th>Тип</th><th>ГОСТ</th></tr></thead><tbody>${TYP.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="muted">${r[2]}</td></tr>`).join("")}</tbody></table>`;
+$("code").value=st.code; run();
+})();
+</script>

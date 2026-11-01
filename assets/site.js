@@ -4,7 +4,7 @@
   var PAGES = [
     ["Точность", [["posadki.html", "Посадки и допуски"], ["razmernye-cepi.html", "Размерные цепи"], ["sherokhovatost.html", "Шероховатость"]]],
     ["Обработка", [["rezhimy-rezaniya.html", "Режимы резания"], ["rezby.html", "Резьбы"], ["konusy.html", "Конусы"]]],
-    ["Справочник", [["vybor-instrumenta.html", "Выбор режущего инструмента"], ["plastiny.html", "Пластины и державки"], ["gkody.html", "G-коды и M-коды"]]],
+    ["Справочник", [["vybor-instrumenta.html", "Выбор режущего инструмента"], ["plastiny.html", "Пластины и державки"], ["gkody.html", "G-коды и M-коды"], ["marki-staley.html", "Расшифровка марки стали"], ["podshipniki.html", "Подшипники"], ["dopuski-formy.html", "Допуски формы и расположения"], ["cveta-pobezhalosti.html", "Цвета побежалости"]]],
     ["Конструирование", [["zatyazhka.html", "Момент затяжки болтов"], ["shesterni.html", "Зубчатые колёса"], ["natyag.html", "Сборка с натягом"]]],
     ["Лист и сварка", [["gibka-lista.html", "Гибка листа"], ["raskroy-lista.html", "Раскрой листа"], ["rashod-elektrodov.html", "Расход на сварку"]]],
     ["Материалы", [["massa-metalla.html", "Масса металла"], ["analogi-staley.html", "Аналоги сталей"]]],
@@ -37,13 +37,42 @@
     '<div class="sb-in">' +
       '<a class="sb-brand" href="./"><img src="assets/favicon.svg" alt="" width="22" height="22"><span>Основы металлообработки</span></a>' +
       '<div class="sb-act">' +
-        '<details class="sb-menu"><summary>' + ICON.menu + '<span class="sb-lbl">Калькуляторы</span></summary><div class="sb-drop">' + menuHTML + '<a class="sb-all" href="./#stati">Статьи и объяснения →</a><a class="sb-all" href="./">Все калькуляторы на главной →</a></div></details>' +
+        '<details class="sb-menu"><summary>' + ICON.menu + '<span class="sb-lbl">Калькуляторы</span></summary><div class="sb-drop"><input type="search" class="sb-q" placeholder="Поиск по сайту: посадка, M10, 40Х…" aria-label="Поиск по сайту"><div class="sb-res" hidden></div>' + menuHTML + '<a class="sb-all" href="./#stati">Статьи и объяснения →</a><a class="sb-all" href="./">Все калькуляторы на главной →</a></div></details>' +
         (stateKey ? '<button type="button" class="sb-btn" id="sbShare" title="Скопировать ссылку на этот расчёт">' + ICON.share + '<span class="sb-lbl">Поделиться</span></button>' : "") +
         (!isHub ? '<button type="button" class="sb-btn" id="sbPrint" title="Распечатать или сохранить в PDF">' + ICON.print + '<span class="sb-lbl">Печать</span></button>' : "") +
       "</div>" +
     "</div>");
   document.body.insertBefore(bar, document.body.firstChild);
   var det = bar.querySelector(".sb-menu");
+  /* ---------- Поиск ---------- */
+  var IDX = null;
+  function loadIdx() { if (IDX) return Promise.resolve(IDX); return fetch("assets/search.json").then(function (r) { return r.json(); }).then(function (j) { IDX = j; return j; }); }
+  function norm(s) { return String(s).toLowerCase().replace(/ё/g, "е").replace(/[aceopxyhtkmb]/g, function (c) { return { a: "а", c: "с", e: "е", o: "о", p: "р", x: "х", y: "у", h: "н", t: "т", k: "к", m: "м", b: "в" }[c]; }); }
+  window.siteSearch = function (q) {
+    return loadIdx().then(function (idx) {
+      var words = norm(q).split(/[\s,]+/).filter(function (w) { return w.length > 1 || /\d/.test(w); });
+      if (!words.length) return [];
+      return idx.map(function (p) {
+        var t = norm(p.t), d = norm(p.d), h = norm(p.h.join(" ")), sc = 0, all = true;
+        words.forEach(function (w) { var s1 = t.indexOf(w) >= 0 ? 5 : 0, s2 = h.indexOf(w) >= 0 ? 2 : 0, s3 = d.indexOf(w) >= 0 ? 1 : 0; if (!s1 && !s2 && !s3) all = false; sc += s1 + s2 + s3; });
+        return { p: p, sc: all ? sc + (p.k === "калькулятор" ? 0.5 : 0) : 0 };
+      }).filter(function (r) { return r.sc > 0; }).sort(function (a, b) { return b.sc - a.sc; }).slice(0, 8).map(function (r) { return r.p; });
+    });
+  };
+  var qIn = bar.querySelector(".sb-q"), qRes = bar.querySelector(".sb-res");
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function renderRes(list, q) {
+    var groupsEls = bar.querySelectorAll(".sb-grp, .sb-all");
+    var on = !!q.trim();
+    groupsEls.forEach(function (g) { g.hidden = on; });
+    qRes.hidden = !on;
+    if (!on) return;
+    qRes.innerHTML = list.length ? list.map(function (p) { return '<a href="' + p.u + '"><b>' + esc(p.t) + '</b><span>' + esc(p.k) + " · " + esc(p.d.slice(0, 90)) + "…</span></a>"; }).join("") : '<div class="sb-none">Ничего не нашлось. Попробуйте другое слово: «резьба», «посадка», «сталь».</div>';
+  }
+  qIn.addEventListener("input", function () { var q = qIn.value; window.siteSearch(q).then(function (l) { if (qIn.value === q) renderRes(l, q); }).catch(function () {}); });
+  qIn.addEventListener("keydown", function (e) { if (e.key === "Enter") { var a = qRes.querySelector("a"); if (a) location.href = a.getAttribute("href"); } });
+  document.addEventListener("keydown", function (e) { if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || "")) { e.preventDefault(); det.open = true; setTimeout(function () { qIn.focus(); }, 0); } });
+  det.addEventListener("toggle", function () { if (det.open && matchMedia("(pointer: fine)").matches) setTimeout(function () { qIn.focus(); }, 0); });
   document.addEventListener("click", function (e) { if (det.open && !det.contains(e.target)) det.open = false; });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && det.open) { det.open = false; det.querySelector("summary").focus(); } });
 
