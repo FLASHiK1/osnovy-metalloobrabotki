@@ -36,7 +36,7 @@ for f in sorted(glob.glob("*.html")):
     ogt = title if f == "index.html" else f"{title} — Основы металлообработки"
     s = s.replace('<!-- Яндекс.Метрика: вставьте сюда код счётчика -->\n', '')
     head = ['<!--site:head-->',
-            '<meta name="yandex-verification" content="68bc83a227a58ef7">',
+            '<meta name="yandex-verification" content="68bc83a227a58ef7" />',
             '<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">',
             f'<link rel="canonical" href="{url}">',
             '<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">',
