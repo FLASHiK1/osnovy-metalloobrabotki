@@ -125,6 +125,16 @@
   var pb = document.getElementById("sbPrint");
   if (pb) pb.addEventListener("click", function () { fillPrintHead(); window.print(); });
 
+  /* ---------- Уведомление о cookie ---------- */
+  var ckKey = "cookie-ok-v1", seen = false;
+  try { seen = localStorage.getItem(ckKey) === "1"; } catch (e) {}
+  if (!seen && here !== "politika.html") {
+    var ck = el("div", { "class": "sb-cookie", role: "region", "aria-label": "Уведомление о cookie" },
+      '<span>Сайт использует cookie и Яндекс Метрику для статистики посещений. <a href="politika.html">Подробнее</a></span><button type="button" class="sb-btn">Понятно</button>');
+    document.body.appendChild(ck);
+    ck.querySelector("button").addEventListener("click", function () { try { localStorage.setItem(ckKey, "1"); } catch (e) {} ck.remove(); });
+  }
+
   /* ---------- 4. Офлайн-режим ---------- */
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
     window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });

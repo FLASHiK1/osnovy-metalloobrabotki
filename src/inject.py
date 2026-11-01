@@ -10,8 +10,22 @@ KEYS = {"posadki.html": "posadki-v1", "razmernye-cepi.html": "razm-cepi-v1", "re
         "plastiny.html": "plastiny-v1", "vybor-instrumenta.html": "vybor-v1",
         "marki-staley.html": "marki-v1", "podshipniki.html": "podsh-v1", "dopuski-formy.html": "dopforma-v1", "cveta-pobezhalosti.html": "cveta-v1",
         "rezba-rezcom.html": "rezcom-v1", "edinicy.html": "edinicy-v1"}
+METRIKA_HEAD = """<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->"""
+METRIKA_BODY = '<noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript>'
 INDEX = []
 for f in sorted(glob.glob("*.html")):
+    if f.startswith(("yandex_", "google")): continue  # файлы подтверждения прав — не трогать
     s = open(f, encoding="utf-8").read()
     s = re.sub(r"\n?<!--site:head-->.*?<!--/site:head-->", "", s, flags=re.S)
     s = re.sub(r"\n?<!--site:body-->.*?<!--/site:body-->", "", s, flags=re.S)
@@ -20,7 +34,9 @@ for f in sorted(glob.glob("*.html")):
     desc = m.group(1) if m else title
     url = SITE + ("" if f == "index.html" else f)
     ogt = title if f == "index.html" else f"{title} — Основы металлообработки"
+    s = s.replace('<!-- Яндекс.Метрика: вставьте сюда код счётчика -->\n', '')
     head = ['<!--site:head-->',
+            '<meta name="yandex-verification" content="68bc83a227a58ef7">',
             f'<link rel="canonical" href="{url}">',
             '<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">',
             '<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">',
@@ -40,9 +56,10 @@ for f in sorted(glob.glob("*.html")):
     if f in KEYS:
         head.append(f'<meta name="state-key" content="{KEYS[f]}">')
         head.append('<script src="assets/early.js"></script>')
+    head.append(METRIKA_HEAD)
     head.append('<!--/site:head-->')
     s = re.sub(r'(<meta name="viewport"[^>]*>)', lambda mm: mm.group(1) + "\n" + "\n".join(head), s, count=1)
-    s = s.replace("</body>", '<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->\n</body>', 1)
+    s = s.replace("</body>", '<!--site:body-->' + METRIKA_BODY + '<script src="assets/site.js" defer></script><!--/site:body-->\n</body>', 1)
     open(f, "w", encoding="utf-8").write(s)
     heads = [re.sub(r"<[^>]+>", "", h).strip() for h in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", s, re.S)]
     INDEX.append({"u": "./" if f == "index.html" else f, "t": html.unescape(title), "d": html.unescape(desc), "h": [html.unescape(h) for h in heads if h][:20],

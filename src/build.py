@@ -9,7 +9,7 @@ PARTS = {"rezby": "rezby.html", "massa": "massa-metalla.html", "sherokh": "shero
          "zatyazhka": "zatyazhka.html", "shesterni": "shesterni.html", "natyag": "natyag.html", "gkody": "gkody.html",
          "plastiny": "plastiny.html", "vybor": "vybor-instrumenta.html",
          "marki": "marki-staley.html", "podshipniki": "podshipniki.html", "dopuski-formy": "dopuski-formy.html", "cveta": "cveta-pobezhalosti.html",
-         "rezcom": "rezba-rezcom.html", "edinicy": "edinicy.html", "glossariy": "glossariy.html"}
+         "rezcom": "rezba-rezcom.html", "edinicy": "edinicy.html", "glossariy": "glossariy.html", "politika": "politika.html"}
 base = open("src/base.css", encoding="utf-8").read()
 HEAD = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
         '<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">')

@@ -19,7 +19,7 @@ async function text(p, sel) { return norm(await p.textContent(sel)); }
 
 const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
   "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
-  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html", "marki-staley.html", "podshipniki.html", "dopuski-formy.html", "cveta-pobezhalosti.html", "rezba-rezcom.html", "edinicy.html", "glossariy.html", "stati-kvalitet.html", "stati-posadka-podshipnika.html", "stati-termoobrabotka.html", "stati-rezba-rezcom.html", "stati-lomayutsya-metchiki.html", "stati-chertezh-oboznacheniya.html",
+  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html", "marki-staley.html", "podshipniki.html", "dopuski-formy.html", "cveta-pobezhalosti.html", "rezba-rezcom.html", "edinicy.html", "glossariy.html", "politika.html", "stati-kvalitet.html", "stati-posadka-podshipnika.html", "stati-termoobrabotka.html", "stati-rezba-rezcom.html", "stati-lomayutsya-metchiki.html", "stati-chertezh-oboznacheniya.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
 
 (async () => {
@@ -323,6 +323,17 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
     { const p = await page("vybor-instrumenta.html");
       check("стальная оправка Ø20 с вылетом 90 → вибрации", (await text(p, "#bOut")).includes("Будут вибрации"));
       await done(p); }
+
+    console.log("Метрика, Вебмастер, cookie");
+    { const p = await page("posadki.html");
+      const html = await p.content();
+      check("счётчик Метрики 113975628 и мета-тег Вебмастера на странице", html.includes("tag.js?id=113975628") && html.includes('name="yandex-verification" content="68bc83a227a58ef7"'));
+      check("плашка cookie видна при первом визите", (await p.$$eval(".sb-cookie", x => x.length)) === 1);
+      await p.click(".sb-cookie button"); await p.reload(); await p.waitForTimeout(300);
+      check("после «Понятно» плашка больше не показывается", (await p.$$eval(".sb-cookie", x => x.length)) === 0);
+      await done(p); }
+    { const r = await (await browser.newContext()).newPage(); const resp = await r.goto(BASE + "yandex_68bc83a227a58ef7.html");
+      check("файл подтверждения Яндекса отдаётся", resp.status() === 200 && (await r.content()).includes("Verification: 68bc83a227a58ef7")); await r.context().close(); }
 
     console.log("«Поделиться расчётом» и переходы");
     { const p = await page("rezby.html");

@@ -83,3 +83,10 @@
 .sb-res a b{font-weight:600}
 .sb-res a span{font-size:12px;color:var(--muted,#5b656b)}
 .sb-none{font-size:14px;color:var(--muted,#5b656b);padding:6px 0}
+
+/* уведомление о cookie */
+.sb-cookie{position:fixed;left:max(12px, env(safe-area-inset-left,0px));right:max(12px, env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:35;
+  max-width:720px;margin:0 auto;display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;
+  background:var(--paper,#fbfbf9);color:var(--ink,#1b2125);border:1px solid var(--line-strong,#a9b1b0);border-radius:8px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.16);font-size:14px}
+.sb-cookie a{color:var(--accent,#1d5a7a)}
+@media print{ .sb-cookie{display:none!important} }
