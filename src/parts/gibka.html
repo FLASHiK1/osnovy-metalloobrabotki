@@ -64,6 +64,11 @@
     </section>
   </div>
 
+  <section class="sheet">
+    <div class="sheet-head"><h2>Как гнётся лист</h2><span class="hint">воздушная гибка в V-матрице, упрощённая 3D-модель</span></div>
+    <div id="anim"></div>
+  </section>
+
   <details class="theory">
     <summary>Как считается</summary>
     <div class="tbody">
@@ -81,7 +86,9 @@ K по DIN 6935:    K = (0,65 + 0,5·lg(r/s)) / 2,  не больше 0,5</div>
   <footer><span>Результат — расчётный. Фактическая развёртка зависит от партии металла, инструмента и направления проката.</span><nav class="sitemenu"><!--MENU--></nav></footer>
 </div>
 
+<script src="assets/anim3d.js"></script>
 <script>
+let anim=null;
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
@@ -148,6 +155,7 @@ function calc(){
       `<a class="btn sm" href="${siteLink("raskroy-lista.html",{a:Lr,b:Lbs,t:ss})}">Раскрой листа под заготовку →</a>`; }
   $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
   drawScheme(s,r,K,b);
+  if(window.Anim3D){ const ap={s,r,beta:b,a:fl[0],b:fl[fl.length>2?1:fl.length-1],V}; if(!anim) anim=Anim3D.bending($("anim"),ap); else anim.set(ap); }
 }
 function drawScheme(s,r,K,b){
   // схема одного гиба (не в масштабе): внутренняя и наружная поверхности, нейтральный слой пунктиром

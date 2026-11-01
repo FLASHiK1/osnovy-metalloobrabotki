@@ -251,6 +251,11 @@ details.qhelp[open] summary{margin-bottom:8px}
     </section>
   </div>
 
+  <section class="sheet">
+    <div class="sheet-head"><h2>Как это выглядит</h2><span class="hint">упрощённая 3D-модель по вашим параметрам, не в масштабе</span></div>
+    <div id="anim"></div>
+  </section>
+
   <section class="sheet" aria-labelledby="h-tab">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline">
       <h2 id="h-tab">Стартовые скорости резания</h2>
@@ -292,6 +297,7 @@ Vf = fz · z · n   (фрезерование)</div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/anim3d.js"></script>
 <script>
 (function(){
 "use strict";
@@ -589,6 +595,11 @@ function calc(){
   $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
   $("gcode").textContent=gc;
   $("gcode").dataset.full=gc;
+  if(window.Anim3D){
+    const kind={turn:"turning",mill:"milling",drill:"drilling",thread:"threadmill"}[op];
+    const ap3=op==="turn"?{shape:"C",kr:P.kr,ap:P.ap,f:P.f,re:P.re,mat:m.iso}:op==="mill"?{Dc:P.D,ae:P.ae,ap:P.ap,z:Math.round(P.z),fz:P.fz}:op==="drill"?{D:P.D,L:P.L}:{D:P.D,P:P.P,Dc:P.Dc,L:P.L,type:P.type,kind:P.kind};
+    if(window.__animKind!==kind){ if(window.__anim) window.__anim.destroy(); window.__anim=Anim3D[kind]($("anim"),ap3); window.__animKind=kind; } else window.__anim.set(ap3);
+  }
   $("gHint").textContent=gh;
 }
 $("copyG").addEventListener("click",()=>{

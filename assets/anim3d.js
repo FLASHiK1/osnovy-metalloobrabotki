@@ -26,8 +26,9 @@
   function stage(box, opts, build) {
     box.classList.add("a3d");
     box.innerHTML = '<div class="a3d-msg">Загрузка 3D…</div><div class="a3d-ui"><button type="button" class="a3d-play" aria-label="Пауза">❚❚</button><span class="a3d-hint">тяните, чтобы повернуть</span></div>';
-    var api = { set: function (p) { api._pending = p; } };
+    var api = { set: function (p) { api._pending = p; }, dead: false };
     var started = false;
+    api.destroy = function () { api.dead = true; io.disconnect(); if (api._renderer) { api._renderer.dispose(); api._renderer.forceContextLoss && api._renderer.forceContextLoss(); } box.innerHTML = ""; };
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         api.visible = e.isIntersecting;
@@ -37,11 +38,13 @@
     io.observe(box);
     function init() {
       loadThree().then(function (THREE) {
+        if (api.dead) return;
         box.querySelector(".a3d-msg").remove();
         var W = box.clientWidth, H = Math.round(W * (opts.ratio || 0.56));
         var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
         renderer.setSize(W, H);
+        api._renderer = renderer;
         box.insertBefore(renderer.domElement, box.firstChild);
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 200);
@@ -67,6 +70,7 @@
         function render() { renderer.render(scene, camera); }
         var last = performance.now();
         function loop(t) {
+          if (api.dead) return;
           requestAnimationFrame(loop);
           var dt = Math.min(0.05, (t - last) / 1000); last = t;
           if (!api.visible || !running) return;
@@ -80,6 +84,7 @@
         mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
         matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { if (scn.recolor) { scn.recolor(); render(); } });
       }).catch(function () {
+        if (api.dead) return;
         box.querySelector(".a3d-msg").textContent = "3D-модель не загрузилась. Обновите страницу.";
       });
     }
@@ -241,6 +246,242 @@
         recolor: recolor,
         set: function (np) { Object.assign(p, np); rebuild(); this.tick(0); },
         tick: function (dt) { ang += dt * 0.6; g1.rotation.z = ang; g2.rotation.z = off2 - ang * ratio; }
+      };
+    });
+  };
+
+  /* ---------- Гибка листа на листогибе ---------- */
+  window.Anim3D.bending = function (box, params) {
+    var p = Object.assign({ s: 2, r: 2, beta: 90, a: 50, b: 50, V: 16, L: 1000 }, params || {});
+    return stage(box, { ratio: 0.55, yaw: 0.12, pitch: 0.1, dist: 10.5 }, function (THREE, scene, ctx) {
+      var sheetMat = new THREE.MeshStandardMaterial({ color: 0xd9e0e6, metalness: 0.25, roughness: 0.35, side: THREE.DoubleSide });
+      var toolMat = new THREE.MeshStandardMaterial({ color: 0x55616a, metalness: 0.3, roughness: 0.5 });
+      var sheet = null, die = null, punch = null, k = 1, depthZ = 3, theta = 0, t = 0;
+      function recolor() { sheetMat.color.set(0xc9d0d6); }
+      function extrude(shape, d) { var g = new THREE.ExtrudeGeometry(shape, { depth: d, bevelEnabled: false, curveSegments: 8 }); g.translate(0, 0, -d / 2); return g; }
+      function rebuildTools() {
+        [die, punch].forEach(function (m) { if (m) { scene.remove(m); m.geometry.dispose(); } });
+        k = 6 / Math.max(p.a + p.b, p.V * 3);
+        depthZ = 3;
+        var V = p.V * k, hD = Math.max(0.8, V * 0.9), wD = Math.max(V * 2.2, 1.6), vDepth = V / 2 * Math.tan(44 * Math.PI / 180);
+        var ds = new THREE.Shape(); ds.moveTo(-wD / 2, -hD); ds.lineTo(wD / 2, -hD); ds.lineTo(wD / 2, 0); ds.lineTo(V / 2, 0); ds.lineTo(0, -Math.min(vDepth, hD * 0.85)); ds.lineTo(-V / 2, 0); ds.lineTo(-wD / 2, 0); ds.lineTo(-wD / 2, -hD);
+        die = new THREE.Mesh(extrude(ds, depthZ), toolMat); scene.add(die);
+        var pw = Math.max(0.35, V * 0.32), ph = 2.6, tipR = Math.max(0.02, p.r * k * 0.8);
+        var ps = new THREE.Shape(); var half = 44 * Math.PI / 180;
+        ps.moveTo(-tipR * Math.cos(half), tipR * (1 - Math.sin(half)));
+        ps.absarc(0, tipR, tipR, Math.PI + half, -half, false);
+        ps.lineTo(pw, pw / Math.tan(half)); ps.lineTo(pw, ph); ps.lineTo(-pw, ph); ps.lineTo(-pw, pw / Math.tan(half)); ps.lineTo(-tipR * Math.cos(half), tipR * (1 - Math.sin(half)));
+        punch = new THREE.Mesh(extrude(ps, depthZ * 1.02), toolMat); scene.add(punch);
+      }
+      function profile(th) {
+        // средняя линия: дуга внизу + две полки, наклонённые на th/2
+        var s = p.s * k, rm = (p.r + p.s / 2) * k, a = p.a * k * 0.5, b = p.b * k * 0.5, pts = [], n = 12;
+        var h = th / 2;
+        var c = { x: 0, y: rm };
+        var arc = []; for (var i = 0; i <= n; i++) { var ang = -Math.PI / 2 - h + 2 * h * i / n; arc.push([c.x + rm * Math.cos(ang), c.y + rm * Math.sin(ang), ang]); }
+        var L0 = arc[0], L1 = arc[n];
+        var dL = [-Math.cos(h), -Math.sin(h)], dR = [Math.cos(h), -Math.sin(h)];   // наружу от дуги
+        dL = [-Math.cos(h), Math.sin(h)]; dR = [Math.cos(h), Math.sin(h)];
+        var mid = [[L0[0] + dL[0] * a, L0[1] + dL[1] * a]].concat(arc.map(function (q) { return [q[0], q[1]]; })).concat([[L1[0] + dR[0] * b, L1[1] + dR[1] * b]]);
+        // смещение на ±s/2 по нормали
+        function off(sg) { return mid.map(function (q, i) { var a1 = mid[Math.max(0, i - 1)], a2 = mid[Math.min(mid.length - 1, i + 1)]; var tx = a2[0] - a1[0], ty = a2[1] - a1[1], l = Math.hypot(tx, ty) || 1; return [q[0] - ty / l * sg * s / 2, q[1] + tx / l * sg * s / 2]; }); }
+        var top = off(1), bot = off(-1).reverse();
+        var shp = new THREE.Shape(); shp.moveTo(top[0][0], top[0][1]); top.concat(bot).forEach(function (q) { shp.lineTo(q[0], q[1]); }); shp.lineTo(top[0][0], top[0][1]);
+        return { shape: shp, bottom: -s / 2 };
+      }
+      function rebuildSheet() {
+        if (sheet) { scene.remove(sheet); sheet.geometry.dispose(); }
+        var pr = profile(theta * Math.PI / 180);
+        sheet = new THREE.Mesh(extrude(pr.shape, depthZ * 0.92), sheetMat); scene.add(sheet);
+        var V = p.V * k, sink = Math.min(V / 2 * Math.tan(theta * Math.PI / 360), V / 2 * Math.tan(44 * Math.PI / 180) * 0.9);
+        sheet.position.y = p.s * k / 2 - sink;
+        punch.position.y = sheet.position.y + p.s * k / 2 + 0.002 + (p.s * k / 2 - p.s * k / 2);
+      }
+      rebuildTools(); recolor(); rebuildSheet();
+      return {
+        recolor: recolor,
+        set: function (np) { Object.assign(p, np); rebuildTools(); rebuildSheet(); },
+        tick: function (dt) {
+          t += dt; var T = 4.2, ph = t % T;
+          var target = Math.min(170, p.beta);
+          theta = ph < 2.4 ? target * (ph / 2.4) : ph < 3.4 ? target : target;
+          rebuildSheet();
+          if (ph >= 3.4) { punch.position.y += (ph - 3.4) * 2.5; sheet.position.y += Math.min(0.6, (ph - 3.4) * 0.8); }
+        }
+      };
+    });
+  };
+
+  /* ---------- Сверление с выводом (G83) ---------- */
+  window.Anim3D.drilling = function (box, params) {
+    var p = Object.assign({ D: 10, L: 30 }, params || {});
+    return stage(box, { ratio: 0.6, yaw: 0.7, pitch: 0.28, dist: 9 }, function (THREE, scene, ctx) {
+      var blockMat = new THREE.MeshStandardMaterial({ color: 0x9aa3aa, metalness: 0.3, roughness: 0.6, transparent: true, opacity: 0.35, depthWrite: false });
+      var holeMat = new THREE.MeshStandardMaterial({ color: 0x3b444a, metalness: 0.2, roughness: 0.7, side: THREE.BackSide });   // видна только внутренняя стенка
+      var drillMat = new THREE.MeshStandardMaterial({ color: 0xe0c48e, metalness: 0.35, roughness: 0.3 });
+      var chipMat = new THREE.MeshStandardMaterial({ color: 0x9a6a3c, metalness: 0.6, roughness: 0.35 });
+      var cv = document.createElement("canvas"); cv.width = 64; cv.height = 256; var g = cv.getContext("2d");
+      g.fillStyle = "#b08d57"; g.fillRect(0, 0, 64, 256); g.strokeStyle = "#5e4a2c"; g.lineWidth = 10; for (var i = -4; i < 8; i++) { g.beginPath(); g.moveTo(0, i * 48); g.lineTo(64, i * 48 + 40); g.stroke(); }
+      var tex = new THREE.CanvasTexture(cv); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; drillMat.map = tex;
+      var block, hole, drill, k, Lk, Rk, top, peck, depth = 0, maxDepth = 0, phase = "down", y = 0, chips = [], t = 0;
+      function recolor() { chipMat.color.set(ctx.css("--hot", "#a3512a")); }
+      function build() {
+        [block, hole, drill].forEach(function (m) { if (m) scene.remove(m); });
+        k = 4.2 / Math.max(p.L * 1.35, p.D * 4); Lk = p.L * k; Rk = p.D / 2 * k; top = Lk * 0.65;
+        var bw = Math.max(Rk * 7, 2.4), bh = Lk * 1.3;
+        block = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bw), blockMat); block.position.y = top - bh / 2; scene.add(block);
+        hole = new THREE.Mesh(new THREE.CylinderGeometry(Rk * 1.02, Rk * 1.02, 1, 32, 1, true), holeMat); scene.add(hole);
+        drill = new THREE.Group();
+        var tipH = Rk / Math.tan(59 * Math.PI / 180);
+        var tip = new THREE.Mesh(new THREE.ConeGeometry(Rk, tipH, 32), drillMat); tip.rotation.x = Math.PI; tip.position.y = tipH / 2;
+        var body = new THREE.Mesh(new THREE.CylinderGeometry(Rk, Rk, Lk * 1.2, 32), drillMat); body.position.y = tipH + Lk * 0.6;
+        var shank = new THREE.Mesh(new THREE.CylinderGeometry(Rk, Rk, Lk * 0.5, 32), new THREE.MeshStandardMaterial({ color: 0xb6bdc3, metalness: 0.35, roughness: 0.3 })); shank.position.y = tipH + Lk * 1.2 + Lk * 0.25;
+        drill.add(tip, body, shank); scene.add(drill);
+        peck = p.L / p.D > 3 ? Math.max(Rk * 2, Lk / 6) : Lk;   // G83 при глубине > 3D
+        depth = 0; maxDepth = 0; phase = "down"; y = top + Rk;
+        ctx.target.set(0, top - Lk / 2, 0); ctx.setDist(9);
+      }
+      function chip() { var m = new THREE.Mesh(new THREE.TorusGeometry(Rk * 0.35, Rk * 0.08, 5, 10, Math.PI * 1.4), chipMat); m.position.set((Math.random() - 0.5) * Rk, top, (Math.random() - 0.5) * Rk); m.userData = { v: new THREE.Vector3((Math.random() - 0.5) * 2, 2 + Math.random() * 1.5, (Math.random() - 0.5) * 2), life: 0 }; scene.add(m); chips.push(m); }
+      recolor(); build();
+      var fast = 3.2, feed = 0.55, acc = 0;
+      return {
+        recolor: recolor,
+        set: function (np) { Object.assign(p, np); build(); },
+        tick: function (dt) {
+          t += dt; drill.rotation.y += dt * 18;
+          var bottom = top - maxDepth;
+          if (phase === "down") { var goal = Math.min(Lk, maxDepth + peck); var cur = top - y; var spd = cur < maxDepth - 0.02 ? fast : feed; y -= spd * dt; if (top - y > maxDepth) { maxDepth = Math.min(goal, top - y); acc += dt * 14; while (acc > 1) { acc -= 1; chip(); } } if (top - y >= goal) { y = top - goal; phase = goal >= Lk - 1e-6 ? "out" : "up"; } }
+          else if (phase === "up") { y += fast * dt; if (y >= top + Rk * 0.6) phase = "down"; }
+          else if (phase === "out") { y += fast * dt; if (y >= top + Lk * 0.6) { maxDepth = 0; y = top + Rk; phase = "down"; } }
+          drill.position.y = y;
+          hole.visible = maxDepth > 0.001; hole.scale.y = Math.max(0.001, maxDepth); hole.position.y = top - maxDepth / 2;
+          for (var i = chips.length - 1; i >= 0; i--) { var c = chips[i], u = c.userData; u.life += dt; u.v.y -= 7 * dt; c.position.addScaledVector(u.v, dt); c.rotation.x += 5 * dt; c.rotation.z += 4 * dt; if (u.life > 1.2) { scene.remove(c); c.geometry.dispose(); chips.splice(i, 1); } }
+        }
+      };
+    });
+  };
+
+  /* ---------- Концевое фрезерование уступа ---------- */
+  window.Anim3D.milling = function (box, params) {
+    var p = Object.assign({ Dc: 20, ae: 10, ap: 5, z: 4, fz: 0.08 }, params || {});
+    return stage(box, { ratio: 0.55, yaw: 0.75, pitch: 0.5, dist: 10 }, function (THREE, scene, ctx) {
+      var raw = new THREE.MeshStandardMaterial({ color: 0x7a746c, metalness: 0.15, roughness: 0.85 });
+      var cutM = new THREE.MeshStandardMaterial({ color: 0xdfe4e8, metalness: 0.3, roughness: 0.25 });
+      var toolM = new THREE.MeshStandardMaterial({ color: 0xc3c9ce, metalness: 0.35, roughness: 0.3 });
+      var chipMat = new THREE.MeshStandardMaterial({ color: 0x9a6a3c, metalness: 0.6, roughness: 0.35 });
+      var cv = document.createElement("canvas"); cv.width = 128; cv.height = 128; var g = cv.getContext("2d");
+      g.fillStyle = "#a7aeb4"; g.fillRect(0, 0, 128, 128); g.strokeStyle = "#4b5157"; g.lineWidth = 9; for (var i = -3; i < 6; i++) { g.beginPath(); g.moveTo(0, i * 32); g.lineTo(128, i * 32 + 60); g.stroke(); }
+      var tex = new THREE.CanvasTexture(cv); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; toolM.map = tex;
+      var grp = new THREE.Group(); scene.add(grp);
+      var ahead, b1, b2, tool, k, W, H, Lx = 6.5, x, chips = [], acc = 0;
+      function recolor() { chipMat.color.set(ctx.css("--hot", "#a3512a")); }
+      function build() {
+        while (grp.children.length) grp.remove(grp.children[0]);
+        var ae = Math.min(p.ae, p.Dc);
+        k = 1.4 / p.Dc; W = Math.max(ae * k + 1.4, 2.2); H = Math.max(p.ap * k + 0.9, 1.6);
+        ahead = new THREE.Mesh(new THREE.BoxGeometry(1, H, W), raw);
+        b1 = new THREE.Mesh(new THREE.BoxGeometry(1, H - p.ap * k, W), raw);
+        b2 = new THREE.Mesh(new THREE.BoxGeometry(1, p.ap * k, W - ae * k), raw);
+        var face1 = new THREE.Mesh(new THREE.PlaneGeometry(1, ae * k), cutM); face1.rotation.x = -Math.PI / 2;   // дно уступа
+        var face2 = new THREE.Mesh(new THREE.PlaneGeometry(1, p.ap * k), cutM);                                    // стенка уступа
+        b1.userData.f1 = face1; b2.userData.f2 = face2;
+        grp.add(ahead, b1, b2, face1, face2);
+        var R = p.Dc / 2 * k, len = Math.max(p.ap * k * 1.6, 1.6);
+        tool = new THREE.Group();
+        var body = new THREE.Mesh(new THREE.CylinderGeometry(R, R, len, 32), toolM); body.position.y = len / 2;
+        var sh = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.95, R * 0.95, 1.6, 32), new THREE.MeshStandardMaterial({ color: 0x9aa2a8, metalness: 0.35, roughness: 0.3 })); sh.position.y = len + 0.8;
+        tool.add(body, sh); grp.add(tool);
+        tool.position.y = H / 2 - p.ap * k; tool.position.z = W / 2 - ae * k + R;
+        x = Lx / 2 + R; ctx.setDist(10);
+        grp.userData = { ae: ae, R: R };
+      }
+      function place() {
+        var ae = grp.userData.ae, R = grp.userData.R, x0 = -Lx / 2, x1 = Lx / 2, cx = Math.max(x0, Math.min(x1, x));
+        ahead.scale.x = Math.max(0.001, cx - x0); ahead.position.x = (x0 + cx) / 2;
+        var bl = Math.max(0.001, x1 - cx);
+        b1.scale.x = bl; b1.position.set((cx + x1) / 2, -p.ap * k / 2, 0);
+        b2.scale.x = bl; b2.position.set((cx + x1) / 2, H / 2 - p.ap * k / 2, -ae * k / 2);
+        var f1 = b1.userData.f1, f2 = b2.userData.f2;
+        f1.scale.x = bl; f1.position.set((cx + x1) / 2, H / 2 - p.ap * k + 0.001, W / 2 - ae * k / 2);
+        f2.scale.x = bl; f2.position.set((cx + x1) / 2, H / 2 - p.ap * k / 2, W / 2 - ae * k + 0.001);
+        [ahead, b1, b2, f1, f2].forEach(function (m) { m.visible = m.scale.x > 0.002; });
+        tool.position.x = x;
+      }
+      recolor(); build(); place();
+      return {
+        recolor: recolor,
+        set: function (np) { Object.assign(p, np); build(); place(); },
+        tick: function (dt) {
+          tool.rotation.y -= dt * 14;
+          x -= dt * (0.5 + p.fz * p.z * 3);
+          if (x < -Lx / 2 - grp.userData.R * 1.2) x = Lx / 2 + grp.userData.R * 1.2;
+          place();
+          if (x < Lx / 2 + grp.userData.R && x > -Lx / 2) { acc += dt * 16; while (acc > 1) { acc -= 1; var m = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.018, 4, 8, Math.PI * 1.3), chipMat); m.position.set(x - grp.userData.R * 0.6, H / 2 - p.ap * k * Math.random(), W / 2 - grp.userData.ae * k); m.userData = { v: new THREE.Vector3(1 + Math.random(), 1.5 + Math.random(), 1.2 + Math.random()), life: 0 }; grp.add(m); chips.push(m); } }
+          for (var i = chips.length - 1; i >= 0; i--) { var c = chips[i], u = c.userData; u.life += dt; u.v.y -= 6 * dt; c.position.addScaledVector(u.v, dt); c.rotation.x += 6 * dt; if (u.life > 1) { grp.remove(c); c.geometry.dispose(); chips.splice(i, 1); } }
+        }
+      };
+    });
+  };
+
+  /* ---------- Резьбофрезерование ---------- */
+  window.Anim3D.threadmill = function (box, params) {
+    var p = Object.assign({ D: 16, P: 2, Dc: 10, L: 20, type: "int", kind: "multi" }, params || {});
+    return stage(box, { ratio: 0.6, yaw: 0.6, pitch: 0.55, dist: 9 }, function (THREE, scene, ctx) {
+      var partMat = new THREE.MeshStandardMaterial({ color: 0x9aa3aa, metalness: 0.3, roughness: 0.55, transparent: true, opacity: 0.32, depthWrite: false, side: THREE.DoubleSide });
+      var grooveMat = new THREE.MeshStandardMaterial({ color: 0xc94f1a, metalness: 0.4, roughness: 0.4 });
+      var toolM = new THREE.MeshStandardMaterial({ color: 0x8f969c, metalness: 0.75, roughness: 0.25 });
+      var grp = new THREE.Group(); scene.add(grp);
+      var tubes = [], tool, k, turns, ecc, Lk, Pk, ang = 0, rows, t = 0;
+      function recolor() { grooveMat.color.set(ctx.css("--hot", "#a3512a")); }
+      function build() {
+        while (grp.children.length) { var c = grp.children[0]; grp.remove(c); if (c.geometry) c.geometry.dispose(); }
+        tubes = [];
+        var isInt = p.type === "int";
+        k = 3.2 / Math.max(p.D * 1.6, p.L * 1.2); Lk = p.L * k; Pk = p.P * k;
+        var Rk = p.D / 2 * k, Rc = p.Dc / 2 * k;
+        ecc = isInt ? Rk - Rc : Rk + Rc;
+        // деталь
+        if (isInt) { var outer = new THREE.Mesh(new THREE.CylinderGeometry(Rk * 2.2, Rk * 2.2, Lk * 1.15, 48, 1, true), partMat); var inner = new THREE.Mesh(new THREE.CylinderGeometry(Rk, Rk, Lk * 1.15, 48, 1, true), partMat); grp.add(outer, inner); }
+        else { grp.add(new THREE.Mesh(new THREE.CylinderGeometry(Rk - 0.6 * Pk, Rk - 0.6 * Pk, Lk * 1.15, 48), new THREE.MeshStandardMaterial({ color: 0xb9c0c6, metalness: 0.35, roughness: 0.4 }))); }
+        // витки резьбы (по одному обороту), раскрываются по мере прохода фрезы
+        turns = Math.max(1, Math.floor(p.L / p.P));
+        rows = p.kind === "multi" ? Math.min(turns, 14) : 1;
+        for (var i = 0; i < Math.min(turns, 14); i++) {
+          var y0 = -Lk / 2 + i * Pk;
+          var curve = new THREE.Curve(); curve.getPoint = (function (yy) { return function (u) { var a = u * Math.PI * 2; return new THREE.Vector3(Rk * Math.cos(a), yy + u * Pk, Rk * Math.sin(a)); }; })(y0);
+          var geo = new THREE.TubeGeometry(curve, 64, Math.max(0.025, Pk * 0.22), 6, false);
+          var m = new THREE.Mesh(geo, grooveMat); m.geometry.setDrawRange(0, 0); grp.add(m); tubes.push(m);
+        }
+        // фреза
+        tool = new THREE.Group();
+        var bodyH = p.kind === "multi" ? rows * Pk + Pk : Pk * 1.5;
+        var core = new THREE.Mesh(new THREE.CylinderGeometry(Rc * 0.7, Rc * 0.7, bodyH + 2, 24), toolM); core.position.y = (bodyH + 2) / 2;
+        tool.add(core);
+        var nr = p.kind === "multi" ? rows : 1;
+        for (var j = 0; j < nr; j++) { var ring = new THREE.Mesh(new THREE.CylinderGeometry(Rc, Rc * 0.7, Pk * 0.5, 24), toolM); ring.position.y = Pk * 0.5 + j * Pk; tool.add(ring); }
+        grp.add(tool);
+        ang = 0; t = 0;
+        ctx.target.set(0, 0, 0); ctx.setDist(9);
+      }
+      recolor(); build();
+      var per = 64 * 6 * 6;   // индексов на один оборот трубки
+      return {
+        recolor: recolor,
+        set: function (np) { Object.assign(p, np); build(); },
+        tick: function (dt) {
+          var total = p.kind === "multi" ? 1 : Math.min(turns, 14);   // оборотов по траектории
+          t += dt * 0.45;
+          var cyc = t % (total + 0.8), prog = Math.min(cyc, total);
+          var a = prog * Math.PI * 2;
+          var yb = -Lk / 2 + (p.kind === "multi" ? prog * Pk : prog * Pk);
+          tool.position.set(ecc * Math.cos(a), yb - Pk * 0.25, ecc * Math.sin(a));
+          tool.rotation.y += dt * 16;
+          for (var i = 0; i < tubes.length; i++) {
+            var f = p.kind === "multi" ? (i < rows ? prog : 0) : Math.max(0, Math.min(1, prog - i));
+            if (cyc > total + 0.6) f = 0;
+            tubes[i].geometry.setDrawRange(0, Math.floor(f * per));
+          }
+        }
       };
     });
   };

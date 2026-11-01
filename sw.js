@@ -1,7 +1,7 @@
 /* Офлайн-режим: страницы и ресурсы сайта кладутся в кэш при первом визите.
    Страницы — «сначала сеть, потом кэш» (свежая версия, если есть интернет),
    остальное — «сначала кэш». При изменении файлов сайта увеличьте VERSION. */
-const VERSION = "v9";
+const VERSION = "v11";
 const CACHE = "osnovy-" + VERSION;
 const PAGES = ["./", "index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html",
   "rezby.html", "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
