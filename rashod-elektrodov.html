@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Расход электродов и проволоки</title>
+<meta name="description" content="Расчёт расхода электродов, сварочной проволоки и защитного газа: масса наплавленного металла для угловых и стыковых швов, время сварки, число баллонов.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: слева тип шва со схемой сечения и процесс, справа масса и расход крупно, затем время и газ */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.types button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border:1px solid var(--line-strong);border-radius:5px;background:var(--paper);cursor:pointer;font-size:12px}
+.types button svg{width:64px;height:40px}
+.types button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+.sect svg{display:block;width:100%;max-width:420px;height:auto}
+@media (max-width:860px){ .main{grid-template-columns:1fr} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Расход электродов и проволоки</h1>
+      <p>Выберите тип шва, размеры и способ сварки. Калькулятор посчитает массу наплавленного металла, сколько купить электродов или проволоки, время сварки и расход газа.</p>
+    </div>
+    <div class="std">ГОСТ 5264 (РД), ГОСТ 14771 (MIG/MAG)<br>нормы расхода — ориентировочные</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="types" id="types" role="group" aria-label="Тип шва"></div>
+      <div class="grid3" id="dims"></div>
+      <div class="sect" id="sect"></div>
+      <div class="grid2">
+        <div class="field"><label for="len"><span>Длина швов</span><i>м</i></label><input type="text" id="len" inputmode="decimal" value="10"></div>
+        <div class="field"><label for="mat">Металл</label><select id="mat"><option value="7850">Сталь углеродистая, низколегированная</option><option value="7900">Нержавеющая сталь</option><option value="2700">Алюминий и сплавы</option></select></div>
+        <div class="field" style="grid-column:1/-1"><label for="proc">Способ сварки</label><select id="proc">
+          <option value="mma">Ручная дуговая штучными электродами (РД, MMA)</option>
+          <option value="mag">Полуавтомат в CO₂ или смеси (MIG/MAG)</option>
+          <option value="tig">Аргонодуговая с присадкой (TIG)</option></select></div>
+        <div class="field"><label for="I"><span>Ток сварки</span><i>А</i></label><input type="text" id="I" inputmode="decimal"></div>
+        <div class="field"><label for="kr"><span>Коэфф. расхода</span><i>×</i></label><input type="text" id="kr" inputmode="decimal"></div>
+        <div class="field"><label for="an"><span>Коэфф. наплавки</span><i>г/(А·ч)</i></label><input type="text" id="an" inputmode="decimal"></div>
+        <div class="field" id="gasWrap"><label for="gas"><span>Расход газа</span><i>л/мин</i></label><input type="text" id="gas" inputmode="decimal"></div>
+      </div>
+      <div class="hint" id="procHint"></div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint" id="bigLabel">Купить электродов</div><div class="big" id="buy">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="extra"></dl>
+      <div class="note" id="tip"></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p><b>Площадь сечения наплавленного металла</b> складывается из геометрии шва и выпуклости (усиления) — её считают как параболический сегмент 2/3·e·g:</p>
+      <div class="formula">угловой:            F = k²/2 + 2/3·(k·√2)·g
+стык без разделки:  F = s·b + 2/3·e·g
+стык V-образный:    F = s·b + (s − c)²·tg(α/2) + 2/3·e·g
+масса: m = F · L · ρ</div>
+      <p><b>Расход</b> = масса наплавленного металла × коэффициент расхода. Для штучных электродов он учитывает огарки, обмазку и разбрызгивание — обычно 1,6–1,8. Для проволоки в CO₂ и смеси — 1,1–1,2, для TIG с присадкой — около 1,05.</p>
+      <p><b>Время горения дуги</b> t = m / (αн · I), где αн — коэффициент наплавки: для электродов 8–11 г/(А·ч), для полуавтомата 12–16 г/(А·ч). Полное время работы больше в 1,5–2,5 раза: зачистка, смена электродов, прихватки, перестановки.</p>
+      <p><b>Газ</b>: расход в л/мин × время горения дуги плюс 15 % на продувку. Баллон 40 л углекислоты (25 кг) — около 12 500 л газа, баллон 40 л аргона или смеси при 150 бар — около 6 000 л.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчёт для планирования закупки. Фактический расход зависит от квалификации сварщика, положения шва и марки электрода.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const T={
+ fillet:{n:"Угловой",dims:[["k","Катет k","мм","6"],["g","Выпуклость g","мм","1"]],
+   ic:'<path d="M6,34 L58,34 M14,34 L14,4" stroke="var(--muted)" stroke-width="3" fill="none"/><path d="M14,34 L14,20 Q24,22 28,34 Z" fill="var(--hot)"/>'},
+ butt:{n:"Стык без разделки",dims:[["s","Толщина s","мм","4"],["b","Зазор b","мм","1,5"],["e","Ширина шва e","мм","8"],["g","Выпуклость g","мм","1,5"]],
+   ic:'<rect x="4" y="16" width="26" height="14" fill="var(--muted)" opacity=".5"/><rect x="34" y="16" width="26" height="14" fill="var(--muted)" opacity=".5"/><path d="M28,16 L36,16 L36,30 L28,30 Z M26,16 Q32,8 38,16 Z" fill="var(--hot)"/>'},
+ v:{n:"Стык V-образный",dims:[["s","Толщина s","мм","10"],["b","Зазор b","мм","2"],["c","Притупление c","мм","2"],["a","Угол разделки α","°","60"],["g","Выпуклость g","мм","2"]],
+   ic:'<path d="M4,12 L24,12 L30,30 L4,30 Z M60,12 L40,12 L34,30 L60,30 Z" fill="var(--muted)" opacity=".5"/><path d="M24,12 L40,12 L34,30 L30,30 Z M22,12 Q32,4 42,12 Z" fill="var(--hot)"/>'}
+};
+const P={
+ mma:{I:"110",kr:"1,7",an:"9",gas:null,label:"Купить электродов",hint:"Ток 80–120 А для электрода Ø3 мм, 130–180 А для Ø4 мм. Пачка электродов обычно 5 кг (или 1–2,5 кг для Ø2–3 мм)."},
+ mag:{I:"180",kr:"1,15",an:"14",gas:"12",label:"Купить проволоки",hint:"Проволока Ø0,8 мм — 80–160 А, Ø1,0 — 120–220 А, Ø1,2 — 150–300 А. Катушки 5 и 15 кг."},
+ tig:{I:"120",kr:"1,05",an:"5",gas:"8",label:"Купить присадочного прутка",hint:"Аргон 6–10 л/мин. Производительность TIG в 2–3 раза ниже полуавтомата — время считайте с запасом."}
+};
+const KEY="svarka-v1";
+let st={type:"fillet",vals:{fillet:{},butt:{},v:{}},len:"10",mat:"7850",proc:"mma",I:"",kr:"",an:"",gas:""};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x&&x.vals&&T[x.type]) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+function smart(v){ return v>=100?fmt(v,0):v>=10?fmt(v,1):fmt(v,2); }
+
+$("types").innerHTML=Object.keys(T).map(k=>`<button type="button" data-t="${k}" aria-pressed="false"><svg viewBox="0 0 64 40" aria-hidden="true">${T[k].ic}</svg>${T[k].n}</button>`).join("");
+$("len").value=st.len; $("mat").value=st.mat; $("proc").value=st.proc;
+function procDefaults(force){ const p=P[st.proc]; ["I","kr","an","gas"].forEach(k=>{ if(force||!st[k]) st[k]=p[k]||""; $(k).value=st[k]; }); $("gasWrap").hidden=!p.gas; $("procHint").textContent=p.hint; $("bigLabel").textContent=p.label; }
+function renderDims(){
+  document.querySelectorAll("#types button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===st.type?"true":"false"));
+  const v=st.vals[st.type];
+  $("dims").innerHTML=T[st.type].dims.map(([id,l,u,d])=>`<div class="field"><label for="d-${id}"><span>${l}</span><i>${u}</i></label><input type="text" id="d-${id}" inputmode="decimal" value="${v[id]!=null?v[id]:d}"></div>`).join("");
+}
+$("types").addEventListener("click",e=>{ const b=e.target.closest("[data-t]"); if(!b) return; st.type=b.dataset.t; renderDims(); calc(); });
+$("dims").addEventListener("input",e=>{ st.vals[st.type][e.target.id.slice(2)]=e.target.value; calc(); });
+$("proc").addEventListener("change",()=>{ st.proc=$("proc").value; procDefaults(true); calc(); });
+$("mat").addEventListener("change",()=>{ st.mat=$("mat").value; calc(); });
+["len","I","kr","an","gas"].forEach(id=>$(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }));
+
+function calc(){
+  save();
+  const D={}; let ok=true;
+  T[st.type].dims.forEach(([id])=>{ const x=num($("d-"+id).value); D[id]=x; const bad=!(x>=0)||((id==="k"||id==="s"||id==="a")&&!(x>0)); $("d-"+id).classList.toggle("bad",bad); if(bad) ok=false; });
+  const L=num(st.len), rho=+st.mat, I=num(st.I), kr=num(st.kr), an=num(st.an), gas=num(st.gas), hasGas=!!P[st.proc].gas;
+  [["len",L],["I",I],["kr",kr],["an",an]].concat(hasGas?[["gas",gas]]:[]).forEach(([id,x])=>{ $(id).classList.toggle("bad",!(x>0)); if(!(x>0)) ok=false; });
+  let F=NaN, eV=NaN;
+  if(ok){
+    if(st.type==="fillet") F=D.k*D.k/2+2/3*D.k*Math.SQRT2*D.g;
+    else if(st.type==="butt") F=D.s*D.b+2/3*D.e*D.g;
+    else { if(D.c>=D.s||D.a>=120){ ok=false; } else { const t=Math.tan(D.a/2*Math.PI/180); eV=D.b+2*(D.s-D.c)*t+3; F=D.s*D.b+(D.s-D.c)**2*t+2/3*eV*D.g; } }
+  }
+  $("err").hidden=ok; $("err").textContent=st.type==="v"&&D.c>=D.s?"Притупление должно быть меньше толщины.":"Заполните все поля положительными числами (угол разделки — до 120°).";
+  if(!ok){ $("buy").textContent="—"; $("kpis").innerHTML=""; $("extra").innerHTML=""; $("tip").textContent=""; drawSect(D); return; }
+  const m=F*1e-6*L*rho;            // кг наплавленного металла
+  const buy=m*kr, tArc=m*1000/(an*I); // ч
+  $("buy").innerHTML=`${smart(buy)}<small>кг</small>`;
+  const k=[["Наплавлено металла",smart(m),"кг"],["Время горения дуги",tArc<1?fmt(tArc*60,0):fmt(tArc,1),tArc<1?"мин":"ч"],["На 1 м шва",fmt(m/L*1000,0),"г"],["Площадь сечения",fmt(F,1),"мм²"]];
+  $("kpis").innerHTML=k.map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  const ex=[["Полное время работы (≈ ×2)",fmt(tArc*2,1)+" ч"]];
+  if(hasGas){ const gl=gas*tArc*60*1.15; ex.push(["Газа с продувкой",fmt(gl,0)+" л"],["Баллонов CO₂ 40 л (≈12 500 л)",fmt(gl/12500,2)],["Баллонов смеси/аргона 40 л (≈6 000 л)",fmt(gl/6000,2)]); }
+  if(st.proc==="mma") ex.push(["Пачек по 5 кг",fmt(Math.ceil(buy/5),0)]);
+  if(st.proc==="mag") ex.push(["Катушек по 15 кг",fmt(Math.ceil(buy/15),0)]);
+  if(st.type==="v") ex.push(["Ширина шва (расчётная)",fmt(eV,1)+" мм"]);
+  $("extra").innerHTML=ex.map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  const tips=[];
+  if(st.type==="fillet"&&D.k>8) tips.push("Катет больше 8 мм варят в несколько проходов.");
+  if(st.type==="butt"&&D.s>6) tips.push("Стык без разделки кромок обычно варят до 4–6 мм толщины; толще — делайте V-разделку, иначе будет непровар.");
+  if(st.type==="v"&&D.s>20) tips.push("При толщине больше 20 мм выгоднее X-образная (двусторонняя) разделка: наплавленного металла почти вдвое меньше.");
+  tips.push("Покупайте с запасом 10–15 % на прихватки, брак и пробные швы.");
+  $("tip").textContent=tips.join(" ");
+  drawSect(D,eV);
+}
+function drawSect(D,eV){
+  const W=420,H=150; let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Сечение шва, не в масштабе">`;
+  const met='fill="var(--line-strong)" fill-opacity=".45" stroke="var(--muted)"', w='fill="var(--hot)" fill-opacity=".85"';
+  const lab=(x,y,t)=>`<text x="${x}" y="${y}" font-family="var(--f-num)" font-size="12" fill="var(--ink)">${t}</text>`;
+  if(st.type==="fillet"){
+    s+=`<rect x="40" y="110" width="340" height="18" ${met}/><rect x="150" y="10" width="18" height="100" ${met}/>`;
+    s+=`<path d="M168,110 L168,60 Q188,72 218,110 Z" ${w}/>`;
+    s+=`<line x1="176" y1="118" x2="218" y2="118" stroke="var(--ink)"/>`+lab(186,140,"k = "+(isFinite(D.k)?String(D.k).replace(".",","):"?"));
+  } else if(st.type==="butt"){
+    s+=`<rect x="30" y="50" width="170" height="60" ${met}/><rect x="220" y="50" width="170" height="60" ${met}/>`;
+    s+=`<path d="M200,50 L220,50 L220,110 L200,110 Z M180,50 Q210,28 240,50 Z" ${w}/>`;
+    s+=lab(250,90,"s = "+String(D.s).replace(".",","))+lab(195,135,"b = "+String(D.b).replace(".",","));
+  } else {
+    s+=`<path d="M20,40 L180,40 L198,110 L20,110 Z M400,40 L240,40 L222,110 L400,110 Z" ${met}/>`;
+    s+=`<path d="M180,40 L240,40 L222,110 L198,110 Z M172,40 Q210,18 248,40 Z" ${w}/>`;
+    s+=lab(300,80,"s = "+String(D.s).replace(".",","))+lab(190,135,"b, c, α = "+String(D.a).replace(".",",")+"°");
+  }
+  s+=`<text x="10" y="16" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">сечение шва, не в масштабе</text></svg>`;
+  $("sect").innerHTML=s;
+}
+procDefaults(false); renderDims(); calc();
+})();
+</script>
+
+</body>
+</html>
