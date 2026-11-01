@@ -107,6 +107,20 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 .pcard.b{border-top:3px solid var(--hot)} .pcard.n{border-top:3px solid var(--accent)}
 .pcard h2{font-size:16px}
 .mini th,.mini td{font-size:13px}
+table.tt th,table.tt td{font-size:13px;white-space:nowrap}
+table.tt td.n{line-height:1.35}
+table.tt th.grp{text-align:center;border-bottom:2px solid var(--line-strong)}
+table.tt .bc{color:var(--hot)} table.tt .nc{color:var(--accent)}
+table.tt tbody tr{cursor:pointer}
+table.tt tbody tr:hover td{background:var(--accent-soft)}
+.ex{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.exc{border:1px solid var(--line);border-radius:5px;padding:12px;display:flex;flex-direction:column;gap:6px;background:var(--bg);min-width:0}
+.exc code{font-family:var(--f-num);font-size:18px;font-weight:600}
+.exc span{font-size:13px;color:var(--muted)}
+.dec{font-family:var(--f-num);font-size:clamp(20px,3vw,28px);font-weight:600;display:flex;flex-wrap:wrap;gap:0;align-items:flex-end}
+.dec span{display:flex;flex-direction:column;align-items:center;padding:0 2px}
+.dec small{font-family:var(--f-ui);font-size:11px;font-weight:400;color:var(--muted);border-top:1px solid var(--line-strong);margin-top:4px;padding-top:3px;white-space:nowrap}
+@media (max-width:700px){ .ex{grid-template-columns:1fr} }
 @media (max-width:900px){ .top{grid-template-columns:1fr} .two{grid-template-columns:1fr} }
 </style>
 
@@ -152,6 +166,52 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     </div>
   </section>
 
+  <section class="sheet" aria-labelledby="h-tt">
+    <div class="sheet-head"><h2 id="h-tt">Таблица допусков резьбы <span class="num" id="ttCls"></span></h2>
+      <div class="chips"><button type="button" class="pbtn on" data-ser="coarse">Крупный шаг</button><button type="button" class="pbtn" data-ser="fine">Мелкий шаг</button><button type="button" class="btn sm" id="ttCopy">Скопировать для Excel</button></div></div>
+    <p class="hint" style="margin:0">Предельные диаметры в мм. Поля допусков берутся из выбора вверху страницы — поменяйте их, и таблица пересчитается. Нажмите строку, чтобы открыть резьбу в калькуляторе.</p>
+    <div class="tbl" id="ttTbl"></div>
+    <p class="hint" style="margin:0" id="ttNote"></p>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-how">
+    <div class="sheet-head"><h2 id="h-how">Как указать допуск резьбы на чертеже</h2><span class="hint">ГОСТ 2.311-68, ГОСТ 16093-2004</span></div>
+    <div>
+      <div class="hint" style="margin-bottom:6px">Из чего состоит обозначение</div>
+      <div class="dec" aria-label="Разбор обозначения M12×1,25LH-7g6g-30">
+        <span>M12<small>тип и d</small></span><span>×1,25<small>шаг (только мелкий)</small></span><span>LH<small>левая</small></span><span>-7g<small>поле d₂</small></span><span>6g<small>поле d</small></span><span>-30<small>длина свинчивания</small></span>
+      </div>
+    </div>
+    <div class="ex">
+      <div class="exc"><code>M12-6g</code><span>Болт, крупный шаг. Шаг не пишут. Поля d₂ и d одинаковые — записывают одно: 6g.</span></div>
+      <div class="exc"><code>M12-6H</code><span>Гайка (внутренняя резьба) — большая буква. Нормируются D₂ и D₁.</span></div>
+      <div class="exc"><code>M12×1,25-6H/6g</code><span>Резьбовое соединение на сборочном чертеже: гайка в числителе, болт в знаменателе, через косую черту.</span></div>
+      <div class="exc"><code>M12-7g6g</code><span>Разные поля среднего и наружного диаметров: сначала поле d₂ (7g), потом d (6g).</span></div>
+      <div class="exc"><code>M12LH-6g</code><span>Левая резьба: LH сразу после размера. Правую никак не обозначают.</span></div>
+      <div class="exc"><code>M12-7g6g-30</code><span>Длина свинчивания отличается от нормальной (N): указывают её в мм. Нормальную длину не пишут.</span></div>
+      <div class="exc"><code>M16×Ph3P1,5-6H</code><span>Многозаходная резьба: Ph — ход, P — шаг. Здесь 2 захода.</span></div>
+      <div class="exc"><code>M12-6g + ТТ</code><span>Резьба под покрытие: в технических требованиях пишут «Размеры резьбы — до покрытия» или указывают поле с учётом покрытия (6e, 6f, 6G).</span></div>
+    </div>
+    <div>
+      <div class="hint" style="margin-bottom:6px">Где ставить на чертеже</div>
+      <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px">
+        <li><b>Деталь с наружной резьбой</b> — на размерной линии наружного диаметра, обозначение пишется над ней вместо «⌀»: M12-6g. Длину резьбы — отдельным размером, без сбега.</li>
+        <li><b>Деталь с внутренней резьбой</b> — на выносной полке или размерной линии по наружному диаметру резьбы (сплошная тонкая линия на виде): M12-6H. Глубину резьбы и глубину сверления под неё — отдельными размерами.</li>
+        <li><b>Сборочный чертёж</b> — допуск соединения дробью 6H/6g, если он важен для сборки; для стандартного крепежа обычно не указывают, он задан стандартом на крепёж.</li>
+        <li><b>Технические требования</b> — общие указания: «Резьба по ГОСТ 24705, поле допуска 6g», «Размеры резьбы до покрытия», «Неуказанные фаски на резьбе 1×45°».</li>
+      </ul>
+    </div>
+    <div>
+      <div class="hint" style="margin-bottom:6px">Какое поле выбрать: рекомендуемые поля ГОСТ 16093 по классу точности и длине свинчивания</div>
+      <div class="tbl"><table><thead><tr><th>Класс точности</th><th class="n">Гайка S</th><th class="n">Гайка N</th><th class="n">Гайка L</th><th class="n">Болт S</th><th class="n">Болт N</th><th class="n">Болт L</th></tr></thead><tbody>
+        <tr><td>Точный — ответственные соединения, малый люфт</td><td class="n">4H</td><td class="n">5H</td><td class="n">6H</td><td class="n">(3h4h)</td><td class="n">4h</td><td class="n">(5h4h)</td></tr>
+        <tr class="cur"><td><b>Средний</b> — общего назначения, крепёж</td><td class="n">5H</td><td class="n"><b>6H</b></td><td class="n">7H</td><td class="n">(5g6g)</td><td class="n"><b>6g</b></td><td class="n">(7g6g)</td></tr>
+        <tr><td>Грубый — горячекатаные заготовки, длинные глухие отверстия</td><td class="n">—</td><td class="n">7H</td><td class="n">8H</td><td class="n">—</td><td class="n">8g</td><td class="n">(9g8g)</td></tr>
+      </tbody></table></div>
+      <p class="hint" style="margin:6px 0 0">S — короткая, N — нормальная, L — длинная длина свинчивания. Самое ходовое сочетание — 6H/6g. В скобках — поля второго ряда. Буквы основного отклонения: h — без зазора, g — небольшой зазор (общий случай), f и e — зазор под толстое покрытие или работу при нагреве.</p>
+    </div>
+  </section>
+
   <section class="sheet">
     <div class="sheet-head"><h2>Крепёж: отверстия и размер под ключ</h2><span class="hint">для резьб с крупным шагом M3–M48</span></div>
     <div class="tbl" id="fastTbl"></div>
@@ -178,7 +238,7 @@ H  = 0,8660·P          высота исходного треугольника
     </div>
   </details>
 
-  <footer><span>Значения рассчитаны по ГОСТ 24705, 8724, 16093. Для приёмки ответственных деталей сверяйте со стандартом.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a></nav></footer>
+  <footer><span>Значения рассчитаны по ГОСТ 24705, 8724, 16093. Для приёмки ответственных деталей сверяйте со стандартом.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -291,13 +351,48 @@ function drawProfile(d,P,d2,d1,d3){
    <text x="${x0+pw}" y="${yd-20}" text-anchor="middle" font-family="var(--f-num)" font-size="12" fill="var(--muted)">P = ${fn(P)}</text>
    <text x="${x0+4}" y="${Hh-6}" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">профиль 60°, схема не в масштабе</text></svg>`;
 }
+// таблица допусков по всем резьбам
+let ser="coarse";
+function lim(d,P){
+  const T=tolerances(d,P); if(T.err) return null;
+  const tb=st.tb, tn=st.tn, gb=+tb[0], gn=+tn[0];
+  const es=tb[1]==="g"?-T.g:0, EI=tn[1]==="G"?T.g:0;
+  const Td=r40(T.td*GF[gb]), Td2=r40(T.td2*GF[gb]), TD2=r40(T.TD2_6*GF[gn]), TD1=r40(T.td1*GF[gn]);
+  const d2=d-.649519*P, d1=d-1.082532*P, d3=d-1.226869*P;
+  return {approx:T.approx, dmax:d+es/1000, dmin:d+(es-Td)/1000, d2max:d2+es/1000, d2min:d2+(es-Td2)/1000, d3max:d3+es/1000,
+    D2min:d2+EI/1000, D2max:d2+(EI+TD2)/1000, D1min:d1+EI/1000, D1max:d1+(EI+TD1)/1000, Dmin:d+EI/1000};
+}
+function ttRows(){ return ser==="coarse"?Object.keys(COARSE).map(d=>[+d,COARSE[d]]):FINE; }
+function renderTT(){
+  $("ttCls").textContent=`${st.tn}/${st.tb}`;
+  let anyApprox=false;
+  const rows=ttRows().map(([d,P])=>{ const L=lim(d,P); if(!L) return ""; if(L.approx) anyApprox=true;
+    const nm=`M${fn(d)}${ser==="coarse"?"":"×"+fn(P)}`;
+    return `<tr data-d="${d}" data-p="${P}" tabindex="0"><td><b>${nm}</b></td><td class="n">${fn(P)}</td>
+      <td class="n bc">${f3(L.dmax)}<br>${f3(L.dmin)}</td><td class="n bc">${f3(L.d2max)}<br>${f3(L.d2min)}</td><td class="n bc">${f3(L.d3max)}</td>
+      <td class="n nc">${f3(L.D2max)}<br>${f3(L.D2min)}</td><td class="n nc">${f3(L.D1max)}<br>${f3(L.D1min)}</td><td class="n nc">${f3(L.Dmin)}</td></tr>`; }).join("");
+  $("ttTbl").innerHTML=`<table class="tt"><thead><tr><th rowspan="2">Резьба</th><th rowspan="2" class="n">P</th><th colspan="3" class="grp bc">Болт ${st.tb}</th><th colspan="3" class="grp nc">Гайка ${st.tn}</th></tr>
+    <tr><th class="n">d max/min</th><th class="n">d₂ max/min</th><th class="n">d₃ max</th><th class="n">D₂ max/min</th><th class="n">D₁ max/min</th><th class="n">D min</th></tr></thead><tbody>${rows}</tbody></table>`;
+  $("ttNote").textContent=(anyApprox?"Мелкий шаг: допуск среднего диаметра — по формуле ISO 965-1, возможна разница с таблицей ГОСТ на одну ступень ряда R40. ":"")+(st.tb!=="6g"||st.tn!=="6H"?"Для степеней точности кроме 6-й допуски получены множителем от 6-й степени с округлением по R40.":"Значения для 6H/6g — по таблицам ГОСТ 16093.");
+}
+document.querySelectorAll("[data-ser]").forEach(b=>b.addEventListener("click",()=>{ ser=b.dataset.ser; document.querySelectorAll("[data-ser]").forEach(x=>x.classList.toggle("on",x===b)); renderTT(); }));
+function openRow(e){ const tr=e.target.closest("tr[data-d]"); if(!tr||!tr.closest("#ttTbl")) return; $("d").value=tr.dataset.d; $("P").value=fn(+tr.dataset.p); st.d=$("d").value; st.P=$("P").value; const m=opts.find(o=>o[0]===`${tr.dataset.d}|${tr.dataset.p}`); $("size").value=m?m[0]:"custom"; st.size=$("size").value; calc(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); }
+$("ttTbl").addEventListener("click",openRow); $("ttTbl").addEventListener("keydown",e=>{ if(e.key==="Enter") openRow(e); });
+$("ttCopy").addEventListener("click",()=>{
+  const head=["Резьба","P",`d max (${st.tb})`,"d min",`d2 max`,"d2 min","d3 max",`D2 max (${st.tn})`,"D2 min","D1 max","D1 min","D min"].join("\t");
+  const lines=ttRows().map(([d,P])=>{ const L=lim(d,P); if(!L) return null; return [`M${fn(d)}${ser==="coarse"?"":"x"+fn(P)}`,fn(P),f3(L.dmax),f3(L.dmin),f3(L.d2max),f3(L.d2min),f3(L.d3max),f3(L.D2max),f3(L.D2min),f3(L.D1max),f3(L.D1min),f3(L.Dmin)].join("\t"); }).filter(Boolean);
+  const t=[head].concat(lines).join("\n").replace(/−/g,"-");
+  const done=()=>toast("Таблица скопирована — вставьте в Excel");
+  try{ navigator.clipboard.writeText(t).then(done,()=>toast("Браузер не дал скопировать — выделите таблицу вручную")); }catch(e){ toast("Браузер не дал скопировать — выделите таблицу вручную"); }
+});
+let tt=null; function toast(s){ const el=$("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2000); }
 // справочные таблицы
 $("fastTbl").innerHTML=`<table><thead><tr><th>Резьба</th><th class="n">Шаг</th><th class="n">Сверло</th><th class="n">Отв. ряд 1</th><th class="n">ряд 2</th><th class="n">ряд 3</th><th class="n">Под ключ</th></tr></thead><tbody>
  ${Object.keys(COARSE).map(d=>`<tr data-d="${d}"><td><b>M${d}</b></td><td class="n">${fn(COARSE[d])}</td><td class="n">${fn(DRILL[d])}</td>${CLEAR[d].map(v=>`<td class="n">${fn(v)}</td>`).join("")}<td class="n">${WRENCH[d]||"—"}</td></tr>`).join("")}</tbody></table>`;
 $("pipeTbl").innerHTML=`<table><thead><tr><th>Обозначение</th><th class="n">Ниток на дюйм</th><th class="n">Шаг, мм</th><th class="n">Наружный d, мм</th><th class="n">Средний d₂, мм</th><th class="n">Внутренний d₁, мм</th></tr></thead><tbody>
  ${PIPE.map(([n,t,dd])=>{const p=25.4/t,h=.640327*p;return `<tr><td><b>${n}</b></td><td class="n">${t}</td><td class="n">${f3(p)}</td><td class="n">${f3(dd)}</td><td class="n">${f3(dd-h)}</td><td class="n">${f3(dd-2*h)}</td></tr>`;}).join("")}</tbody></table>`;
 function hi(){ const d=num($("d").value); document.querySelectorAll("#fastTbl tr[data-d]").forEach(r=>r.classList.toggle("cur",+r.dataset.d===d)); }
-const _calc=calc; calc=function(){ _calc(); hi(); };
+const _calc=calc; calc=function(){ _calc(); hi(); renderTT(); };
 calc();
 })();
 </script>
