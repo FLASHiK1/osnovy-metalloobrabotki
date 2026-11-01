@@ -83,6 +83,7 @@ input.bad{border-color:var(--bad);background:var(--bad-soft)}
 .btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
 .btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
 .pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
 .pbtn:hover{border-color:var(--accent);color:var(--accent)}
 .pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
@@ -176,6 +177,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
       <div class="kpis" id="kpis"></div>
       <dl class="kv" id="extra"></dl>
       <div style="display:flex;flex-direction:column;gap:8px" id="notes"></div>
+      <div class="chips" id="rel"></div>
       <div class="scheme" id="scheme"></div>
     </section>
   </div>
@@ -194,7 +196,7 @@ K по DIN 6935:    K = (0,65 + 0,5·lg(r/s)) / 2,  не больше 0,5</div>
     </div>
   </details>
 
-  <footer><span>Результат — расчётный. Фактическая развёртка зависит от партии металла, инструмента и направления проката.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+  <footer><span>Результат — расчётный. Фактическая развёртка зависит от партии металла, инструмента и направления проката.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a></nav></footer>
 </div>
 
 <script>
@@ -259,6 +261,9 @@ function calc(){
   const minF=0.7*V, shortF=fl.map((x,i)=>[x,i]).filter(([x])=>x<minF);
   if(shortF.length) notes.push(["warn",`Полка ${shortF.map(([,i])=>String.fromCharCode(1072+i)).join(", ")} короче ≈ ${fmt(minF,0)} мм (0,7·V): она провалится в матрицу V${fmt(V,0)}. Возьмите матрицу меньше или удлините полку.`]);
   if(Math.abs(V/6-r)>Math.max(0.5,r*0.3)) notes.push(["note",`Матрица V${fmt(V,0)} при воздушной гибке даст радиус около ${fmt(V/6,1)} мм, а в расчёте ${fmt(r,1)} мм. Для точной развёртки подставьте фактический радиус или подберите матрицу ≈ V${fmt(r*6,0)}.`]);
+  if(window.siteLink){ const Lr=String(+L.toFixed(1)).replace(".",","), Lbs=String(Lb>0?Lb:1000).replace(".",","), ss=String(s).replace(".",",");
+    $("rel").innerHTML=`<a class="btn sm" href="${siteLink("massa-metalla.html",{shape:"sheet",vals:{sheet:{b:Lr,t:ss}},L:Lbs})}">Масса заготовки →</a>`+
+      `<a class="btn sm" href="${siteLink("raskroy-lista.html",{a:Lr,b:Lbs,t:ss})}">Раскрой листа под заготовку →</a>`; }
   $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
   drawScheme(s,r,K,b);
 }

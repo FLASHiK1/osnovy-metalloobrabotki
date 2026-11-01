@@ -4,8 +4,9 @@
   var PAGES = [
     ["Точность", [["posadki.html", "Посадки и допуски"], ["razmernye-cepi.html", "Размерные цепи"], ["sherokhovatost.html", "Шероховатость"]]],
     ["Обработка", [["rezhimy-rezaniya.html", "Режимы резания"], ["rezby.html", "Резьбы"], ["konusy.html", "Конусы"]]],
-    ["Лист и сварка", [["gibka-lista.html", "Гибка листа"], ["rashod-elektrodov.html", "Расход на сварку"]]],
-    ["Материалы", [["massa-metalla.html", "Масса металла"], ["analogi-staley.html", "Аналоги сталей"]]]
+    ["Лист и сварка", [["gibka-lista.html", "Гибка листа"], ["raskroy-lista.html", "Раскрой листа"], ["rashod-elektrodov.html", "Расход на сварку"]]],
+    ["Материалы", [["massa-metalla.html", "Масса металла"], ["analogi-staley.html", "Аналоги сталей"]]],
+    ["Пересчёт и экономика", [["dyuymy.html", "Дюймы и UNC"], ["sebestoimost.html", "Себестоимость детали"]]]
   ];
   var here = (location.pathname.split("/").pop() || "index.html");
   var keyMeta = document.querySelector('meta[name="state-key"]');
@@ -49,7 +50,7 @@
   document.body.appendChild(tipEl);
   var tipT = null;
   function tip(t) { tipEl.textContent = t; tipEl.classList.add("show"); clearTimeout(tipT); tipT = setTimeout(function () { tipEl.classList.remove("show"); }, 2600); }
-  if (window.__sharedState) setTimeout(function () { tip("Открыт расчёт по присланной ссылке"); }, 400);
+  if (window.__sharedState) setTimeout(function () { tip(window.__sharedState === "link" ? "Значения подставлены из соседнего калькулятора" : "Открыт расчёт по присланной ссылке"); }, 400);
 
   /* ---------- 2. Поделиться расчётом ---------- */
   function shareURL() {

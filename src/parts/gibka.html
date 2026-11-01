@@ -59,6 +59,7 @@
       <div class="kpis" id="kpis"></div>
       <dl class="kv" id="extra"></dl>
       <div style="display:flex;flex-direction:column;gap:8px" id="notes"></div>
+      <div class="chips" id="rel"></div>
       <div class="scheme" id="scheme"></div>
     </section>
   </div>
@@ -142,6 +143,9 @@ function calc(){
   const minF=0.7*V, shortF=fl.map((x,i)=>[x,i]).filter(([x])=>x<minF);
   if(shortF.length) notes.push(["warn",`Полка ${shortF.map(([,i])=>String.fromCharCode(1072+i)).join(", ")} короче ≈ ${fmt(minF,0)} мм (0,7·V): она провалится в матрицу V${fmt(V,0)}. Возьмите матрицу меньше или удлините полку.`]);
   if(Math.abs(V/6-r)>Math.max(0.5,r*0.3)) notes.push(["note",`Матрица V${fmt(V,0)} при воздушной гибке даст радиус около ${fmt(V/6,1)} мм, а в расчёте ${fmt(r,1)} мм. Для точной развёртки подставьте фактический радиус или подберите матрицу ≈ V${fmt(r*6,0)}.`]);
+  if(window.siteLink){ const Lr=String(+L.toFixed(1)).replace(".",","), Lbs=String(Lb>0?Lb:1000).replace(".",","), ss=String(s).replace(".",",");
+    $("rel").innerHTML=`<a class="btn sm" href="${siteLink("massa-metalla.html",{shape:"sheet",vals:{sheet:{b:Lr,t:ss}},L:Lbs})}">Масса заготовки →</a>`+
+      `<a class="btn sm" href="${siteLink("raskroy-lista.html",{a:Lr,b:Lbs,t:ss})}">Раскрой листа под заготовку →</a>`; }
   $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
   drawScheme(s,r,K,b);
 }

@@ -403,7 +403,7 @@ const MACH=[
 const KEY="rezhimy-v1";
 let st={op:"turn",mat:1,tool:"carb",vcManual:null,vals:{turn:{},mill:{},drill:{},thread:{}},nmax:"4000",pmax:"11",eta:"0,8",mach:"custom"};
 try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s&&s.vals) st=Object.assign(st,s); }catch(e){}
-st.vals.thread=st.vals.thread||{}; if(!GEO[st.op]) st.op="turn";
+["turn","mill","drill","thread"].forEach(k=>{ st.vals[k]=st.vals[k]||{}; }); if(!GEO[st.op]) st.op="turn";
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
 
 function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }

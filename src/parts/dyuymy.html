@@ -1,0 +1,141 @@
+<title>Дюймы и дюймовые резьбы</title>
+<meta name="description" content="Перевод дюймов в миллиметры и обратно, дроби 1/64 дюйма, дюймовые резьбы UNC и UNF, трубная коническая NPT, перевод ниток на дюйм в шаг.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: конвертер с крупным результатом сверху, ниже рядом таблица дробей и таблицы резьб UNC/UNF/NPT */
+.conv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-family:var(--f-num);font-size:clamp(30px,4.6vw,44px);font-weight:600;letter-spacing:-.02em;line-height:1.05;overflow-wrap:anywhere}
+.big small{font-size:16px;color:var(--muted);font-weight:400;margin-left:6px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line-strong);border-radius:5px;overflow:hidden}
+.seg button{border:0;background:var(--paper);padding:8px;cursor:pointer;font-size:13px}
+.seg button+button{border-left:1px solid var(--line-strong)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+.fr{columns:4 150px;column-gap:20px;font-family:var(--f-num);font-size:13px}
+.fr div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--line);break-inside:avoid}
+.fr div.e8{font-weight:700}
+.fr div.cur{background:var(--accent-soft)}
+table.th tbody tr{cursor:pointer}
+table.th tbody tr:hover td{background:var(--accent-soft)}
+@media (max-width:860px){ .conv{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Дюймы и дюймовые резьбы</h1>
+      <p>Переводит дюймы в миллиметры и обратно, в том числе дроби вроде 1 3/8″, подбирает ближайшую дробь к размеру в мм. Ниже — таблицы дюймовых резьб UNC, UNF и NPT с шагом в мм и сверлом под метчик.</p>
+    </div>
+    <div class="std">1″ = 25,4 мм точно<br>ASME B1.1, ASME B1.20.1</div>
+  </header>
+
+  <section class="conv">
+    <div class="sheet">
+      <div class="seg" role="group" aria-label="Что перевести"><button type="button" data-u="in" aria-pressed="true">Дюймы → мм</button><button type="button" data-u="mm" aria-pressed="false">мм → дюймы</button><button type="button" data-u="tpi" aria-pressed="false">Ниток на дюйм</button></div>
+      <div class="field"><label for="v" id="vLabel">Размер в дюймах</label><input type="text" id="v" inputmode="text" autocomplete="off"></div>
+      <div class="hint" id="vHint"></div>
+      <div class="chips" id="quick"></div>
+      <div id="err" class="note bad" hidden></div>
+    </div>
+    <div class="sheet" aria-live="polite">
+      <div><div class="hint" id="resLabel"></div><div class="big" id="res">—</div></div>
+      <dl class="kv" id="extra"></dl>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Резьбы UNC и UNF</h2><span class="hint">крупная (UNC) и мелкая (UNF) по ASME B1.1 · нажмите строку — переведётся размер</span></div>
+    <div class="tbl" id="unTbl"></div>
+    <p class="hint" style="margin:0">Обозначение «1/2-13 UNC-2A»: 1/2″ — номинальный диаметр, 13 — ниток на дюйм, 2A — класс допуска болта (2B — гайки). Сверло под метчик указано как ближайшее метрическое для глубины профиля около 75 %.</p>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Трубная коническая резьба NPT</h2><span class="hint">ASME B1.20.1, конусность 1:16</span></div>
+    <div class="tbl" id="nptTbl"></div>
+    <p class="hint" style="margin:0">Размер NPT — условный проход трубы, а не диаметр резьбы: NPT 1/2 нарезают на трубе с наружным диаметром 21,3 мм. Не путайте с трубной цилиндрической G (BSP) — у неё другой профиль (55°) и шаг; G есть в калькуляторе резьб.</p>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Дроби дюйма в миллиметрах</h2><span class="hint">от 1/64 до 1″ · жирным — восьмые доли</span></div>
+    <div class="fr" id="frTbl"></div>
+  </section>
+
+  <footer><span>1 дюйм = 25,4 мм — точное определение с 1959 года.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// [обозначение, диаметр в дюймах, ниток на дюйм]
+const UNC=[["#4",.112,40],["#6",.138,32],["#8",.164,32],["#10",.190,24],["1/4",.25,20],["5/16",.3125,18],["3/8",.375,16],["7/16",.4375,14],["1/2",.5,13],["9/16",.5625,12],["5/8",.625,11],["3/4",.75,10],["7/8",.875,9],["1",1,8],["1 1/8",1.125,7],["1 1/4",1.25,7],["1 1/2",1.5,6]];
+const UNF=[["#10",.190,32],["1/4",.25,28],["5/16",.3125,24],["3/8",.375,24],["7/16",.4375,20],["1/2",.5,20],["9/16",.5625,18],["5/8",.625,18],["3/4",.75,16],["7/8",.875,14],["1",1,12]];
+// [размер, ниток на дюйм, наружный диаметр трубы, дюймы]
+const NPT=[["1/8",27,.405,"11/32",11/32],["1/4",18,.540,"7/16",7/16],["3/8",18,.675,"37/64",37/64],["1/2",14,.840,"23/32",23/32],["3/4",14,1.050,"59/64",59/64],["1",11.5,1.315,"1 5/32",1+5/32],["1 1/4",11.5,1.660,"1 1/2",1.5],["1 1/2",11.5,1.900,"1 47/64",1+47/64],["2",11.5,2.375,"2 7/32",2+7/32]];
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+function trim(v,d){ return String(+v.toFixed(d)).replace(".",","); }
+function gcd(a,b){ return b?gcd(b,a%b):a; }
+// «1 3/8», «1-3/8"», «3/8», «0,375», «1.5in»
+function parseIn(s){
+  let t=String(s).trim().replace(/[″"”]|in(ch)?$/gi,"").replace(/,/g,".").trim();
+  let m=t.match(/^(\d+)\s*[-\s]\s*(\d+)\s*\/\s*(\d+)$/); if(m) return +m[1]+ +m[2]/ +m[3];
+  m=t.match(/^(\d+)\s*\/\s*(\d+)$/); if(m) return +m[1]/ +m[2];
+  m=t.match(/^\d*\.?\d+$/); if(m) return +t;
+  return NaN;
+}
+function frac(x,den){ // ближайшая дробь с знаменателем den
+  const whole=Math.floor(x+1e-9); let n=Math.round((x-whole)*den), d=den, w=whole;
+  if(n===den){ w++; n=0; }
+  if(n===0) return {txt:w+"″",val:w};
+  const g=gcd(n,d); n/=g; d/=g;
+  return {txt:(w?w+" ":"")+n+"/"+d+"″",val:w+n/d};
+}
+const KEY="dyuymy-v1";
+let st={u:"in",v:"3/8"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+const Q={in:["1/8","1/4","3/8","1/2","3/4","1","1 1/4","2"],mm:["6","8","10","12","16","20","25","50"],tpi:["8","11","13","14","18","20","24","28"]};
+const L={in:["Размер в дюймах","Например: 3/8, 1 1/4, 1-3/8\", 0,375","В миллиметрах"],mm:["Размер в миллиметрах","Например: 12 или 9,5","В дюймах"],tpi:["Ниток на дюйм (TPI)","Например: 13 для 1/2-13 UNC","Шаг резьбы"]};
+function setU(u){ st.u=u; document.querySelectorAll("[data-u]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.u===u?"true":"false")); $("vLabel").textContent=L[u][0]; $("vHint").textContent=L[u][1]; $("resLabel").textContent=L[u][2]; $("quick").innerHTML=Q[u].map(q=>`<button type="button" class="pbtn" data-q="${q}">${q}${u==="in"?"″":""}</button>`).join(""); }
+document.querySelectorAll("[data-u]").forEach(b=>b.addEventListener("click",()=>{ setU(b.dataset.u); $("v").value=Q[b.dataset.u][2]; st.v=$("v").value; calc(); }));
+$("quick").addEventListener("click",e=>{ const b=e.target.closest("[data-q]"); if(!b) return; $("v").value=b.dataset.q; st.v=b.dataset.q; calc(); });
+$("v").addEventListener("input",()=>{ st.v=$("v").value; calc(); });
+
+function calc(){
+  save();
+  const u=st.u; let ok=true, mm=NaN;
+  const ex=[];
+  if(u==="in"){
+    const x=parseIn(st.v); ok=x>0; mm=x*25.4;
+    if(ok){ $("res").innerHTML=`${trim(mm,4)}<small>мм</small>`; ex.push(["Десятичные дюймы",trim(x,5)+"″"],["Ближайшая дробь 1/64",frac(x,64).txt],["Ближайшее метрическое сверло (0,1 мм)",fmt(Math.round(mm*10)/10,1)+" мм"],["Тысячные дюйма (thou, mil)",fmt(x*1000,1)]); }
+  } else if(u==="mm"){
+    const x=num(st.v); ok=x>0; mm=x;
+    if(ok){ const inch=x/25.4, f16=frac(inch,16), f64=frac(inch,64);
+      $("res").innerHTML=`${trim(inch,5)}<small>″</small>`;
+      ex.push(["Ближайшая дробь 1/64",f64.txt+" = "+trim(f64.val*25.4,3)+" мм"],["Ближайшая дробь 1/16",f16.txt+" = "+trim(f16.val*25.4,3)+" мм"],["Разница с 1/64",trim((x-f64.val*25.4),3)+" мм"],["Тысячные дюйма",fmt(inch*1000,1)]); }
+  } else {
+    const x=num(st.v); ok=x>0;
+    if(ok){ const p=25.4/x; mm=p; $("res").innerHTML=`${trim(p,4)}<small>мм</small>`;
+      const metric=[.5,.7,.75,.8,1,1.25,1.5,1.75,2,2.5,3,3.5,4].map(m=>[m,Math.abs(m-p)/p]).sort((a,b)=>a[1]-b[1])[0];
+      ex.push(["Ниток на 25,4 мм",trim(x,2)],["Ближайший метрический шаг",trim(metric[0],2)+" мм"+(metric[1]<0.01?" — совпадает":` (разница ${fmt(metric[1]*100,1)} %)`)],["Глубина профиля UN (наружн.)",trim(.61343*p,3)+" мм"]);
+      if(metric[1]>=0.01) ex.push(["Внимание","метрический метчик не подойдёт"]); }
+  }
+  $("v").classList.toggle("bad",!ok&&String(st.v).trim()!=="");
+  $("err").hidden=ok||String(st.v).trim()===""; $("err").textContent=u==="in"?"Не понял запись. Примеры: 3/8, 1 1/4, 1-3/8\", 0,375.":"Введите положительное число.";
+  if(!ok){ $("res").textContent="—"; $("extra").innerHTML=""; markFr(NaN); return; }
+  $("extra").innerHTML=ex.map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  markFr(u==="tpi"?NaN:mm);
+}
+function unRows(list,ser){ return list.map(([n,d,t])=>{ const D=d*25.4, P=25.4/t; return `<tr data-v="${n.startsWith("#")?trim(d,4):n}" tabindex="0"><td><b>${n}-${t} ${ser}</b></td><td class="n">${trim(D,3)}</td><td class="n">${t}</td><td class="n">${trim(P,3)}</td><td class="n">${trim(D-.649519*P,3)}</td><td class="n">${trim(D-1.082532*P,3)}</td><td class="n">${fmt(Math.round((D-P)*10)/10,1)}</td></tr>`; }).join(""); }
+$("unTbl").innerHTML=`<table class="th"><thead><tr><th>Резьба</th><th class="n">d, мм</th><th class="n">TPI</th><th class="n">Шаг, мм</th><th class="n">d₂, мм</th><th class="n">D₁, мм</th><th class="n">Сверло, мм</th></tr></thead><tbody>${unRows(UNC,"UNC")}${unRows(UNF,"UNF")}</tbody></table>`;
+$("nptTbl").innerHTML=`<table class="th"><thead><tr><th>Размер</th><th class="n">TPI</th><th class="n">Шаг, мм</th><th class="n">Наружный ⌀ трубы, мм</th><th class="n">Сверло под метчик (без развёртки)</th></tr></thead><tbody>${NPT.map(([n,t,od,dr,drv])=>{ const P=25.4/t, D=od*25.4; return `<tr data-v="${n}" tabindex="0"><td><b>NPT ${n}</b></td><td class="n">${trim(t,1)}</td><td class="n">${trim(P,3)}</td><td class="n">${trim(D,2)}</td><td class="n">${dr}″ = ${trim(drv*25.4,2)}</td></tr>`; }).join("")}</tbody></table>`;
+function pickRow(e){ const tr=e.target.closest("tr[data-v]"); if(!tr) return; setU("in"); $("v").value=tr.dataset.v; st.v=tr.dataset.v; calc(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); }
+["unTbl","nptTbl"].forEach(id=>{ $(id).addEventListener("click",pickRow); $(id).addEventListener("keydown",e=>{ if(e.key==="Enter") pickRow(e); }); });
+let fr=""; for(let n=1;n<=64;n++){ const f=frac(n/64,64); fr+=`<div class="${n%8===0?"e8":""}" data-mm="${n/64*25.4}"><span>${f.txt}</span><span>${trim(n/64*25.4,4)}</span></div>`; }
+$("frTbl").innerHTML=fr;
+function markFr(mm){ document.querySelectorAll("#frTbl div").forEach(d=>d.classList.toggle("cur",isFinite(mm)&&Math.abs(+d.dataset.mm-mm)<0.2)); }
+setU(st.u); $("v").value=st.v; calc();
+})();
+</script>

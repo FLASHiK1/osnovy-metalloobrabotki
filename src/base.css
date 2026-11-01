@@ -50,6 +50,7 @@ input.bad{border-color:var(--bad);background:var(--bad-soft)}
 .btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
 .btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
 .pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
 .pbtn:hover{border-color:var(--accent);color:var(--accent)}
 .pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}

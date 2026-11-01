@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/sebestoimost.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Себестоимость детали — Основы металлообработки">
+<meta property="og:description" content="Расчёт себестоимости и цены детали: материал, машинное время по операциям, наладка, накладные расходы, рентабельность. Как цена за штуку зависит от размера партии.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/sebestoimost.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="sebest-v1">
+<script src="assets/early.js"></script>
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Себестоимость детали</title>
+<meta name="description" content="Расчёт себестоимости и цены детали: материал, машинное время по операциям, наладка, накладные расходы, рентабельность. Как цена за штуку зависит от размера партии.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: слева заготовка и список операций, справа цена за штуку крупно, структура затрат полосой и график «цена от партии» */
+.main{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+.ops{display:flex;flex-direction:column;gap:8px}
+.op{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,.8fr)) 34px;gap:8px;align-items:end;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.op .field label{font-size:11px}
+.del{width:34px;height:34px;border-radius:4px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;font-size:18px}
+.del:hover{border-color:var(--line);color:var(--bad)}
+.stack{display:flex;height:14px;border-radius:3px;overflow:hidden;background:var(--line)}
+.stack span{display:block;height:100%}
+.leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted)}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.curve svg{display:block;width:100%;height:auto}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line-strong);border-radius:5px;overflow:hidden}
+.seg button{border:0;background:var(--paper);padding:7px;cursor:pointer;font-size:13px}
+.seg button+button{border-left:1px solid var(--line-strong)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+@media (max-width:900px){ .main{grid-template-columns:1fr} }
+@media (max-width:560px){ .op{grid-template-columns:repeat(3,minmax(0,1fr)) 34px} .op .field:first-child{grid-column:1/-1} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Себестоимость детали</h1>
+      <p>Материал, машинное время по операциям, наладка и накладные — калькулятор сложит всё в себестоимость и цену детали и покажет, как цена за штуку падает с ростом партии.</p>
+    </div>
+    <div class="std">прямые затраты + накладные<br>+ рентабельность</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <h3>Заготовка</h3>
+      <div class="seg" role="group" aria-label="Тип заготовки"><button type="button" data-b="round" aria-pressed="true">Круг</button><button type="button" data-b="plate" aria-pressed="false">Лист, плита</button><button type="button" data-b="mass" aria-pressed="false">Знаю массу</button></div>
+      <div class="grid3" id="blankDims"></div>
+      <div class="grid3">
+        <div class="field"><label for="rho"><span>Плотность</span><i>кг/м³</i></label><input type="text" id="rho" inputmode="decimal"></div>
+        <div class="field"><label for="price"><span>Цена металла</span><i>₽/кг</i></label><input type="text" id="price" inputmode="decimal"></div>
+        <div class="field"><label for="scrap"><span>Возврат стружки</span><i>₽/кг</i></label><input type="text" id="scrap" inputmode="decimal"></div>
+        <div class="field"><label for="pm"><span>Масса готовой детали</span><i>кг</i></label><input type="text" id="pm" inputmode="decimal" placeholder="необязательно"></div>
+      </div>
+      <h3 style="margin-top:6px">Операции</h3>
+      <div class="ops" id="ops"></div>
+      <button type="button" class="btn sm" id="addOp" style="align-self:flex-start">+ Добавить операцию</button>
+      <div class="hint">Штучное время — на одну деталь. Наладка — подготовительно-заключительное время на всю партию. Ставка — стоимость станко-часа с зарплатой станочника: обычно 1 500–3 500 ₽/ч для станков с ЧПУ, 800–1 500 ₽/ч для универсальных.</div>
+      <div class="grid3">
+        <div class="field"><label for="qty"><span>Партия</span><i>шт</i></label><input type="text" id="qty" inputmode="numeric"></div>
+        <div class="field"><label for="ovh"><span>Накладные</span><i>%</i></label><input type="text" id="ovh" inputmode="decimal"></div>
+        <div class="field"><label for="prof"><span>Рентабельность</span><i>%</i></label><input type="text" id="prof" inputmode="decimal"></div>
+      </div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Цена одной детали (без НДС)</div><div class="big" id="price1">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <div><div class="stack" id="stack"></div><div class="leg" id="leg" style="margin-top:6px"></div></div>
+      <dl class="kv" id="extra"></dl>
+      <div><h3 style="margin-bottom:6px">Цена за штуку от размера партии</h3><div class="curve" id="curve"></div></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">материал = масса заготовки · цена − (масса заготовки − масса детали) · цена стружки
+операции = Σ штучное время / 60 · ставка
+наладка на штуку = Σ время наладки / 60 · ставка / партия
+прямые затраты = материал + операции + наладка на штуку
+себестоимость = прямые · (1 + накладные %)
+цена = себестоимость · (1 + рентабельность %)</div>
+      <p>Накладные покрывают то, что не видно в операциях: аренду, электроэнергию, инструмент, ОТК, управленцев. На небольших производствах это обычно 20–60 % к прямым затратам. Рентабельность 15–30 % — типичный уровень для механообработки на заказ.</p>
+      <p>Чем больше партия, тем меньше доля наладки в цене штуки — это видно на графике. Для разовых деталей наладка часто дороже самой обработки.</p>
+    </div>
+  </details>
+
+  <footer><span>Ставки и проценты — ваши; калькулятор только складывает их по прозрачным формулам.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const B={round:[["d","Диаметр","мм","50"],["L","Длина","мм","120"]],plate:[["a","Ширина","мм","100"],["b","Длина","мм","200"],["s","Толщина","мм","20"]],mass:[["mass","Масса заготовки","кг","1,85"]]};
+const KEY="sebest-v1";
+let st={blank:"round",bv:{round:{},plate:{},mass:{}},rho:"7850",price:"95",scrap:"15",pm:"",qty:"50",ovh:"40",prof:"20",
+  ops:[{n:"Токарная с ЧПУ",t:"6",s:"45",r:"2500"},{n:"Фрезерная с ЧПУ",t:"8",s:"60",r:"2800"},{n:"Слесарная, ОТК",t:"3",s:"0",r:"900"}]};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+st.bv=Object.assign({round:{},plate:{},mass:{}},st.bv||{});
+if(st.mass!=null){ st.bv.mass.mass=st.mass; delete st.mass; }   // из ссылки «Раскрой листа»
+if(!Array.isArray(st.ops)||!st.ops.length) st.ops=[{n:"Операция 1",t:"5",s:"30",r:"2000"}];
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+function rub(v){ return v>=1000?fmt(v,0):fmt(v,2); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+["rho","price","scrap","pm","qty","ovh","prof"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }); });
+function renderBlank(){
+  document.querySelectorAll("[data-b]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.b===st.blank?"true":"false"));
+  const v=st.bv[st.blank];
+  $("blankDims").innerHTML=B[st.blank].map(([id,l,u,d])=>`<div class="field"><label for="bl-${id}"><span>${l}</span><i>${u}</i></label><input type="text" id="bl-${id}" inputmode="decimal" value="${esc(v[id]!=null?v[id]:d)}"></div>`).join("");
+  $("rho").disabled=st.blank==="mass";
+}
+document.querySelectorAll("[data-b]").forEach(b=>b.addEventListener("click",()=>{ st.blank=b.dataset.b; renderBlank(); calc(); }));
+$("blankDims").addEventListener("input",e=>{ st.bv[st.blank][e.target.id.slice(3)]=e.target.value; calc(); });
+function renderOps(){
+  $("ops").innerHTML=st.ops.map((o,i)=>`<div class="op">
+    <div class="field"><label for="on-${i}">Операция</label><input type="text" id="on-${i}" value="${esc(o.n)}" style="font-family:var(--f-ui)"></div>
+    <div class="field"><label for="ot-${i}">Штучное, мин</label><input type="text" id="ot-${i}" inputmode="decimal" value="${esc(o.t)}"></div>
+    <div class="field"><label for="os-${i}">Наладка, мин</label><input type="text" id="os-${i}" inputmode="decimal" value="${esc(o.s)}"></div>
+    <div class="field"><label for="or-${i}">Ставка, ₽/ч</label><input type="text" id="or-${i}" inputmode="decimal" value="${esc(o.r)}"></div>
+    <button type="button" class="del" data-del="${i}" aria-label="Удалить операцию"${st.ops.length<=1?" disabled":""}>×</button></div>`).join("");
+}
+$("ops").addEventListener("input",e=>{ const [f,i]=e.target.id.split("-"); st.ops[+i][{on:"n",ot:"t",os:"s",or:"r"}[f]]=e.target.value; calc(); });
+$("ops").addEventListener("click",e=>{ const b=e.target.closest("[data-del]"); if(!b||st.ops.length<=1) return; st.ops.splice(+b.dataset.del,1); renderOps(); calc(); });
+$("addOp").addEventListener("click",()=>{ st.ops.push({n:"Операция "+(st.ops.length+1),t:"5",s:"20",r:"2000"}); renderOps(); calc(); });
+
+const COL=["var(--hot)","var(--accent)","var(--warn)","var(--muted)"];
+function cost(N,c){ // цена штуки при партии N
+  const direct=c.mat+c.ops+c.setup/N; const self=direct*(1+c.ovh/100); return {direct,self,price:self*(1+c.prof/100)};
+}
+function calc(){
+  save();
+  let ok=true;
+  const bv={}; B[st.blank].forEach(([id])=>{ const x=num($("bl-"+id).value); bv[id]=x; $("bl-"+id).classList.toggle("bad",!(x>0)); if(!(x>0)) ok=false; });
+  const rho=num(st.rho), price=num(st.price), scrap=num(st.scrap)||0, pm=num(st.pm), qty=num(st.qty), ovh=num(st.ovh), prof=num(st.prof);
+  [["rho",st.blank==="mass"||rho>0],["price",price>=0],["qty",qty>0],["ovh",ovh>=0],["prof",prof>=0]].forEach(([id,v])=>{ $(id).classList.toggle("bad",!v); if(!v) ok=false; });
+  let opsT=0,opsS=0,opsC=0,setC=0;
+  st.ops.forEach((o,i)=>{ const t=num(o.t),s=num(o.s)||0,r=num(o.r); const bt=!(t>=0), br=!(r>=0); $("ot-"+i).classList.toggle("bad",bt); $("or-"+i).classList.toggle("bad",br); if(bt||br){ ok=false; return; } opsT+=t; opsS+=s; opsC+=t/60*r; setC+=s/60*r; });
+  $("err").hidden=ok; $("err").textContent="Заполните поля числами: размеры и партия больше 0, время и ставки — не меньше 0.";
+  if(!ok){ $("price1").textContent="—"; ["kpis","stack","leg","extra","curve"].forEach(id=>$(id).innerHTML=""); return; }
+  const mBlank=st.blank==="round"?Math.PI*bv.d*bv.d/4*bv.L*rho/1e9:st.blank==="plate"?bv.a*bv.b*bv.s*rho/1e9:bv.mass;
+  const chips=pm>0?Math.max(0,mBlank-pm):0;
+  const mat=mBlank*price-chips*scrap;
+  const c={mat,ops:opsC,setup:setC,ovh,prof};
+  const r=cost(qty,c);
+  $("price1").innerHTML=`${rub(r.price)}<small>₽</small>`;
+  $("kpis").innerHTML=[["Себестоимость штуки",rub(r.self),"₽"],["Партия "+fmt(qty,0)+" шт",rub(r.price*qty),"₽"],["Машинное время",fmt(opsT,1),"мин/шт"],["Масса заготовки",fmt(mBlank,3),"кг"]]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  const parts=[["Материал",mat],["Операции",opsC],["Наладка на штуку",setC/qty],["Накладные",r.direct*ovh/100]];
+  const tot=parts.reduce((a,p)=>a+Math.max(0,p[1]),0)||1;
+  $("stack").innerHTML=parts.map((p,i)=>`<span style="width:${(Math.max(0,p[1])/tot*100).toFixed(2)}%;background:${COL[i]}" title="${p[0]}"></span>`).join("");
+  $("leg").innerHTML=parts.map((p,i)=>`<span><i style="background:${COL[i]}"></i>${p[0]} ${fmt(Math.max(0,p[1])/tot*100,0)} %</span>`).join("");
+  $("extra").innerHTML=[["Материал на штуку",rub(mat)+" ₽"],["Операции на штуку",rub(opsC)+" ₽"],["Наладка на партию",rub(setC)+" ₽"],["Время наладки",fmt(opsS,0)+" мин"],["Прибыль с партии",rub((r.price-r.self)*qty)+" ₽"],["Загрузка станков на партию",fmt((opsT*qty+opsS)/60,1)+" ч"]]
+    .concat(chips>0?[["Стружки с детали",fmt(chips,3)+" кг"]]:[]).map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  drawCurve(c,qty);
+}
+function drawCurve(c,qty){
+  const Ns=[1,2,5,10,20,50,100,200,500,1000], W=480,H=190,l=56,rgt=14,top=12,bot=30;
+  const ys=Ns.map(N=>cost(N,c).price), ymax=Math.max(...ys), ymin=0;
+  const x=i=>l+i*(W-l-rgt)/(Ns.length-1), y=v=>top+(1-(v-ymin)/(ymax-ymin||1))*(H-top-bot);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Цена детали в зависимости от размера партии">`;
+  [0,.5,1].forEach(f=>{ const v=ymin+f*(ymax-ymin); s+=`<line x1="${l}" x2="${W-rgt}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end" font-family="var(--f-num)" font-size="11" fill="var(--muted)">${rub(v)}</text>`; });
+  s+=`<path d="${ys.map((v,i)=>(i?"L":"M")+x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")} L${x(Ns.length-1)},${y(0)} L${x(0)},${y(0)} Z" fill="var(--accent-soft)"/>`;
+  s+=`<path d="${ys.map((v,i)=>(i?"L":"M")+x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+  Ns.forEach((N,i)=>{ s+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-family="var(--f-num)" font-size="11" fill="var(--muted)">${N}</text>`; });
+  // текущая партия — интерполяция по логарифму
+  const lq=Math.log(Math.min(Math.max(qty,1),1000)); let i=0; while(i<Ns.length-2&&Math.log(Ns[i+1])<lq) i++;
+  const f=(lq-Math.log(Ns[i]))/(Math.log(Ns[i+1])-Math.log(Ns[i])), cx=x(i)+f*(x(i+1)-x(i)), cy=y(cost(qty,c).price);
+  s+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="var(--hot)" stroke="var(--paper)" stroke-width="2"/>`;
+  s+=`<text x="${Math.min(cx+8,W-110)}" y="${Math.max(cy-8,14)}" font-family="var(--f-num)" font-size="12" font-weight="600" fill="var(--hot)">${fmt(qty,0)} шт — ${rub(cost(qty,c).price)} ₽</text>`;
+  s+=`<text x="${W-rgt}" y="${H-10+0}" text-anchor="end" font-family="var(--f-ui)" font-size="10" fill="var(--muted)" dy="-14">партия, шт</text></svg>`;
+  $("curve").innerHTML=s;
+}
+renderBlank(); renderOps(); calc();
+})();
+</script>
+
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

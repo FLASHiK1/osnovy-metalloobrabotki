@@ -118,7 +118,7 @@ dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
 .copyrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 14px;cursor:pointer;font-size:14px;font-weight:500}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn.sm{padding:4px 10px;font-size:13px}
+.btn.sm{padding:4px 10px;font-size:13px;text-decoration:none;color:inherit;display:inline-block}
 code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
 
 .req{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:12px;align-items:end}
@@ -502,7 +502,10 @@ function calc(){
       <div class="sep"></div><dt>Вероятность зазора</dt><dd>${pct(pGap)}</dd><dt>Вероятность натяга</dt><dd>${pct(1-pGap)}</dd>
       <dt>Вероятные пределы</dt><dd>${mean-3*sig>=0?"S "+mm(mean-3*sig):"N "+mm(-(mean-3*sig))} … ${mean+3*sig>=0?"S "+mm(mean+3*sig):"N "+mm(-(mean+3*sig))}</dd>`;
   }
-  $("cFit").innerHTML=`<h3>Посадка ${fitName}</h3><dl class="kv">${rows}<div class="sep"></div><dt>Допуск посадки TD+Td</dt><dd>${mm(TD+Td)}</dd></dl>`;
+  const PREF=[.025,.05,.1,.2,.4,.8,1.6,3.2,6.3,12.5,25,50], raOf=T=>{ let r=PREF[0]; for(const p of PREF) if(p<=0.05*T+1e-9) r=p; return r; };
+  const raH=raOf(TD), raS=raOf(Td), raT=v=>String(v).replace(".",",");
+  const relRa=window.siteLink?`<div style="display:flex;flex-wrap:wrap;gap:6px"><a class="btn sm" href="${siteLink("sherokhovatost.html",{unit:"ra",val:raT(raH)})}">Ra ${raT(raH)} — отверстие →</a><a class="btn sm" href="${siteLink("sherokhovatost.html",{unit:"ra",val:raT(raS)})}">Ra ${raT(raS)} — вал →</a></div>`:"";
+  $("cFit").innerHTML=`<h3>Посадка ${fitName}</h3><dl class="kv">${rows}<div class="sep"></div><dt>Допуск посадки TD+Td</dt><dd>${mm(TD+Td)}</dd><div class="sep"></div><dt>Шероховатость отверстия</dt><dd>Ra ≤ ${raT(raH)}</dd><dt>Шероховатость вала</dt><dd>Ra ≤ ${raT(raS)}</dd></dl><div class="hint">По правилу Ra ≤ 0,05·IT — для нормальной точности формы.</div>${relRa}`;
 
   const n=size(nom);
   const txt=[

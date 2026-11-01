@@ -4,7 +4,8 @@ import re, glob, html
 SITE = "https://flashik1.github.io/osnovy-metalloobrabotki/"
 KEYS = {"posadki.html": "posadki-v1", "razmernye-cepi.html": "razm-cepi-v1", "rezhimy-rezaniya.html": "rezhimy-v1",
         "rezby.html": "rezby-v1", "massa-metalla.html": "massa-v1", "sherokhovatost.html": "sherokh-v1",
-        "gibka-lista.html": "gibka-v1", "rashod-elektrodov.html": "svarka-v1", "konusy.html": "konusy-v1"}
+        "gibka-lista.html": "gibka-v1", "rashod-elektrodov.html": "svarka-v1", "konusy.html": "konusy-v1",
+        "raskroy-lista.html": "raskroy-v1", "sebestoimost.html": "sebest-v1", "dyuymy.html": "dyuymy-v1"}
 for f in sorted(glob.glob("*.html")):
     s = open(f, encoding="utf-8").read()
     s = re.sub(r"\n?<!--site:head-->.*?<!--/site:head-->", "", s, flags=re.S)

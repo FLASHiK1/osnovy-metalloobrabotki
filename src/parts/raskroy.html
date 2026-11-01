@@ -1,0 +1,145 @@
+<title>Раскрой листа</title>
+<meta name="description" content="Сколько деталей выйдет из листа: прямоугольный раскрой с учётом ширины реза и отступа от края, поворот деталей, процент отхода, число листов на партию, масса и схема раскроя.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: слева лист и деталь, справа крупно «деталей с листа» и отход; ниже схема раскроя во всю ширину */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+.layout svg{display:block;width:100%;height:auto;max-height:70vh}
+.cmp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cmp div{border:1px solid var(--line);border-radius:5px;padding:8px 10px;font-size:13px;background:var(--bg)}
+.cmp div.best{border-color:var(--accent);background:var(--accent-soft)}
+.cmp b{display:block;font-family:var(--f-num);font-size:18px}
+@media (max-width:860px){ .main{grid-template-columns:1fr} }
+@media (max-width:480px){ .cmp{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Раскрой листа</h1>
+      <p>Введите размеры листа и детали. Калькулятор разложит детали рядами, попробует повернуть их и добрать остаток листа, посчитает отход и сколько листов нужно на партию.</p>
+    </div>
+    <div class="std">прямоугольный (гильотинный) раскрой<br>лазер · плазма · гильотина</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="field"><label for="sheetSel">Лист</label><select id="sheetSel">
+        <option value="1000x2000">1000 × 2000</option><option value="1250x2500">1250 × 2500</option><option value="1500x3000">1500 × 3000</option><option value="1500x6000">1500 × 6000</option><option value="2000x6000">2000 × 6000</option><option value="custom">Свой размер</option></select></div>
+      <div class="grid2">
+        <div class="field"><label for="W"><span>Ширина листа</span><i>мм</i></label><input type="text" id="W" inputmode="decimal"></div>
+        <div class="field"><label for="H"><span>Длина листа</span><i>мм</i></label><input type="text" id="H" inputmode="decimal"></div>
+        <div class="field"><label for="a"><span>Деталь: ширина</span><i>мм</i></label><input type="text" id="a" inputmode="decimal"></div>
+        <div class="field"><label for="b"><span>Деталь: длина</span><i>мм</i></label><input type="text" id="b" inputmode="decimal"></div>
+        <div class="field"><label for="k"><span>Ширина реза</span><i>мм</i></label><input type="text" id="k" inputmode="decimal"></div>
+        <div class="field"><label for="m"><span>Отступ от края</span><i>мм</i></label><input type="text" id="m" inputmode="decimal"></div>
+        <div class="field"><label for="n"><span>Нужно деталей</span><i>шт</i></label><input type="text" id="n" inputmode="numeric"></div>
+        <div class="field"><label for="t"><span>Толщина листа</span><i>мм</i></label><input type="text" id="t" inputmode="decimal"></div>
+      </div>
+      <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="rot"> Деталь можно поворачивать (нет направления проката)</label>
+      <div class="hint">Ширина реза: лазер 0,2–0,4 мм, плазма 1,5–3 мм, гильотина 0. Отступ от края — 5–10 мм для лазера и плазмы.</div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Деталей с одного листа</div><div class="big" id="cnt">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="cmp" id="cmp"></div>
+      <dl class="kv" id="extra"></dl>
+      <div class="chips" id="links"></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Схема раскроя</h2><span class="hint" id="legend"></span></div>
+    <div class="layout" id="layout"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p>Калькулятор раскладывает одинаковые прямоугольные детали ровными рядами (гильотинный раскрой). Пробует два положения детали и для каждого — добрать полосу, оставшуюся справа или снизу, повёрнутыми деталями. Из вариантов выбирается тот, где деталей больше.</p>
+      <div class="formula">полезная ширина = W − 2·отступ
+деталей в ряду  = ⌊(полезная ширина + рез) / (деталь + рез)⌋
+отход = 1 − (число деталей · площадь детали) / площадь листа</div>
+      <p>Для деталей сложной формы, вложенного раскроя (nesting) и смешанных деталей на одном листе нужен специализированный раскройщик. Этот расчёт даёт быструю оценку и нижнюю границу выхода.</p>
+    </div>
+  </details>
+
+  <footer><span>Оценочный расчёт для прямоугольных деталей.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const KEY="raskroy-v1";
+let st={sheet:"1250x2500",W:"1250",H:"2500",a:"150",b:"300",k:"0,3",m:"5",n:"200",t:"2",rot:true};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+["W","H","a","b","k","m","n","t"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; if(id==="W"||id==="H"){ st.sheet="custom"; $("sheetSel").value="custom"; } calc(); }); });
+$("sheetSel").value=st.sheet; $("rot").checked=!!st.rot;
+$("sheetSel").addEventListener("change",()=>{ st.sheet=$("sheetSel").value; if(st.sheet!=="custom"){ const [w,h]=st.sheet.split("x"); st.W=w; st.H=h; $("W").value=w; $("H").value=h; } calc(); });
+$("rot").addEventListener("change",()=>{ st.rot=$("rot").checked; calc(); });
+
+// раскладка: прямоугольники деталей в координатах полезной области
+function grid(x0,y0,w,h,a,b,k){ const nx=Math.floor((w+k)/(a+k)), ny=Math.floor((h+k)/(b+k)); const r=[]; for(let i=0;i<nx;i++) for(let j=0;j<ny;j++) r.push([x0+i*(a+k),y0+j*(b+k),a,b]); return {nx,ny,r}; }
+function best(Wu,Hu,a,b,k,rot){
+  const vars=[];
+  const orient=rot?[[a,b,false],[b,a,true]]:[[a,b,false]];
+  for(const [pa,pb,turned] of orient){
+    const base=grid(0,0,Wu,Hu,pa,pb,k);
+    vars.push({name:turned?"повёрнуты":"как задано",parts:base.r,turned});
+    if(!rot) continue;
+    // уменьшаем число столбцов и добираем правую полосу повёрнутыми
+    for(let c=base.nx;c>=0;c--){ const used=c>0?c*(pa+k):0; const g1=grid(0,0,used-k>0?used-k:0,Hu,pa,pb,k); const g2=grid(used,0,Wu-used,Hu,pb,pa,k); vars.push({name:(turned?"повёрнуты":"как задано")+" + добор справа",parts:g1.r.concat(g2.r),turned,mixed:true}); }
+    for(let rws=base.ny;rws>=0;rws--){ const used=rws>0?rws*(pb+k):0; const g1=grid(0,0,Wu,used-k>0?used-k:0,pa,pb,k); const g2=grid(0,used,Wu,Hu-used,pb,pa,k); vars.push({name:(turned?"повёрнуты":"как задано")+" + добор снизу",parts:g1.r.concat(g2.r),turned,mixed:true}); }
+  }
+  vars.sort((p,q)=>q.parts.length-p.parts.length||(p.mixed?1:0)-(q.mixed?1:0));
+  return {best:vars[0], plainA:vars.find(v=>v.name==="как задано"), plainB:vars.find(v=>v.name==="повёрнуты")};
+}
+let last=null;
+function calc(){
+  save();
+  const W=num(st.W),H=num(st.H),a=num(st.a),b=num(st.b),k=num(st.k),m=num(st.m),n=num(st.n),t=num(st.t);
+  const req=[["W",W>0],["H",H>0],["a",a>0],["b",b>0],["k",k>=0],["m",m>=0],["n",n>0],["t",t>0]];
+  let ok=true; req.forEach(([id,v])=>{ $(id).classList.toggle("bad",!v); if(!v) ok=false; });
+  const Wu=W-2*m, Hu=H-2*m;
+  if(ok&&(Wu<=0||Hu<=0)) ok=false;
+  $("err").hidden=ok; $("err").textContent="Проверьте размеры: всё больше 0, отступы меньше половины листа.";
+  if(!ok){ $("cnt").textContent="—"; ["kpis","cmp","extra","layout","links"].forEach(id=>$(id).innerHTML=""); return; }
+  const R=best(Wu,Hu,a,b,k,st.rot), cnt=R.best.parts.length;
+  if(!cnt){ $("cnt").innerHTML=`0<small>шт</small>`; $("kpis").innerHTML=""; $("cmp").innerHTML=""; $("extra").innerHTML=`<div class="note warn" style="grid-column:1/-1">Деталь не помещается на лист с учётом отступов.</div>`; $("layout").innerHTML=""; $("links").innerHTML=""; return; }
+  const use=cnt*a*b/(W*H), sheets=Math.ceil(n/cnt), rho=7850;
+  const sheetMass=W*H*t*rho/1e9, partMass=a*b*t*rho/1e9;
+  $("cnt").innerHTML=`${fmt(cnt,0)}<small>шт</small>`;
+  $("kpis").innerHTML=[["Использование листа",fmt(use*100,1),"%"],["Отход",fmt((1-use)*100,1),"%"],["Листов на "+fmt(n,0)+" шт",fmt(sheets,0),"шт"],["Лишних деталей",fmt(sheets*cnt-n,0),"шт"]]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  const opts=[["Как задано",R.plainA],["Повёрнуты на 90°",R.plainB],["Лучший вариант",R.best]];
+  $("cmp").innerHTML=opts.map(([l,v])=>v?`<div class="${v===R.best?"best":""}">${l}<b>${v.parts.length} шт</b></div>`:`<div>${l}<b>—</b><span class="hint">поворот запрещён</span></div>`).join("");
+  $("extra").innerHTML=[["Схема",R.best.name],["Масса листа (сталь)",fmt(sheetMass,1)+" кг"],["Масса детали (сталь)",fmt(partMass,3)+" кг"],["Металл на деталь с отходом",fmt(sheetMass/cnt,3)+" кг"],["Металла на партию",fmt(sheets*sheetMass,1)+" кг"]]
+    .map(([x,v])=>`<dt>${x}</dt><dd>${v}</dd>`).join("");
+  const lk=window.siteLink?siteLink("sebestoimost.html",{blank:"mass",mass:String(+(sheetMass/cnt).toFixed(3)).replace(".",","),qty:String(n)}):null;
+  $("links").innerHTML=lk?`<a class="btn sm" href="${lk}">Себестоимость детали →</a>`:"";
+  last={W,H,m,k,parts:R.best.parts,a,b};
+  draw();
+}
+function draw(){
+  if(!last) return; const {W,H,m,parts,a,b}=last;
+  const land=H>W; // рисуем лист горизонтально
+  const VW=1000, sc=VW/(land?H:W), VH=(land?W:H)*sc+4;
+  const tr=(x,y,w,h)=>land?[ (y+m)*sc, (x+m)*sc, h*sc, w*sc ]:[ (x+m)*sc, (y+m)*sc, w*sc, h*sc ];
+  let s=`<svg viewBox="-2 -2 ${VW+4} ${VH+4}" role="img" aria-label="Схема раскроя листа">`;
+  s+=`<rect x="0" y="0" width="${(land?H:W)*sc}" height="${(land?W:H)*sc}" fill="var(--hot-soft)" stroke="var(--ink)" stroke-width="1.5"/>`;
+  for(const [x,y,w,h] of parts){ const [X,Y,Wd,Ht]=tr(x,y,w,h); const turned=Math.abs(w-a)>1e-9; s+=`<rect x="${X.toFixed(1)}" y="${Y.toFixed(1)}" width="${Wd.toFixed(1)}" height="${Ht.toFixed(1)}" fill="${turned?"var(--accent)":"var(--accent-soft)"}" fill-opacity="${turned?.35:1}" stroke="var(--accent)" stroke-width="1"/>`; }
+  s+=`</svg>`; $("layout").innerHTML=s;
+  $("legend").textContent=`лист ${fmt(W,0)} × ${fmt(H,0)} мм${land?" (показан повёрнутым)":""} · отход — цветом фона · повёрнутые детали — темнее`;
+}
+calc();
+})();
+</script>

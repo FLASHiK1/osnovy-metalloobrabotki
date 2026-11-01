@@ -16,7 +16,10 @@
 | rezby.html | Метрическая резьба |
 | konusy.html | Конусы |
 | gibka-lista.html | Гибка листа |
+| raskroy-lista.html | Раскрой листа |
 | rashod-elektrodov.html | Расход электродов и проволоки |
+| dyuymy.html | Дюймы и дюймовые резьбы |
+| sebestoimost.html | Себестоимость детали |
 | massa-metalla.html | Масса металла |
 | analogi-staley.html | Аналоги сталей и сплавов |
 

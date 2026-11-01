@@ -83,6 +83,7 @@ input.bad{border-color:var(--bad);background:var(--bad-soft)}
 .btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
 .btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
 .pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
 .pbtn:hover{border-color:var(--accent);color:var(--accent)}
 .pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
@@ -179,6 +180,7 @@ table.tt tbody tr:hover td{background:var(--accent-soft)}
 
     <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
       <div class="kpis" id="kpis"></div>
+      <div class="chips" id="rel"></div>
       <div class="two">
         <article class="pcard b" id="bolt"></article>
         <article class="pcard n" id="nut"></article>
@@ -258,7 +260,7 @@ H  = 0,8660·P          высота исходного треугольника
     </div>
   </details>
 
-  <footer><span>Значения рассчитаны по ГОСТ 24705, 8724, 16093. Для приёмки ответственных деталей сверяйте со стандартом.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+  <footer><span>Значения рассчитаны по ГОСТ 24705, 8724, 16093. Для приёмки ответственных деталей сверяйте со стандартом.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a></nav></footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -331,6 +333,12 @@ function calc(){
   $("kpis").innerHTML=[["Сверло под метчик",fn(drill),"мм"],["Под раскатник (≈)",fn(Math.round((d-.45*P)*20)/20),"мм"],["Средний диаметр d₂",f3(d2),"мм"],["Шаг",fn(P),"мм"]]
     .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
 
+  if(window.siteLink){
+    const RZ=[3,4,5,6,8,10,12,16,20,24,30,36,42,48];
+    const thrSize=(coarse&&RZ.includes(d))?`${d}|${P}`:"custom";
+    $("rel").innerHTML=`<a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"drill",vcManual:null,vals:{drill:{D:fn(drill),L:fn(Math.round(d*2))}}})}">Режимы сверления Ø${fn(drill)} →</a>`+
+      `<a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"thread",vcManual:null,vals:{thread:{type:"int",size:thrSize,D:fn(d),P:fn(P)}}})}">Резьбофрезерование ${nm} →</a>`;
+  }
   const T=tolerances(d,P);
   if(T.err){
     $("bolt").innerHTML=`<h2>Болт (наружная)</h2><dl class="kv"><dt>d</dt><dd>${f3(d)}</dd><dt>d₂</dt><dd>${f3(d2)}</dd><dt>d₃</dt><dd>${f3(d3)}</dd></dl>`;

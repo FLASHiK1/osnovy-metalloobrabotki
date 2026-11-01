@@ -45,6 +45,7 @@
       <div class="kpis" id="kpis"></div>
       <dl class="kv" id="extra"></dl>
       <div class="note" id="shapeNote" hidden></div>
+      <div class="chips" id="rel"></div>
     </section>
   </div>
 
@@ -96,6 +97,7 @@ const DEF={round:{d:"50"},square:{a:"40"},hex:{s:"24"},sheet:{b:"1000",t:"5"},pi
 const KEY="massa-v1";
 let st={shape:"round",mat:0,rho:"7850",vals:JSON.parse(JSON.stringify(DEF)),L:"1000",qty:"1"};
 try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s&&s.vals&&SH[s.shape]) st=Object.assign(st,s); }catch(e){}
+Object.keys(DEF).forEach(k=>{ st.vals[k]=Object.assign({},DEF[k],(st.vals||{})[k]||{}); });
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
 function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
 function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
@@ -140,6 +142,7 @@ function calc(){
   if(st.shape==="hex") ex.push(["Диаметр описанной окружности",fmt(v.s*2/Math.sqrt(3),2)+" мм"]);
   if(st.shape==="square") ex.push(["Диагональ",fmt(v.a*Math.SQRT2,2)+" мм"]);
   $("extra").innerHTML=ex.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
+  if(window.siteLink) $("rel").innerHTML=`<a class="btn sm" href="${siteLink("sebestoimost.html",{blank:"mass",mass:String(+m1.toFixed(3)).replace(".",","),qty:String(Math.round(q))})}">Себестоимость детали из этой заготовки →</a>`;
   $("shapeNote").hidden=!sh.note; $("shapeNote").textContent=sh.note||"";
 }
 renderDims(); calc();
