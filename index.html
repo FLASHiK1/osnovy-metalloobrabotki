@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Основы металлообработки</title>
+<meta name="description" content="Бесплатные инженерные калькуляторы по металлообработке: посадки и допуски, размерные цепи, шероховатость, режимы резания, резьбы, масса металла, аналоги сталей. По ГОСТ, ISO и старым ОСТ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: заголовок-манифест, затем три раздела (точность → обработка → материалы) карточками-строками, как оглавление справочника */
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;align-items:end;border-bottom:2px solid var(--ink);padding-bottom:20px}
+.hero h1{font-size:clamp(32px,5.4vw,56px);letter-spacing:-.025em;line-height:1.02}
+.hero p{margin:12px 0 0;max-width:56ch;color:var(--muted);font-size:16px}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.facts div{background:var(--paper);padding:10px 12px}
+.facts b{display:block;font-family:var(--f-num);font-size:24px;font-weight:600;line-height:1.1}
+.facts span{font-size:12px;color:var(--muted)}
+.sec{display:grid;grid-template-columns:200px minmax(0,1fr);gap:20px;padding-top:6px}
+.sec>header{border:0;padding:0;display:block}
+.sec>header h2{font-size:20px}
+.sec>header p{margin:6px 0 0;font-size:13px;color:var(--muted);max-width:none}
+.cards{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+a.card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 20px;padding:16px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;align-items:center}
+a.card:hover{background:var(--paper)}
+a.card:hover .go{color:var(--accent);transform:translateX(3px)}
+a.card h3{font-size:18px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink)}
+a.card p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:64ch}
+a.card .tags{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:8px;font-family:var(--f-num);font-size:12px;color:var(--muted)}
+a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.why div{border-top:2px solid var(--ink);padding-top:10px;font-size:14px}
+.why b{display:block;margin-bottom:4px}
+@media (max-width:860px){ .hero{grid-template-columns:1fr} .sec{grid-template-columns:1fr;gap:8px} .why{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ a.card .go{transition:none} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Справочник-калькулятор для технологов, конструкторов и станочников</div>
+      <h1>Основы металло&shy;обработки</h1>
+      <p>Расчёты, которые нужны каждый день у чертежа и у станка: допуски и посадки, размерные цепи, шероховатость, режимы резания, резьбы, масса заготовки и аналоги марок. Всё по ГОСТ, с переводом из ISO, китайских GB и старых ОСТ. Бесплатно, без регистрации.</p>
+    </div>
+    <div class="facts">
+      <div><b>7</b><span>калькуляторов</span></div>
+      <div><b>ГОСТ</b><span>ISO · GB · ОСТ</span></div>
+      <div><b>0 ₽</b><span>без регистрации</span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <header><h2>Точность</h2><p>Допуски, посадки и качество поверхности</p></header>
+    <div class="cards">
+      <a class="card" href="posadki.html"><div><h3>Посадки и допуски</h3><p>Отклонения, зазоры и натяги для H7/g6 и любых других полей, схема полей, подбор посадки по зазору, перевод старых обозначений ОСТ (А, С, Х, Пр) в ЕСДП, неуказанные допуски.</p><div class="tags"><span>ГОСТ 25347</span><span>ISO 286</span><span>ОСТ → ЕСДП</span><span>ГОСТ 30893.1</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="razmernye-cepi.html"><div><h3>Размерные цепи</h3><p>Расчёт замыкающего звена методом максимума-минимума, вероятностным методом и Монте-Карло. Показывает, какое звено даёт больше всего разброса, и подбирает квалитет.</p><div class="tags"><span>РД 50-635-87</span><span>Монте-Карло</span><span>подбор квалитета</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="sherokhovatost.html"><div><h3>Шероховатость</h3><p>Перевод Ra ↔ Rz ↔ классы ▽ старого ГОСТ 2789-59 ↔ ISO N ↔ микродюймы. Какой обработкой получить нужную шероховатость и что обычно ставят на чертеже.</p><div class="tags"><span>ГОСТ 2789</span><span>▽1–▽14</span><span>N1–N12</span></div></div><span class="go" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <header><h2>Обработка</h2><p>Режимы, инструмент, резьбы</p></header>
+    <div class="cards">
+      <a class="card" href="rezhimy-rezaniya.html"><div><h3>Режимы резания</h3><p>Точение, фрезерование, сверление и резьбофрезерование: обороты, подача, мощность, момент, машинное время. Проверка, потянет ли станок, и строка для программы ЧПУ.</p><div class="tags"><span>ISO P M K N S H</span><span>твёрдый сплав · Р6М5</span><span>G96 · G94 · G03</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="rezby.html"><div><h3>Резьбы</h3><p>Диаметры и допуски метрической резьбы 6g/6H, сверло под метчик и раскатник, отверстия под крепёж, размер под ключ, трубная резьба G.</p><div class="tags"><span>ГОСТ 24705</span><span>ГОСТ 16093</span><span>ГОСТ 6357</span></div></div><span class="go" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <header><h2>Материалы</h2><p>Заготовка и марки</p></header>
+    <div class="cards">
+      <a class="card" href="massa-metalla.html"><div><h3>Масса металла</h3><p>Круг, шестигранник, лист, трубы, уголок, втулка — масса детали, партии и погонного метра, метров в тонне. Сталь, нержавейка, алюминий, медь, латунь, титан.</p><div class="tags"><span>m = ρ·S·L</span><span>15 материалов</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="analogi-staley.html"><div><h3>Аналоги сталей и сплавов</h3><p>Российская марка и её ближайшие аналоги по EN/DIN, AISI и китайскому GB. Поиск в обе стороны: 40Х, 1.4301, 52100, GCr15.</p><div class="tags"><span>ГОСТ ↔ EN ↔ AISI ↔ GB</span><span>44 марки</span></div></div><span class="go" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="why">
+    <div><b>Под отечественные чертежи</b>ЕСКД, ЕСДП, старые обозначения ОСТ и ГОСТ 2789-59 — то, что встречается в документации заводов, а не только ISO.</div>
+    <div><b>Видно, откуда цифры</b>У каждого калькулятора есть раздел «Как считается»: формулы, стандарты и честные оговорки там, где значение ориентировочное.</div>
+    <div><b>Работает на телефоне</b>Открывается у станка, запоминает введённые данные, не требует установки и регистрации.</div>
+  </section>
+
+  <footer><span>Основы металлообработки. Результаты — инженерный ориентир; для приёмки ответственных деталей сверяйтесь со стандартами.</span></footer>
+</div>
+
+</body>
+</html>

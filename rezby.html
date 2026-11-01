@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Калькулятор метрической резьбы</title>
+<meta name="description" content="Метрическая резьба по ГОСТ 24705 и ГОСТ 16093: диаметры, допуски 6g и 6H, сверло под метчик, отверстия под крепёж, размер под ключ, трубная резьба G.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: ввод резьбы и профиль слева, таблицы болта и гайки справа; ниже справочные таблицы */
+.top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;align-items:start}
+.notation{font-family:var(--f-num);font-size:clamp(24px,3.2vw,32px);font-weight:600;letter-spacing:-.01em}
+.prof svg{display:block;width:100%;height:auto}
+.two{display:grid;grid-template-columns:1fr;gap:14px}
+.pcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pcard.b{border-top:3px solid var(--hot)} .pcard.n{border-top:3px solid var(--accent)}
+.pcard h2{font-size:16px}
+.mini th,.mini td{font-size:13px}
+@media (max-width:900px){ .top{grid-template-columns:1fr} .two{grid-template-columns:1fr} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Метрическая резьба</h1>
+      <p>Выберите резьбу и поля допусков. Калькулятор покажет диаметры болта и гайки с предельными отклонениями, сверло под метчик, отверстие под крепёж и обозначение для чертежа.</p>
+    </div>
+    <div class="std">ГОСТ 24705-2004, ГОСТ 8724-2002<br>ГОСТ 16093-2004 (ISO 965-1)</div>
+  </header>
+
+  <section class="top">
+    <div class="sheet">
+      <div class="grid2">
+        <div class="field" style="grid-column:1/-1"><label for="size">Резьба</label><select id="size"></select></div>
+        <div class="field"><label for="d"><span>Номинальный диаметр d</span><i>мм</i></label><input type="text" id="d" inputmode="decimal"></div>
+        <div class="field"><label for="P"><span>Шаг P</span><i>мм</i></label><input type="text" id="P" inputmode="decimal"></div>
+        <div class="field"><label for="tb">Поле допуска болта</label><select id="tb">
+          <option value="6g">6g — общее применение</option><option value="6h">6h</option><option value="4h">4h — точная</option><option value="8g">8g — грубая</option></select></div>
+        <div class="field"><label for="tn">Поле допуска гайки</label><select id="tn">
+          <option value="6H">6H — общее применение</option><option value="5H">5H</option><option value="4H">4H — точная</option><option value="7H">7H — грубая</option><option value="6G">6G — под покрытие</option></select></div>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14px;grid-column:1/-1"><input type="checkbox" id="lh"> Левая резьба (LH)</label>
+      </div>
+      <div id="err" class="note bad" hidden></div>
+      <div>
+        <div class="hint">Обозначение на чертеже</div>
+        <div class="notation" id="notation">—</div>
+      </div>
+      <div class="chips" id="noteChips"></div>
+      <div class="prof" id="prof"></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div class="kpis" id="kpis"></div>
+      <div class="two">
+        <article class="pcard b" id="bolt"></article>
+        <article class="pcard n" id="nut"></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Крепёж: отверстия и размер под ключ</h2><span class="hint">для резьб с крупным шагом M3–M48</span></div>
+    <div class="tbl" id="fastTbl"></div>
+    <p class="hint" style="margin:0">Отверстия под крепёж — ГОСТ 11284-75 (ISO 273): ряд 1 — точный, 2 — средний, 3 — грубый. Размер под ключ — ISO 4032; в скобках старый размер по ГОСТ 5915-70, который ещё встречается.</p>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Трубная цилиндрическая резьба G</h2><span class="hint">ГОСТ 6357-81, ISO 228-1</span></div>
+    <div class="tbl" id="pipeTbl"></div>
+    <p class="hint" style="margin:0">Обозначение «G1/2» — условный размер трубы в дюймах, а не диаметр резьбы. Наружный диаметр резьбы G1/2 — 20,955 мм.</p>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p>Профиль метрической резьбы — равносторонний треугольник со срезанными вершинами, угол 60°. Основные диаметры по ГОСТ 24705:</p>
+      <div class="formula">d₂ = d − 0,6495·P      средний диаметр
+d₁ = d − 1,0825·P      внутренний диаметр (гайки)
+d₃ = d − 1,2269·P      внутренний диаметр болта по дну впадины
+H  = 0,8660·P          высота исходного треугольника</div>
+      <p>Поле допуска болта «6g»: 6 — степень точности, g — основное отклонение (зазор под покрытие или смазку). У болта нормируются наружный диаметр d и средний d₂, у гайки — средний D₂ и внутренний D₁. Допуски берутся по ГОСТ 16093 (ISO 965-1); для других степеней точности допуск 6-й степени умножается на 0,63 (4), 0,8 (5), 1,25 (7) или 1,6 (8) с округлением по ряду R40.</p>
+      <p>Для мелких шагов допуск среднего диаметра считается по формуле ISO 965-1: Td₂(6) = 90·P<sup>0,4</sup>·d<sup>0,1</sup> мкм с округлением по ряду R40. Результат может отличаться от таблицы стандарта на одну ступень ряда — для приёмки сверяйте с ГОСТ 16093.</p>
+      <p>Сверло под нарезной метчик ≈ D − P. Для раскатника (метчика без стружки) отверстие больше: примерно d − 0,45·P — точное значение берите из каталога метчика.</p>
+    </div>
+  </details>
+
+  <footer><span>Значения рассчитаны по ГОСТ 24705, 8724, 16093. Для приёмки ответственных деталей сверяйте со стандартом.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const COARSE={3:.5,4:.7,5:.8,6:1,8:1.25,10:1.5,12:1.75,14:2,16:2,18:2.5,20:2.5,22:2.5,24:3,27:3,30:3.5,33:3.5,36:4,42:4.5,48:5};
+const FINE=[[8,1],[10,1.25],[10,1],[12,1.5],[12,1.25],[14,1.5],[16,1.5],[18,1.5],[20,1.5],[22,1.5],[24,2],[27,2],[30,2],[36,3],[42,3],[48,3]];
+// Td2 для степени 6, крупный шаг (ГОСТ 16093), мкм
+// TD2 для 6H, крупный шаг (ГОСТ 16093), мкм
+const TD2N={3:100,4:118,5:125,6:150,8:160,10:180,12:200,14:212,16:212,18:224,20:224,22:224,24:265,27:265,30:280,33:280,36:300,42:315,48:335};
+const TD2C={3:75,4:90,5:95,6:112,8:118,10:132,12:150,14:160,16:160,18:170,20:170,22:170,24:200,27:200,30:212,33:212,36:224,42:236,48:250};
+// по шагу: Td (6, наружный диаметр болта), TD1 (6, внутренний диаметр гайки), основное отклонение g
+const BYP={.5:[106,140,20],.7:[140,180,22],.75:[140,190,22],.8:[150,200,24],1:[180,236,26],1.25:[212,265,28],1.5:[236,300,32],1.75:[265,335,34],2:[280,375,38],2.5:[335,450,42],3:[375,500,48],3.5:[425,560,53],4:[475,600,60],4.5:[500,670,63],5:[530,710,71]};
+const DRILL={3:2.5,4:3.3,5:4.2,6:5,8:6.8,10:8.5,12:10.2,14:12,16:14,18:15.5,20:17.5,22:19.5,24:21,27:24,30:26.5,33:29.5,36:32,42:37.5,48:43};
+const CLEAR={3:[3.2,3.4,3.6],4:[4.3,4.5,4.8],5:[5.3,5.5,5.8],6:[6.4,6.6,7],8:[8.4,9,10],10:[10.5,11,12],12:[13,13.5,14.5],14:[15,15.5,16.5],16:[17,17.5,18.5],18:[19,20,21],20:[21,22,24],22:[23,24,26],24:[25,26,28],27:[28,30,32],30:[31,33,35],33:[34,36,38],36:[37,39,42],42:[43,45,48],48:[50,52,56]};
+const WRENCH={3:"5,5",4:"7",5:"8",6:"10",8:"13",10:"16 (17)",12:"18 (19)",14:"21 (22)",16:"24",20:"30",24:"36",30:"46",36:"55",42:"65",48:"75"};
+const PIPE=[["G1/8",28,9.728],["G1/4",19,13.157],["G3/8",19,16.662],["G1/2",14,20.955],["G3/4",14,26.441],["G1",11,33.249],["G1 1/4",11,41.910],["G1 1/2",11,47.803],["G2",11,59.614]];
+const GF={4:.63,5:.8,6:1,7:1.25,8:1.6};
+const R40=[1,1.06,1.12,1.18,1.25,1.32,1.4,1.5,1.6,1.7,1.8,1.9,2,2.12,2.24,2.36,2.5,2.65,2.8,3,3.15,3.35,3.55,3.75,4,4.25,4.5,4.75,5,5.3,5.6,6,6.3,6.7,7.1,7.5,8,8.5,9,9.5,10];
+function r40(v){ if(!(v>0)) return v; const e=Math.floor(Math.log10(v)), m=v/Math.pow(10,e); let best=R40[0]; for(const x of R40) if(Math.abs(x-m)<Math.abs(best-m)) best=x; return +(best*Math.pow(10,e)).toFixed(6); }
+const DR=[.99,1.4,2.8,5.6,11.2,22.4,45,90,180,355];
+function dmean(d){ for(let i=0;i<DR.length-1;i++) if(d>DR[i]&&d<=DR[i+1]) return Math.sqrt(DR[i]*DR[i+1]); return null; }
+
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function f3(v){ return (Math.abs(v)<5e-7?0:v).toFixed(3).replace(".",",").replace("-","−"); }
+function fd(um){ if(Math.abs(um)<1e-6) return "0"; return (um>0?"+":"−")+(Math.abs(um)/1000).toFixed(3).replace(".",","); }
+function fn(v){ return String(+v.toFixed(3)).replace(".",","); }
+
+// список
+let opts=Object.keys(COARSE).map(d=>[`${d}|${COARSE[d]}`,`M${d} — крупный шаг ${fn(COARSE[d])}`]);
+opts=opts.concat(FINE.map(([d,p])=>[`${d}|${p}`,`M${d}×${fn(p)} — мелкий шаг`])).concat([["custom","Своя — ввести d и P"]]);
+$("size").innerHTML=opts.map(([v,t])=>`<option value="${v}">${t}</option>`).join("");
+const KEY="rezby-v1";
+let st={size:"16|2",d:"16",P:"2",tb:"6g",tn:"6H",lh:false};
+try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s) st=Object.assign(st,s); }catch(e){}
+$("size").value=st.size; $("d").value=st.d; $("P").value=st.P; $("tb").value=st.tb; $("tn").value=st.tn; $("lh").checked=!!st.lh;
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+
+$("size").addEventListener("change",()=>{ st.size=$("size").value; if(st.size!=="custom"){ const [d,p]=st.size.split("|"); $("d").value=d; $("P").value=fn(+p); st.d=d; st.P=$("P").value; } calc(); });
+["d","P"].forEach(id=>$(id).addEventListener("input",()=>{ st[id]=$(id).value; const m=opts.find(o=>o[0]===`${num($("d").value)}|${num($("P").value)}`); $("size").value=m?m[0]:"custom"; st.size=$("size").value; calc(); }));
+["tb","tn"].forEach(id=>$(id).addEventListener("change",()=>{ st[id]=$(id).value; calc(); }));
+$("lh").addEventListener("change",()=>{ st.lh=$("lh").checked; calc(); });
+
+function tolerances(d,P){
+  const coarse=COARSE[d]===P, bp=BYP[P];
+  if(!bp) return {err:"Допуски рассчитываются для шагов 0,5–5 мм из рядов ГОСТ 8724. Диаметры ниже посчитаны, допуски — нет."};
+  let td2, approx=false;
+  if(coarse&&TD2C[d]) td2=TD2C[d];
+  else { const dm=dmean(d); if(!dm) return {err:"Диаметр вне диапазона 1–355 мм."}; td2=r40(90*Math.pow(P,.4)*Math.pow(dm,.1)); approx=true; }
+  return {td2,TD2_6:(coarse&&TD2N[d])?TD2N[d]:r40(1.32*td2),td:bp[0],td1:bp[1],g:bp[2],approx};
+}
+function calc(){
+  save();
+  const d=num($("d").value), P=num($("P").value);
+  $("d").classList.toggle("bad",!(d>0)); $("P").classList.toggle("bad",!(P>0));
+  const err=$("err"); err.hidden=true;
+  if(!(d>0&&P>0)||P>=d/2){ err.textContent=P>=d/2&&d>0&&P>0?"Шаг слишком велик для этого диаметра.":"Введите диаметр и шаг."; err.hidden=false; ["kpis","bolt","nut","prof"].forEach(id=>$(id).innerHTML=""); $("notation").textContent="—"; return; }
+  const H=.866025*P, d2=d-.649519*P, d1=d-1.082532*P, d3=d-1.226869*P;
+  const coarse=COARSE[d]===P;
+  const tb=st.tb, tn=st.tn, gb=+tb[0], gn=+tn[0];
+  const nm=`M${fn(d)}${coarse?"":"×"+fn(P)}${st.lh?"LH":""}`;
+  $("notation").textContent=`${nm}-${tn}/${tb}`;
+  const chips=[`<span class="pbtn" style="cursor:default">${coarse?"крупный шаг":"мелкий шаг"}</span>`];
+  if(coarse) chips.push(`<span class="hint" style="align-self:center">Шаг крупной резьбы на чертеже не указывают</span>`);
+  $("noteChips").innerHTML=chips.join("");
+
+  const drill=DRILL[d]&&coarse?DRILL[d]:Math.round((d-P)*10)/10;
+  $("kpis").innerHTML=[["Сверло под метчик",fn(drill),"мм"],["Под раскатник (≈)",fn(Math.round((d-.45*P)*20)/20),"мм"],["Средний диаметр d₂",f3(d2),"мм"],["Шаг",fn(P),"мм"]]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+
+  const T=tolerances(d,P);
+  if(T.err){
+    $("bolt").innerHTML=`<h2>Болт (наружная)</h2><dl class="kv"><dt>d</dt><dd>${f3(d)}</dd><dt>d₂</dt><dd>${f3(d2)}</dd><dt>d₃</dt><dd>${f3(d3)}</dd></dl>`;
+    $("nut").innerHTML=`<h2>Гайка (внутренняя)</h2><dl class="kv"><dt>D</dt><dd>${f3(d)}</dd><dt>D₂</dt><dd>${f3(d2)}</dd><dt>D₁</dt><dd>${f3(d1)}</dd></dl><div class="note warn">${T.err}</div>`;
+  } else {
+    const es=tb[1]==="g"?-T.g:0;
+    const Td=r40(T.td*GF[gb]), Td2=r40(T.td2*GF[gb]);
+    const EI=tn[1]==="G"?T.g:0;
+    const TD2=r40(T.TD2_6*GF[gn]), TD1=r40(T.td1*GF[gn]);
+    const row=(name,nom,up,lo)=>`<tr><td>${name}</td><td class="n">${f3(nom)}</td><td class="n">${fd(up)}<br>${fd(lo)}</td><td class="n">${f3(nom+up/1000)}<br>${f3(nom+lo/1000)}</td></tr>`;
+    const head=`<thead><tr><th>Диаметр</th><th class="n">Номинал</th><th class="n">Откл.</th><th class="n">max / min</th></tr></thead>`;
+    $("bolt").innerHTML=`<h2>Болт ${tb}</h2><div class="tbl"><table class="mini">${head}<tbody>
+      ${row("d — наружный",d,es,es-Td)}${row("d₂ — средний",d2,es,es-Td2)}
+      <tr><td>d₃ — по дну</td><td class="n">${f3(d3)}</td><td class="n">${fd(es)}</td><td class="n">≤ ${f3(d3+es/1000)}</td></tr></tbody></table></div>
+      <div class="hint">Td = ${Td} мкм, Td₂ = ${Td2} мкм${T.approx?" (по формуле)":""}</div>`;
+    $("nut").innerHTML=`<h2>Гайка ${tn}</h2><div class="tbl"><table class="mini">${head}<tbody>
+      <tr><td>D — наружный</td><td class="n">${f3(d)}</td><td class="n">${fd(EI)}</td><td class="n">≥ ${f3(d+EI/1000)}</td></tr>
+      ${row("D₂ — средний",d2,EI+TD2,EI)}${row("D₁ — внутренний",d1,EI+TD1,EI)}</tbody></table></div>
+      <div class="hint">TD₂ = ${TD2} мкм, TD₁ = ${TD1} мкм</div>${T.approx?'<div class="note warn">Мелкий шаг: допуск среднего диаметра рассчитан по формуле ISO 965-1 и может отличаться от таблицы ГОСТ 16093 на одну ступень.</div>':""}`;
+  }
+  drawProfile(d,P,d2,d1,d3);
+}
+function drawProfile(d,P,d2,d1,d3){
+  // не в масштабе: два витка профиля
+  const W=440,Hh=200,x0=40,pw=150,yd=40,yD1=130,yd2=(yd+yD1)/2,yd3=148;
+  let path="";
+  for(let i=0;i<2;i++){
+    const x=x0+i*pw, f=pw/8;
+    path+=`${i?"":"M"+x+","+yD1} L${x+f},${yD1} L${x+pw/2-f/2},${yd} L${x+pw/2+f/2},${yd} L${x+pw-f},${yD1} L${x+pw},${yD1}`;
+  }
+  const lab=(y,t,c)=>`<line x1="20" y1="${y}" x2="${W-110}" y2="${y}" stroke="${c}" stroke-dasharray="4 3" stroke-width="1"/><text x="${W-104}" y="${y+4}" font-family="var(--f-num)" font-size="12" fill="${c}">${t}</text>`;
+  $("prof").innerHTML=`<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Профиль метрической резьбы, не в масштабе">
+   <path d="${path} L${x0+2*pw},${Hh-20} L${x0},${Hh-20} Z" fill="var(--hot-soft)" stroke="none"/>
+   <path d="${path}" fill="none" stroke="var(--hot)" stroke-width="2"/>
+   ${lab(yd,"d = "+fn(d),"var(--ink)")}${lab(yd2,"d₂ = "+f3(d2),"var(--accent)")}${lab(yD1,"d₁ = "+f3(d1),"var(--ink)")}
+   <line x1="${x0+pw/2}" y1="${yd-14}" x2="${x0+pw*1.5}" y2="${yd-14}" stroke="var(--muted)" stroke-width="1"/>
+   <line x1="${x0+pw/2}" y1="${yd-20}" x2="${x0+pw/2}" y2="${yd-4}" stroke="var(--muted)"/><line x1="${x0+pw*1.5}" y1="${yd-20}" x2="${x0+pw*1.5}" y2="${yd-4}" stroke="var(--muted)"/>
+   <text x="${x0+pw}" y="${yd-20}" text-anchor="middle" font-family="var(--f-num)" font-size="12" fill="var(--muted)">P = ${fn(P)}</text>
+   <text x="${x0+4}" y="${Hh-6}" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">профиль 60°, схема не в масштабе</text></svg>`;
+}
+// справочные таблицы
+$("fastTbl").innerHTML=`<table><thead><tr><th>Резьба</th><th class="n">Шаг</th><th class="n">Сверло</th><th class="n">Отв. ряд 1</th><th class="n">ряд 2</th><th class="n">ряд 3</th><th class="n">Под ключ</th></tr></thead><tbody>
+ ${Object.keys(COARSE).map(d=>`<tr data-d="${d}"><td><b>M${d}</b></td><td class="n">${fn(COARSE[d])}</td><td class="n">${fn(DRILL[d])}</td>${CLEAR[d].map(v=>`<td class="n">${fn(v)}</td>`).join("")}<td class="n">${WRENCH[d]||"—"}</td></tr>`).join("")}</tbody></table>`;
+$("pipeTbl").innerHTML=`<table><thead><tr><th>Обозначение</th><th class="n">Ниток на дюйм</th><th class="n">Шаг, мм</th><th class="n">Наружный d, мм</th><th class="n">Средний d₂, мм</th><th class="n">Внутренний d₁, мм</th></tr></thead><tbody>
+ ${PIPE.map(([n,t,dd])=>{const p=25.4/t,h=.640327*p;return `<tr><td><b>${n}</b></td><td class="n">${t}</td><td class="n">${f3(p)}</td><td class="n">${f3(dd)}</td><td class="n">${f3(dd-h)}</td><td class="n">${f3(dd-2*h)}</td></tr>`;}).join("")}</tbody></table>`;
+function hi(){ const d=num($("d").value); document.querySelectorAll("#fastTbl tr[data-d]").forEach(r=>r.classList.toggle("cur",+r.dataset.d===d)); }
+const _calc=calc; calc=function(){ _calc(); hi(); };
+calc();
+})();
+</script>
+
+</body>
+</html>

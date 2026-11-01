@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Шероховатость поверхности</title>
+<meta name="description" content="Перевод шероховатости Ra, Rz, классов ГОСТ 2789-59 (▽), ISO N и микродюймов. Какой обработкой получить нужную шероховатость, типовые требования.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: конвертер с крупными значениями во всех системах, затем шкала методов обработки по логарифмической оси, затем справочники */
+.conv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:14px;align-items:start}
+.vals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.sym{font-family:var(--f-num);font-size:28px;font-weight:600;display:flex;align-items:baseline;gap:6px}
+.chart svg{display:block;width:100%;min-width:620px;height:auto}
+.chart{overflow-x:auto}
+@media (max-width:860px){ .conv{grid-template-columns:1fr} }
+@media (max-width:520px){ .vals{grid-template-columns:repeat(2,minmax(0,1fr))} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Шероховатость поверхности</h1>
+      <p>Переводит шероховатость между Ra, Rz, старыми классами ▽ по ГОСТ 2789-59, ISO N и микродюймами. Показывает, какой обработкой её получить.</p>
+    </div>
+    <div class="std">ГОСТ 2789-73, ГОСТ 2789-59<br>ГОСТ 2.309-73, ISO 1302</div>
+  </header>
+
+  <section class="conv">
+    <div class="sheet">
+      <div class="field"><label for="unit">Что известно</label><select id="unit">
+        <option value="ra">Ra, мкм</option><option value="rz">Rz, мкм</option><option value="cls">Класс ▽ по ГОСТ 2789-59</option><option value="n">Класс ISO N (N1–N12)</option><option value="uin">Ra, микродюймы (µin)</option></select></div>
+      <div class="field" id="valWrap"><label for="val">Значение</label><input type="text" id="val" inputmode="decimal" value="1,6"></div>
+      <div class="field" id="clsWrap" hidden><label for="cls">Класс</label><select id="cls"></select></div>
+      <div class="chips" id="quick"></div>
+      <div id="err" class="note bad" hidden></div>
+    </div>
+    <div class="sheet" aria-live="polite">
+      <div class="vals" id="vals"></div>
+      <div><div class="hint">На чертеже — ближайшее значение из предпочтительного ряда, не грубее заданного (ГОСТ 2.309-73 с изм. 3)</div><div class="sym" id="sym"></div></div>
+      <div class="note" id="where"></div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Какой обработкой получить</h2><span class="hint">Ra, мкм, логарифмическая шкала · типичный диапазон</span></div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Классы шероховатости ГОСТ 2789-59</h2><span class="hint">для перевода старых чертежей</span></div>
+    <div class="tbl" id="clsTbl"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Типовые требования</h2><span class="hint">ориентир для назначения, Ra мкм</span></div>
+    <div class="tbl" id="reqTbl"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как переводится</summary>
+    <div class="tbody">
+      <p><b>Ra</b> — среднее арифметическое отклонение профиля, <b>Rz</b> — высота неровностей по десяти точкам (ГОСТ 2789-73). Однозначной формулы между ними нет: соотношение зависит от формы профиля. Для обработки резанием обычно принимают Rz ≈ 4·Ra при Ra ≥ 0,32 мкм и Rz ≈ 5…6·Ra на тонко обработанных поверхностях. Калькулятор использует Rz ≈ 4·Ra для Ra ≥ 0,32 и 5·Ra ниже — это приближение.</p>
+      <p>Классы 1–5 и 13–14 по ГОСТ 2789-59 нормировались по Rz, классы 6–12 — по Ra. Класс ISO N: N1 = 0,025 мкм, каждый следующий вдвое грубее, N12 = 50 мкм. 1 мкм = 39,37 µin.</p>
+      <p>С 2003 года (изменение 3 к ГОСТ 2.309-73) параметр пишут с обозначением: «Ra 1,6», а не просто «1,6».</p>
+    </div>
+  </details>
+
+  <footer><span>Диапазоны методов обработки — типичные; на хорошем станке и с правильным инструментом можно получить лучше.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// классы ГОСТ 2789-59: [класс, тип нормирования, верх, низ] (мкм)
+const CLS=[[1,"Rz",320,160],[2,"Rz",160,80],[3,"Rz",80,40],[4,"Rz",40,20],[5,"Rz",20,10],[6,"Ra",2.5,1.25],[7,"Ra",1.25,.63],[8,"Ra",.63,.32],[9,"Ra",.32,.16],[10,"Ra",.16,.08],[11,"Ra",.08,.04],[12,"Ra",.04,.02],[13,"Rz",.1,.05],[14,"Rz",.05,.025]];
+const N=[[1,.025],[2,.05],[3,.1],[4,.2],[5,.4],[6,.8],[7,1.6],[8,3.2],[9,6.3],[10,12.5],[11,25],[12,50]];
+const PREF=[.025,.05,.1,.2,.4,.8,1.6,3.2,6.3,12.5,25,50];
+const PROC=[
+ ["Отрезка пилой",12.5,50,"Заготовка"],["Точение черновое",12.5,50,"Точение"],["Точение получистовое",3.2,12.5,"Точение"],["Точение чистовое",.8,3.2,"Точение"],["Точение тонкое",.2,.8,"Точение"],
+ ["Фрезерование черновое",6.3,25,"Фрезерование"],["Фрезерование чистовое",.8,3.2,"Фрезерование"],["Сверление",3.2,12.5,"Отверстия"],["Зенкерование",1.6,6.3,"Отверстия"],["Развёртывание",.4,1.6,"Отверстия"],
+ ["Протягивание",.4,3.2,"Отверстия"],["Шлифование предварительное",.8,3.2,"Шлифование"],["Шлифование чистовое",.2,.8,"Шлифование"],["Шлифование тонкое",.05,.2,"Шлифование"],
+ ["Хонингование",.05,.4,"Доводка"],["Полирование",.025,.4,"Доводка"],["Притирка, доводка",.012,.1,"Доводка"],["Электроэрозия",.8,6.3,"Прочее"]
+];
+const REQ=[["Свободные необрабатываемые поверхности","6,3–12,5"],["Привалочные плоскости корпусов, крышек","3,2–6,3"],["Отверстия под крепёж","6,3–12,5"],["Посадочные поверхности под зубчатые колёса, шкивы","1,6–3,2"],["Шейки валов под подшипники качения","0,63–1,25"],["Отверстия корпусов под подшипники","1,25–2,5"],["Рабочие поверхности под манжетные уплотнения","0,2–0,4"],["Направляющие скольжения станков","0,4–0,8"],["Рабочие поверхности зубьев (7–8 ст. точности)","1,6–3,2"],["Измерительные поверхности калибров","0,05–0,1"]];
+
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fv(v){ if(!isFinite(v)) return "—"; const d=v>=10?1:v>=1?2:v>=.1?3:4; return String(+v.toFixed(d)).replace(".",","); }
+const rz2ra=rz=>rz/4>=.32?rz/4:rz/5;
+const ra2rz=ra=>ra>=.32?ra*4:ra*5;
+function clsOfFix(ra){ // поиск по Ra-эквиваленту диапазона
+  for(const c of CLS){ const hi=c[1]==="Ra"?c[2]:rz2ra(c[2]), lo=c[1]==="Ra"?c[3]:rz2ra(c[3]); if(ra<=hi*1.0001&&ra>lo*1.0001) return c; }
+  return null;
+}
+function nOf(ra){ let best=N[0]; for(const n of N) if(Math.abs(Math.log(n[1]/ra))<Math.abs(Math.log(best[1]/ra))) best=n; return best; }
+function prefUp(ra){ let r=null; for(const p of PREF) if(p<=ra*1.001) r=p; return r; }
+
+$("cls").innerHTML=CLS.map(c=>`<option value="${c[0]}">▽${c[0]} — ${c[1]} ${fv(c[2])}…${fv(c[3])}</option>`).join("");
+const KEY="sherokh-v1"; let st={unit:"ra",val:"1,6",cls:"7"};
+try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s) st=Object.assign(st,s); }catch(e){}
+$("unit").value=st.unit; $("val").value=st.val; $("cls").value=st.cls;
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function quick(){
+  const u=st.unit; let list=[];
+  if(u==="ra") list=["0,4","0,8","1,6","3,2","6,3","12,5"]; else if(u==="rz") list=["6,3","12,5","20","40","80"]; else if(u==="n") list=["N5","N6","N7","N8","N9"]; else if(u==="uin") list=["16","32","63","125","250"];
+  $("quick").innerHTML=list.map(v=>`<button type="button" class="pbtn" data-v="${v.replace("N","")}">${v}</button>`).join("");
+  $("valWrap").hidden=u==="cls"; $("clsWrap").hidden=u!=="cls";
+  $("val").placeholder=u==="n"?"от 1 до 12":"";
+}
+$("unit").addEventListener("change",()=>{ st.unit=$("unit").value; const m={ra:"1,6",rz:"6,3",n:"7",uin:"63"}; if(m[st.unit]){ $("val").value=m[st.unit]; st.val=m[st.unit]; } quick(); calc(); });
+$("val").addEventListener("input",()=>{ st.val=$("val").value; calc(); });
+$("cls").addEventListener("change",()=>{ st.cls=$("cls").value; calc(); });
+$("quick").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; $("val").value=b.dataset.v; st.val=b.dataset.v; calc(); });
+
+let curRa=null;
+function calc(){
+  save();
+  let ra=NaN, err="";
+  const v=num($("val").value);
+  if(st.unit==="ra") ra=v;
+  else if(st.unit==="rz") ra=v>0?rz2ra(v):NaN;
+  else if(st.unit==="uin") ra=v/39.37;
+  else if(st.unit==="n"){ const n=N.find(x=>x[0]===v); ra=n?n[1]:NaN; if(!n&&!isNaN(v)) err="Класс ISO N — целое число от 1 до 12."; }
+  else { const c=CLS.find(x=>x[0]===+st.cls); ra=c[1]==="Ra"?c[2]:rz2ra(c[2]); }
+  if(st.unit!=="cls") $("val").classList.toggle("bad",!(ra>0));
+  if(!(ra>0)){ $("err").hidden=false; $("err").textContent=err||"Введите положительное число."; $("vals").innerHTML=""; $("sym").innerHTML=""; $("where").textContent=""; curRa=null; drawChart(); return; }
+  if(ra>100||ra<0.005){ $("err").hidden=false; $("err").textContent="Значение вне диапазона стандартов (Ra 0,008–100 мкм)."; } else $("err").hidden=true;
+  curRa=ra;
+  const rz=ra2rz(ra), c=clsOfFix(ra), n=nOf(ra), pu=prefUp(ra);
+  const cells=[["Ra",fv(ra),"мкм"],["Rz (≈)",fv(rz),"мкм"],["Класс ГОСТ 2789-59",c?"▽"+c[0]:"—",""],["ISO",`N${n[0]}`,`(Ra ${fv(n[1])})`],["Ra",fv(ra*39.37),"µin"],["Предпочт. Ra не грубее",pu?fv(pu):"—","мкм"]];
+  $("vals").innerHTML=cells.map(([l,val,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${val}<small>${u}</small></span></div>`).join("");
+  const pr=pu||ra;
+  $("sym").innerHTML=`<svg width="46" height="34" viewBox="0 0 46 34" aria-hidden="true"><path d="M2,18 L10,30 L26,2 L44,2" fill="none" stroke="var(--ink)" stroke-width="1.6"/></svg><span>Ra ${fv(pr)}</span>`;
+  const fit=PROC.filter(p=>ra>=p[1]*0.999&&ra<=p[2]*1.001).map(p=>p[0].toLowerCase());
+  $("where").innerHTML=fit.length?`Ra ${fv(ra)} получают: ${fit.join(", ")}.`:"Такую шероховатость типовыми методами из таблицы не получают.";
+  drawChart();
+}
+function drawChart(){
+  const W=900, rowH=22, top=34, H=top+PROC.length*rowH+10, lx=200, rx=W-20;
+  const lo=Math.log10(.01), hi=Math.log10(60), x=v=>lx+(Math.log10(v)-lo)/(hi-lo)*(rx-lx);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Шероховатость, получаемая разными методами обработки">`;
+  PREF.forEach(p=>{ s+=`<line x1="${x(p)}" y1="${top-8}" x2="${x(p)}" y2="${H-6}" stroke="var(--line)" stroke-width="1"/><text x="${x(p)}" y="${top-14}" text-anchor="middle" font-family="var(--f-num)" font-size="11" fill="var(--muted)">${fv(p)}</text>`; });
+  PROC.forEach((p,i)=>{
+    const y=top+i*rowH, on=curRa&&curRa>=p[1]*0.999&&curRa<=p[2]*1.001;
+    s+=`<text x="${lx-10}" y="${y+14}" text-anchor="end" font-family="var(--f-ui)" font-size="12" fill="${on?"var(--ink)":"var(--muted)"}" font-weight="${on?600:400}">${p[0]}</text>`;
+    s+=`<rect x="${x(p[1])}" y="${y+4}" width="${x(p[2])-x(p[1])}" height="${rowH-8}" rx="3" fill="${on?"var(--accent)":"var(--accent-soft)"}" stroke="var(--accent)" stroke-width="${on?0:1}" stroke-opacity=".5"/>`;
+  });
+  if(curRa&&curRa>=.01&&curRa<=60) s+=`<line x1="${x(curRa)}" y1="${top-6}" x2="${x(curRa)}" y2="${H-6}" stroke="var(--hot)" stroke-width="2"/><text x="${Math.min(x(curRa)+6,W-80)}" y="${H-10}" font-family="var(--f-num)" font-size="12" font-weight="600" fill="var(--hot)">Ra ${fv(curRa)}</text>`;
+  s+=`</svg>`; $("chart").innerHTML=s;
+}
+$("clsTbl").innerHTML=`<table><thead><tr><th>Класс</th><th>Норм.</th><th class="n">Диапазон, мкм</th><th class="n">≈ Ra, мкм</th><th class="n">≈ Rz, мкм</th><th>Типичная обработка</th></tr></thead><tbody>${CLS.map(c=>{
+  const ra1=c[1]==="Ra"?c[2]:rz2ra(c[2]), ra2=c[1]==="Ra"?c[3]:rz2ra(c[3]); const mid=Math.sqrt(ra1*ra2);
+  const pr=PROC.filter(p=>mid>=p[1]&&mid<=p[2]).slice(0,3).map(p=>p[0].toLowerCase()).join(", ");
+  return `<tr><td><b>▽${c[0]}</b></td><td>${c[1]}</td><td class="n">${fv(c[2])}…${fv(c[3])}</td><td class="n">${fv(ra1)}…${fv(ra2)}</td><td class="n">${fv(ra2rz(ra1))}…${fv(ra2rz(ra2))}</td><td class="muted">${pr||"—"}</td></tr>`;}).join("")}</tbody></table>`;
+$("reqTbl").innerHTML=`<table><thead><tr><th>Поверхность</th><th class="n">Ra, мкм</th></tr></thead><tbody>${REQ.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td></tr>`).join("")}</tbody></table>`;
+quick(); calc();
+})();
+</script>
+
+</body>
+</html>

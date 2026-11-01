@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Калькулятор посадок</title>
+<meta name="description" content="Онлайн-калькулятор посадок и допусков по ГОСТ 25346/25347: отклонения, зазоры и натяги, схема полей допусков, подбор посадки, неуказанные допуски ГОСТ 30893.1.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: расчётный лист — ввод посадки и схема полей рядом, ниже параметры отверстия/вала/посадки, затем подбор посадки и неуказанные допуски */
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hole:#1d5a7a; --hole-soft:#d3e3ec; --shaft:#a3512a; --shaft-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hole:#72b4d6; --hole-soft:#1d3440; --shaft:#e3935f; --shaft-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hole:#72b4d6; --hole-soft:#1d3440; --shaft:#e3935f; --shaft-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:15px;font-weight:600}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+a{color:var(--accent)}
+
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+
+input,select,button{font:inherit;color:inherit}
+select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:14px}
+input[type=text]{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font-size:16px;font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500}
+.err{color:var(--bad);font-size:12px;min-height:18px}
+
+.top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px}
+.inputs{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:12px}
+.inputs .field:nth-child(2) input{border-color:var(--hole)}
+.inputs .field:nth-child(3) input{border-color:var(--shaft)}
+.notation{font-family:var(--f-num);font-size:clamp(22px,3vw,30px);font-weight:600;letter-spacing:-.01em;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 2px}
+.notation .h{color:var(--hole)} .notation .s{color:var(--shaft)}
+.notation .fr{display:inline-flex;flex-direction:column;font-size:12px;line-height:1.15;font-weight:500;margin:0 4px;vertical-align:middle;transform:translateY(-4px)}
+.chip{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.chip.gap{background:var(--ok-soft);color:var(--ok)}
+.chip.trans{background:var(--warn-soft);color:var(--warn)}
+.chip.int{background:var(--bad-soft);color:var(--bad)}
+.chip.sys{background:var(--bg);color:var(--muted)}
+.chip.sys::before{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.purpose{font-size:14px;color:var(--muted);margin:0}
+
+.presets{display:flex;flex-direction:column;gap:10px}
+.pgroup{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.pgroup>span{font-size:12px;color:var(--muted);width:78px;flex:none}
+.pbtn{font-family:var(--f-num);font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+
+.diagram svg{display:block;width:100%;height:auto}
+
+.params{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pcard.hole{border-top:3px solid var(--hole)} .pcard.shaft{border-top:3px solid var(--shaft)} .pcard.fit{border-top:3px solid var(--ink)}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv dd small{color:var(--muted);font-size:12px;margin-left:6px}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+.big{font-family:var(--f-num);font-size:20px;font-weight:600}
+
+.copyrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 14px;cursor:pointer;font-size:14px;font-weight:500}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+
+.req{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:12px;align-items:end}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td.n{font-family:var(--f-num);text-align:right}
+th.n{text-align:right}
+tr.cur td{background:var(--accent-soft)}
+td.cur, th.cur{background:var(--accent-soft)}
+.tag{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:3px;padding:1px 6px;margin-left:6px}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+
+@media (max-width:900px){ .top{grid-template-columns:1fr} .params{grid-template-columns:1fr} }
+@media (max-width:560px){ .inputs{grid-template-columns:1fr 1fr} .inputs .field:first-child{grid-column:1/-1} .req{grid-template-columns:1fr 1fr} .req .btn{grid-column:1/-1} .pgroup>span{width:100%} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html" style="color:inherit;text-decoration:none">Основы металлообработки</a> · калькулятор</div>
+      <h1>Калькулятор посадок</h1>
+      <p>Введите диаметр и поля допусков. Калькулятор покажет отклонения, зазоры и натяги, схему полей и запись для чертежа. Ниже — подбор посадки по нужному зазору и неуказанные допуски.</p>
+    </div>
+    <div class="std">ГОСТ 25346-2013, 25347-2013<br>ГОСТ 30893.1-2002</div>
+  </header>
+
+  <section class="top">
+    <div class="sheet">
+      <div class="field"><label for="std">Стандарт допусков</label><select id="std">
+        <option value="esdp">ГОСТ 25347 (ЕСДП) = ISO 286, GB/T 1800, DIN ISO 286, ANSI B4.2, JIS B 0401</option>
+        <option value="ost">Старая система ОСТ (А, С, Х, Пр…) — перевод в ЕСДП</option>
+      </select></div>
+      <div class="inputs">
+        <div class="field"><label for="nom">Номинальный размер, мм</label><input type="text" id="nom" inputmode="decimal" value="25"></div>
+        <div class="field"><label for="hole">Отверстие</label><input type="text" id="hole" list="holeList" value="H7" autocapitalize="characters" autocomplete="off"></div>
+        <div class="field"><label for="shaft">Вал</label><input type="text" id="shaft" list="shaftList" value="g6" autocapitalize="none" autocomplete="off"></div>
+      </div>
+      <div class="err" id="inErr" role="alert"></div>
+      <div class="notation" id="notation"></div>
+      <div class="chips" id="chips"></div>
+      <div class="note warn" id="ostNote" hidden></div>
+      <p class="purpose" id="purpose"></p>
+      <div class="presets" id="presets"></div>
+    </div>
+    <div class="sheet">
+      <div class="sheet-head"><h2>Схема полей допусков</h2><span class="muted" style="font-size:13px">отклонения в мкм</span></div>
+      <div class="diagram" id="diagram"></div>
+    </div>
+  </section>
+
+  <section class="params" aria-label="Параметры посадки">
+    <article class="pcard hole" id="cHole"></article>
+    <article class="pcard shaft" id="cShaft"></article>
+    <article class="pcard fit" id="cFit"></article>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Запись на чертеже</h2></div>
+    <div id="drawing" style="display:flex;flex-direction:column;gap:8px"></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-pick">
+    <div class="sheet-head">
+      <h2 id="h-pick">Подобрать посадку по зазору или натягу</h2>
+      <span class="muted" style="font-size:13px">натяг вводите со знаком минус</span>
+    </div>
+    <div class="req">
+      <div class="field"><label>Номинальный размер, мм</label><div class="big" id="pickNom">25</div></div>
+      <div class="field"><label for="sMin">Наименьший допустимый зазор, мм</label><input type="text" id="sMin" inputmode="decimal" value="0,010"></div>
+      <div class="field"><label for="sMax">Наибольший допустимый зазор, мм</label><input type="text" id="sMax" inputmode="decimal" value="0,060"></div>
+      <button class="btn" id="pickBtn" type="button">Подобрать</button>
+    </div>
+    <div id="pickOut"></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-gen">
+    <div class="sheet-head">
+      <h2 id="h-gen">Неуказанные допуски линейных размеров</h2>
+      <select id="genStd" style="width:auto;max-width:100%" aria-label="Стандарт неуказанных допусков">
+        <option value="iso">ГОСТ 30893.1 = ISO 2768-1 = DIN 7168</option>
+        <option value="g25670">ГОСТ 25670-83 (старый, по квалитетам)</option>
+      </select>
+    </div>
+    <div class="tbl" id="genTbl"></div>
+    <p class="muted" style="margin:0;font-size:13px" id="genNote"></p>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p>Отклонения берутся по таблицам ГОСТ 25346/25347 (ISO 286): допуск квалитета IT и основное отклонение поля. Для отверстий K, M, N (до IT8) и P, R, S (до IT7) применяется поправка Δ = IT<sub>n</sub> − IT<sub>n−1</sub>.</p>
+      <div class="formula">S_max = ES − ei        S_min = EI − es
+N_max = es − EI        N_min = ei − ES
+T_посадки = TD + Td</div>
+      <p>Для переходной посадки вероятность зазора и натяга считается при нормальном распределении размеров отверстия и вала с центром в середине поля и σ = T/6. Тогда σ посадки = √(TD² + Td²)/6.</p>
+      <p>Подбор перебирает поля в системе отверстия (H5–H11) и вала (h5–h11) с валами и отверстиями c…s, квалитет отверстия равен квалитету вала или грубее на один. Подходят посадки, у которых все возможные зазоры лежат внутри заданных пределов. Сначала показаны часто применяемые посадки, затем — с наибольшим допуском посадки, они дешевле в изготовлении.</p>
+      <p>Поддерживаются поля c, d, e, f, g, h, js, k, m, n, p, r, s (валы) и C…S (отверстия), квалитеты 5–18, размеры до 500 мм.</p>
+      <p><b>Стандарты.</b> Значения ГОСТ 25346/25347 совпадают с ISO 286-1/-2, китайским GB/T 1800.1/.2, немецким DIN EN ISO 286, американским ANSI B4.2 (метрические посадки) и японским JIS B 0401. Поэтому поле H7 по любому из них даёт те же отклонения.</p>
+      <p><b>Старая система ОСТ</b> (до перехода на ЕСДП в 1980-х) переводится в ЕСДП по справочным таблицам замены: А → H7, А1 → H6, А3 → H8 (или H9), С → h6, Д → g6, Х → f7, Х1 → f6, Л → e8, Ш → d8, П → js6, Н → k6, Т → m6, Г → n6, Пр → r6 (или s6), С3 → h8, Х3 → f9 (или e9). Замена считается допустимой, если отклонения ЕСДП выходят за поле ОСТ не более чем на 10 %. Для ответственных деталей сверяйте с исходной таблицей ОСТ.</p>
+      <p>Отраслевые стандарты (например, ОСТ 1 00022 для авиации) пока не включены: их таблицы нужно взять из официального текста стандарта.</p>
+    </div>
+  </details>
+
+  <footer style="display:flex;flex-direction:column;gap:10px"><span>Значения рассчитаны по таблицам ГОСТ 25346/25347. Для ответственных узлов сверяйте результат со стандартом.</span><nav style="display:flex;flex-wrap:wrap;gap:6px 16px"><a href="index.html"><b>Все калькуляторы</b></a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+</div>
+<datalist id="holeList"><option value="H7"><option value="H8"><option value="H9"><option value="H11"><option value="H6"><option value="G7"><option value="F8"><option value="JS7"><option value="K7"><option value="M7"><option value="N7"><option value="P7"><option value="R7"><option value="S7"><option value="E9"><option value="D10"></datalist>
+<datalist id="shaftList"><option value="g6"><option value="h6"><option value="f7"><option value="e8"><option value="d9"><option value="js6"><option value="k6"><option value="m6"><option value="n6"><option value="p6"><option value="r6"><option value="s6"><option value="h7"><option value="h8"><option value="h9"><option value="d11"><option value="h11"><option value="c11"></datalist>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+// ---------- Таблицы ГОСТ 25346 / ISO 286 (мкм) ----------
+const R_UP=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const R_LO=[0,3,6,10,18,30,50,80,120,180,250,315,400];
+const F_UP=[3,6,10,18,30,40,50,65,80,100,120,140,160,180,200,225,250,280,315,355,400,450,500];
+const IT={
+ 4:[3,4,4,5,6,7,8,10,12,14,16,18,20],
+ 5:[4,5,6,8,9,11,13,15,18,20,23,25,27],
+ 6:[6,8,9,11,13,16,19,22,25,29,32,36,40],
+ 7:[10,12,15,18,21,25,30,35,40,46,52,57,63],
+ 8:[14,18,22,27,33,39,46,54,63,72,81,89,97],
+ 9:[25,30,36,43,52,62,74,87,100,115,130,140,155],
+ 10:[40,48,58,70,84,100,120,140,160,185,210,230,250],
+ 11:[60,75,90,110,130,160,190,220,250,290,320,360,400],
+ 12:[100,120,150,180,210,250,300,350,400,460,520,570,630],
+ 13:[140,180,220,270,330,390,460,540,630,720,810,890,970],
+ 14:[250,300,360,430,520,620,740,870,1000,1150,1300,1400,1550],
+ 15:[400,480,580,700,840,1000,1200,1400,1600,1850,2100,2300,2500],
+ 16:[600,750,900,1100,1300,1600,1900,2200,2500,2900,3200,3600,4000],
+ 17:[1000,1200,1500,1800,2100,2500,3000,3500,4000,4600,5200,5700,6300],
+ 18:[1400,1800,2200,2700,3300,3900,4600,5400,6300,7200,8100,8900,9700]
+};
+const SH_ES={ // |es| для d…h
+ d:[20,30,40,50,65,80,100,120,145,170,190,210,230],
+ e:[14,20,25,32,40,50,60,72,85,100,110,125,135],
+ f:[6,10,13,16,20,25,30,36,43,50,56,62,68],
+ g:[2,4,5,6,7,9,10,12,14,15,17,18,20],
+ h:[0,0,0,0,0,0,0,0,0,0,0,0,0]
+};
+const C_ES=[60,70,80,95,110,120,130,140,150,170,180,200,210,230,240,260,280,300,330,360,400,440,480];
+const SH_EI={
+ k:[0,1,1,1,2,2,2,3,3,4,4,4,5],
+ m:[2,4,6,7,8,9,11,13,15,17,20,21,23],
+ n:[4,8,10,12,15,17,20,23,27,31,34,37,40],
+ p:[6,12,15,18,22,26,32,37,43,50,56,62,68]
+};
+const FINE_EI={
+ r:[10,15,19,23,28,34,34,41,43,51,54,63,65,68,77,80,84,94,98,108,114,126,132],
+ s:[14,19,23,28,35,43,43,53,59,71,79,92,100,108,122,130,140,158,170,190,208,232,252]
+};
+function rIdx(n){ if(!(n>0)||n>500) return -1; for(let i=0;i<R_UP.length;i++) if(n<=R_UP[i]) return i; return -1; }
+function fIdx(n){ for(let i=0;i<F_UP.length;i++) if(n<=F_UP[i]) return i; return -1; }
+
+// Возвращает {es,ei,it,hole,letter,grade} в мкм или {err}
+function field(code,nom){
+  const c=(code||"").trim();
+  const m=c.match(/^([a-zA-Z]{1,2})\s*(\d{1,2})$/);
+  if(!m) return {err:"Запись поля: буква и квалитет, например H7 или g6"};
+  const L=m[1], g=+m[2];
+  const isHole = L[0]>="A"&&L[0]<="Z";
+  const l=L.toLowerCase();
+  if(g<5||g>18) return {err:"Квалитет — от 5 до 18"};
+  const idx=rIdx(nom), fi=fIdx(nom);
+  if(idx<0) return {err:nom>500?"Таблицы — для размеров до 500 мм":"Укажите номинальный размер больше 0"};
+  const it=IT[g][idx];
+  let es,ei;
+  if(!isHole){
+    if(l==="js"){es=it/2;ei=-it/2;}
+    else if(l==="c"){es=-C_ES[fi];ei=es-it;}
+    else if(SH_ES[l]){es=-SH_ES[l][idx];ei=es-it;}
+    else if(l==="k"){ei=(g<=7)?SH_EI.k[idx]:0;es=ei+it;}
+    else if(SH_EI[l]){ei=SH_EI[l][idx];es=ei+it;}
+    else if(FINE_EI[l]){ei=FINE_EI[l][fi];es=ei+it;}
+    else return {err:"Поле вала «"+L+"» не поддерживается (есть c–s)"};
+  } else {
+    const D=idx===0?0:it-IT[g-1][idx];
+    if(l==="js"){es=it/2;ei=-it/2;}
+    else if(l==="c"){ei=C_ES[fi];es=ei+it;}
+    else if(SH_ES[l]){ei=SH_ES[l][idx];es=ei+it;}
+    else if(l==="k"){es=(g<=8)?-SH_EI.k[idx]+D:0;ei=es-it;}
+    else if(l==="m"){es=(g<=8)?-SH_EI.m[idx]+D:-SH_EI.m[idx];ei=es-it;}
+    else if(l==="n"){es=idx===0?-4:((g<=8)?-SH_EI.n[idx]+D:0);ei=es-it;}
+    else if(l==="p"){es=(g<=7)?-SH_EI.p[idx]+D:-SH_EI.p[idx];ei=es-it;}
+    else if(FINE_EI[l]){es=(g<=7)?-FINE_EI[l][fi]+D:-FINE_EI[l][fi];ei=es-it;}
+    else return {err:"Поле отверстия «"+L+"» не поддерживается (есть C–S)"};
+  }
+  const name=(isHole?l.toUpperCase():l)+g;
+  return {es,ei,it,hole:isHole,letter:l,grade:g,name};
+}
+
+// ---------- Справочник посадок ----------
+const PRESETS=[
+ {g:"С зазором",fits:[
+  ["H7/g6","Точные подвижные соединения: шпиндели, плунжеры, золотники, сменные кондукторные втулки."],
+  ["H7/h6","Неподвижные соединения с частой разборкой и точным центрированием: сменные шестерни, фланцы, крышки."],
+  ["H7/f7","Подшипники скольжения при умеренных скоростях, валы в направляющих втулках."],
+  ["H8/e8","Подшипники скольжения при высоких скоростях, многоопорные валы."],
+  ["H8/h7","Центрирующие поверхности с невысокими требованиями к соосности."],
+  ["H9/d9","Подвижные соединения с крупным зазором: холостые шкивы, грубые подшипники скольжения."],
+  ["H11/d11","Грубые подвижные соединения: шарниры, рычаги, крышки, где допустим большой зазор."],
+  ["H11/h11","Неответственные неподвижные соединения: распорные втулки, фланцы на шпильках."]
+ ]},
+ {g:"Переходные",fits:[
+  ["H7/js6","Частая разборка, точное центрирование: ступицы шкивов и муфт, крышки подшипников."],
+  ["H7/k6","Плотное соединение, разборка редко: зубчатые колёса и шкивы на валах со шпонкой."],
+  ["H7/m6","Ещё плотнее, разборка редко: втулки, установочные пальцы, кольца."],
+  ["H7/n6","Глухое соединение при ударных нагрузках: колёса и муфты на валах, втулки в корпусах."]
+ ]},
+ {g:"С натягом",fits:[
+  ["H7/p6","Лёгкий натяг: тонкостенные втулки, передача малых моментов, центрирование тяжело нагруженных деталей."],
+  ["H7/r6","Средний натяг: венцы зубчатых колёс, втулки подшипников скольжения, передача моментов с доп. креплением."],
+  ["H7/s6","Постоянное соединение без доп. крепления: бронзовые венцы червячных колёс, втулки в корпусах."]
+ ]},
+ {g:"Система вала",fits:[
+  ["G7/h6","Аналог H7/g6 в системе вала: точные подвижные соединения на калиброванном валу."],
+  ["JS7/h6","Аналог H7/js6 в системе вала."],
+  ["K7/h6","Аналог H7/k6 в системе вала."],
+  ["N7/h6","Аналог H7/n6 в системе вала."],
+  ["P7/h6","Аналог H7/p6 в системе вала."]
+ ]}
+];
+const PURPOSE={}; const COMMON=new Set();
+PRESETS.forEach(g=>g.fits.forEach(([f,d])=>{PURPOSE[f]=d;COMMON.add(f);}));
+["H8/d9","H8/h8","H8/f8","H9/h9","H9/f9","H7/e8","F8/h6","F8/h7","E9/h8","H6/h5","H6/g5"].forEach(f=>COMMON.add(f));
+
+// ---------- Старая система ОСТ → ЕСДП (приближённая замена по справочным таблицам) ----------
+const OST={
+ hole:{"А1":{f:"H6"},"А":{f:"H7"},"А3":{f:"H8",alt:"H9"}},
+ shaft:{"С":{f:"h6"},"Д":{f:"g6"},"Х":{f:"f7"},"Х1":{f:"f6"},"Л":{f:"e8"},"Ш":{f:"d8"},"П":{f:"js6"},"Н":{f:"k6"},"Т":{f:"m6"},"Г":{f:"n6"},"Пр":{f:"r6",alt:"s6"},"С3":{f:"h8"},"Х3":{f:"f9",alt:"e9"}},
+ none:{"Гр":"Горячая посадка Гр: в найденных справочниках однозначной замены в ЕСДП нет. Подберите посадку с натягом по требуемому натягу (раздел ниже)."}
+};
+const OST_NAME={"С":"скольжения","Д":"движения","Х":"ходовая","Х1":"ходовая, 1 класс","Л":"лёгкоходовая","Ш":"широкоходовая","П":"плотная","Н":"напряжённая","Т":"тугая","Г":"глухая","Пр":"прессовая","С3":"скольжения, 3 класс","Х3":"ходовая, 3 класс"};
+const OST_PRESETS=[
+ {g:"С зазором",fits:["А/С","А/Д","А/Х","А/Л","А/Ш","А3/С3","А3/Х3"]},
+ {g:"Переходные",fits:["А/П","А/Н","А/Т","А/Г"]},
+ {g:"С натягом",fits:["А/Пр"]}
+];
+function normOst(s){
+  const lat={A:"А",C:"С",X:"Х",H:"Н",T:"Т",a:"А",c:"С",x:"Х",h:"Н",t:"Т"};
+  let t=String(s||"").trim().replace(/\s+/g,"").replace(/[₀-₉]/g,d=>String(d.charCodeAt(0)-8320)).replace(/[ACXHTacxht]/g,c=>lat[c]);
+  if(!t) return "";
+  return t[0].toUpperCase()+t.slice(1).toLowerCase();
+}
+function resolve(code,kind){
+  if(stdMode()!=="ost") return {code:code};
+  const n=normOst(code);
+  if(!n) return {err:"Введите обозначение по ОСТ, например А, С, Х, Пр"};
+  if(OST.none[n]) return {err:OST.none[n]};
+  const e=OST[kind][n];
+  if(!e){
+    const other=kind==="hole"?"shaft":"hole";
+    if(OST[other][n]) return {err:"«"+n+"» — поле "+(other==="hole"?"отверстия":"вала")+", а не "+(kind==="hole"?"отверстия":"вала")};
+    return {err:"Обозначение «"+n+"» не найдено в таблице замены. Есть: "+Object.keys(OST[kind]).join(", ")};
+  }
+  return {code:e.f,ost:n,alt:e.alt};
+}
+function stdMode(){ return document.getElementById("std").value; }
+
+// ---------- Формат ----------
+function toNum(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/[−–—]/g,"-").replace(/\s+/g,""); if(!t) return NaN; return /^[+-]?\d*\.?\d+$/.test(t)?+t:NaN; }
+function mm(um,d){ let v=um/1000; if(Math.abs(v)<5e-7) v=0; return v.toFixed(d===undefined?3:d).replace(".",",").replace("-","−"); }
+function dev(um){ if(Math.abs(um)<1e-6) return "0"; return (um>0?"+":"−")+mm(Math.abs(um)); }
+function devUm(um){ if(Math.abs(um)<1e-6) return "0"; const a=Math.abs(um); return (um>0?"+":"−")+(Number.isInteger(a)?a:a.toFixed(1).replace(".",",")); }
+function size(v){ let s=(+v.toFixed(4)).toString().replace(".",","); return s; }
+function abs3(v){ return (Math.abs(v)<5e-7?0:v).toFixed(3).replace(".",",").replace("-","−"); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function erf(x){ const s=Math.sign(x); x=Math.abs(x); const t=1/(1+0.3275911*x); const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x); return s*y; }
+function phi(z){ return 0.5*(1+erf(z/Math.SQRT2)); }
+function pct(p){ p*=100; if(p<0.01) return "<0,01 %"; if(p>99.99) return ">99,99 %"; return (p<1||p>99?p.toFixed(2):p.toFixed(1)).replace(".",",")+" %"; }
+
+// ---------- Состояние ----------
+const $=id=>document.getElementById(id);
+const KEY="posadki-v1";
+try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s){ if(s.std==="ost")$("std").value="ost"; if(s.genStd==="g25670")$("genStd").value="g25670"; if(s.nom)$("nom").value=s.nom; if(s.hole)$("hole").value=s.hole; if(s.shaft)$("shaft").value=s.shaft; if(s.sMin!=null)$("sMin").value=s.sMin; if(s.sMax!=null)$("sMax").value=s.sMax; } }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify({std:$("std").value,genStd:$("genStd").value,nom:$("nom").value,hole:$("hole").value,shaft:$("shaft").value,sMin:$("sMin").value,sMax:$("sMax").value})); }catch(e){} }
+
+// пресеты
+const DL={
+ esdp:{hole:["H7","H8","H9","H11","H6","G7","F8","JS7","K7","M7","N7","P7","R7","S7","E9","D10"],shaft:["g6","h6","f7","e8","d9","js6","k6","m6","n6","p6","r6","s6","h7","h8","h9","d11","h11","c11"]},
+ ost:{hole:Object.keys(OST.hole),shaft:Object.keys(OST.shaft)}
+};
+function renderPresets(){
+  const m=stdMode();
+  const groups=m==="ost"?OST_PRESETS:PRESETS.map(g=>({g:g.g,fits:g.fits.map(f=>f[0])}));
+  $("presets").innerHTML=groups.map(g=>`<div class="pgroup"><span>${g.g}</span>${g.fits.map(f=>`<button type="button" class="pbtn" data-fit="${f}">${f}</button>`).join("")}</div>`).join("");
+  $("holeList").innerHTML=DL[m].hole.map(v=>`<option value="${v}">`).join("");
+  $("shaftList").innerHTML=DL[m].shaft.map(v=>`<option value="${v}">`).join("");
+  document.querySelector('label[for="hole"]').textContent=m==="ost"?"Отверстие (ОСТ)":"Отверстие";
+  document.querySelector('label[for="shaft"]').textContent=m==="ost"?"Вал (ОСТ)":"Вал";
+}
+renderPresets();
+$("std").addEventListener("change",()=>{
+  if(stdMode()==="ost"){ $("hole").value="А"; $("shaft").value="Х"; } else { $("hole").value="H7"; $("shaft").value="g6"; }
+  renderPresets(); calc();
+});
+$("genStd").addEventListener("change",()=>calc());
+$("presets").addEventListener("click",e=>{ const b=e.target.closest(".pbtn"); if(!b) return; const [h,s]=b.dataset.fit.split("/"); $("hole").value=h; $("shaft").value=s; calc(); });
+
+let cur=null;
+function calc(){
+  save();
+  const nom=toNum($("nom").value);
+  $("nom").classList.toggle("bad",isNaN(nom)||nom<=0);
+  $("pickNom").textContent=isNaN(nom)?"—":size(nom);
+  const rH=resolve($("hole").value,"hole"), rS=resolve($("shaft").value,"shaft");
+  const H=rH.err?{err:rH.err}:field(rH.code,nom), S=rS.err?{err:rS.err}:field(rS.code,nom);
+  const isOst=stdMode()==="ost";
+  $("ostNote").hidden=true;
+  let err="";
+  if(isNaN(nom)||nom<=0) err="Укажите номинальный размер больше 0.";
+  else if(H.err) err="Отверстие: "+H.err;
+  else if(S.err) err="Вал: "+S.err;
+  else if(!H.hole) err="Отверстие обозначается заглавной буквой: H7, G7, K7.";
+  else if(S.hole) err="Вал обозначается строчной буквой: g6, h6, k6.";
+  $("hole").classList.toggle("bad",!!(H.err||(!H.err&&!H.hole)));
+  $("shaft").classList.toggle("bad",!!(S.err||(!S.err&&S.hole)));
+  $("inErr").textContent=err;
+  renderGeneral(nom);
+  const curKey=isOst?(rH.ost+"/"+rS.ost):(H.name+"/"+S.name);
+  document.querySelectorAll(".pbtn").forEach(b=>b.classList.toggle("on",!err&&b.dataset.fit===curKey));
+  if(err){ cur=null; $("chips").innerHTML=""; $("notation").textContent="—"; $("purpose").hidden=true; $("diagram").innerHTML=""; $("drawing").innerHTML='<p class="muted" style="margin:0">Исправьте ввод выше.</p>';
+    ["cHole","cShaft","cFit"].forEach(id=>$(id).innerHTML='<p class="muted" style="margin:0">Нет данных — исправьте ввод выше.</p>'); return; }
+
+  const Smax=H.es-S.ei, Smin=H.ei-S.es; // мкм; отрицательный зазор = натяг
+  const type=Smin>=0?"gap":(Smax<=0?"int":"trans");
+  const TD=H.es-H.ei, Td=S.es-S.ei;
+  const sys=H.letter==="h"&&S.letter==="h"?"Система отверстия и вала":H.letter==="h"?"Система отверстия":S.letter==="h"?"Система вала":"Внесистемная посадка";
+  const fitName=H.name+"/"+S.name;
+  cur={nom,H,S,Smax,Smin,type,TD,Td,fitName};
+
+  $("notation").innerHTML=`<span>Ø${size(nom)}</span>&nbsp;<span class="h">${H.name}</span><span class="fr h"><span>${dev(H.es)}</span><span>${dev(H.ei)}</span></span><span>/</span>&nbsp;<span class="s">${S.name}</span><span class="fr s"><span>${dev(S.es)}</span><span>${dev(S.ei)}</span></span>`;
+  const tl={gap:["gap","Посадка с зазором"],trans:["trans","Переходная посадка"],int:["int","Посадка с натягом"]}[type];
+  $("chips").innerHTML=`<span class="chip ${tl[0]}">${tl[1]}</span><span class="chip sys">${sys}</span>${COMMON.has(fitName)?'<span class="chip sys">часто применяется</span>':""}`;
+  if(isOst){
+    $("chips").insertAdjacentHTML("afterbegin",`<span class="chip sys">ОСТ: ${esc(rH.ost)}/${esc(rS.ost)} → ${fitName}</span>`);
+    const alts=[]; if(rH.alt) alts.push(`для ${esc(rH.ost)} встречается также ${rH.alt}`); if(rS.alt) alts.push(`для ${esc(rS.ost)} встречается также ${rS.alt}`);
+    $("ostNote").innerHTML=`Посадка ${esc(rS.ost)}${OST_NAME[rS.ost]?" ("+OST_NAME[rS.ost]+")":""} переведена в ЕСДП по справочным таблицам замены. Замена приближённая: поля ОСТ и ЕСДП близки, но совпадают не во всех интервалах размеров. Ниже — отклонения уже по ЕСДП.${alts.length?" Источники расходятся: "+alts.join("; ")+".":""}`;
+    $("ostNote").hidden=false;
+  }
+  $("purpose").textContent=PURPOSE[fitName]||"";
+  $("purpose").hidden=!PURPOSE[fitName];
+
+  const D=nom;
+  $("cHole").innerHTML=`<h3>Отверстие ${H.name}</h3><dl class="kv">
+    <dt>Верхнее отклонение ES</dt><dd>${dev(H.es)}<small>${devUm(H.es)} мкм</small></dd>
+    <dt>Нижнее отклонение EI</dt><dd>${dev(H.ei)}<small>${devUm(H.ei)} мкм</small></dd>
+    <dt>Допуск TD (IT${H.grade})</dt><dd>${mm(TD)}<small>${TD} мкм</small></dd>
+    <div class="sep"></div>
+    <dt>D<sub>max</sub></dt><dd>${abs3(D+H.es/1000)}</dd>
+    <dt>D<sub>min</sub></dt><dd>${abs3(D+H.ei/1000)}</dd>
+    <dt>Середина поля</dt><dd>${abs3(D+(H.es+H.ei)/2000)}</dd></dl>`;
+  $("cShaft").innerHTML=`<h3>Вал ${S.name}</h3><dl class="kv">
+    <dt>Верхнее отклонение es</dt><dd>${dev(S.es)}<small>${devUm(S.es)} мкм</small></dd>
+    <dt>Нижнее отклонение ei</dt><dd>${dev(S.ei)}<small>${devUm(S.ei)} мкм</small></dd>
+    <dt>Допуск Td (IT${S.grade})</dt><dd>${mm(Td)}<small>${Td} мкм</small></dd>
+    <div class="sep"></div>
+    <dt>d<sub>max</sub></dt><dd>${abs3(D+S.es/1000)}</dd>
+    <dt>d<sub>min</sub></dt><dd>${abs3(D+S.ei/1000)}</dd>
+    <dt>Середина поля</dt><dd>${abs3(D+(S.es+S.ei)/2000)}</dd></dl>`;
+  let rows="";
+  if(type==="gap") rows=`<dt>Наибольший зазор S<sub>max</sub></dt><dd>${mm(Smax)}</dd><dt>Наименьший зазор S<sub>min</sub></dt><dd>${mm(Smin)}</dd><dt>Средний зазор</dt><dd>${mm((Smax+Smin)/2)}</dd>`;
+  else if(type==="int") rows=`<dt>Наибольший натяг N<sub>max</sub></dt><dd>${mm(-Smin)}</dd><dt>Наименьший натяг N<sub>min</sub></dt><dd>${mm(-Smax)}</dd><dt>Средний натяг</dt><dd>${mm(-(Smax+Smin)/2)}</dd>`;
+  else {
+    const mean=(H.es+H.ei)/2-(S.es+S.ei)/2, sig=Math.sqrt(TD*TD+Td*Td)/6, pGap=1-phi(-mean/sig);
+    rows=`<dt>Наибольший зазор S<sub>max</sub></dt><dd>${mm(Smax)}</dd><dt>Наибольший натяг N<sub>max</sub></dt><dd>${mm(-Smin)}</dd>
+      <div class="sep"></div><dt>Вероятность зазора</dt><dd>${pct(pGap)}</dd><dt>Вероятность натяга</dt><dd>${pct(1-pGap)}</dd>
+      <dt>Вероятные пределы</dt><dd>${mean-3*sig>=0?"S "+mm(mean-3*sig):"N "+mm(-(mean-3*sig))} … ${mean+3*sig>=0?"S "+mm(mean+3*sig):"N "+mm(-(mean+3*sig))}</dd>`;
+  }
+  $("cFit").innerHTML=`<h3>Посадка ${fitName}</h3><dl class="kv">${rows}<div class="sep"></div><dt>Допуск посадки TD+Td</dt><dd>${mm(TD+Td)}</dd></dl>`;
+
+  const n=size(nom);
+  const txt=[
+    ["Сборочный чертёж",`Ø${n} ${fitName}`],
+    ["С отклонениями",`Ø${n} ${H.name}(${dev(H.es)}${H.ei!==0?"/"+dev(H.ei):""}) / ${S.name}(${dev(S.es)}${S.ei!==0?"/"+dev(S.ei):""})`],
+    ["Деталь — отверстие",`Ø${n}${H.name}(${devPair(H)})`],
+    ["Деталь — вал",`Ø${n}${S.name}(${devPair(S)})`]
+  ];
+  $("drawing").innerHTML=txt.map(([l,t],i)=>`<div class="copyrow"><span class="muted" style="font-size:13px;width:150px;flex:none">${l}</span><code class="dw" id="dw${i}">${esc(t)}</code><button type="button" class="btn sm" data-copy="${i}">Копировать</button></div>`).join("");
+  drawDiagram();
+}
+function devPair(F){ if(F.es===0) return dev(F.ei); if(F.ei===0) return dev(F.es); if(F.es===-F.ei) return "±"+mm(F.es); return dev(F.es)+" "+dev(F.ei); }
+$("drawing").addEventListener("click",e=>{ const b=e.target.closest("[data-copy]"); if(!b) return; const el=$("dw"+b.dataset.copy); copy(el.textContent,el); });
+function copy(t,el){
+  const sel=()=>{ const r=document.createRange(); r.selectNodeContents(el); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); toast("Выделено — нажмите Ctrl+C"); };
+  try{ navigator.clipboard.writeText(t).then(()=>toast("Скопировано"),sel); }catch(e){ sel(); }
+}
+
+// ---------- Схема полей ----------
+function drawDiagram(){
+  if(!cur){ $("diagram").innerHTML=""; return; }
+  const {H,S,Smax,Smin,type,nom}=cur;
+  const W=580, Hh=300, top=24, bot=Hh-34;
+  let hi=Math.max(0,H.es,S.es), lo=Math.min(0,H.ei,S.ei);
+  const span=(hi-lo)||10; hi+=span*0.12; lo-=span*0.12;
+  const y=v=>top+(hi-v)/(hi-lo)*(bot-top);
+  const y0=y(0);
+  const dx1=420, dx2=490;
+  const hx=150, sx=270, bw=90;
+  let s=`<svg viewBox="0 0 ${W} ${Hh}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема полей допусков отверстия и вала">
+   <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="var(--hole)" stroke-width="1.2" opacity=".55"/></pattern>
+   <marker id="ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 z" fill="var(--ink)"/></marker></defs>`;
+  // нулевая линия
+  s+=`<line x1="40" y1="${y0}" x2="${dx2+4}" y2="${y0}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  s+=`<text x="44" y="${y0-6}" font-family="var(--f-ui)" font-size="12" fill="var(--muted)">0</text>`;
+  s+=`<text x="44" y="${y0+16}" font-family="var(--f-num)" font-size="12" fill="var(--ink)">Ø${size(nom)}</text>`;
+  function zone(x,F,fill,stroke,label){
+    const yt=y(F.es), yb=y(F.ei), h=Math.max(2,yb-yt);
+    let r=`<rect x="${x}" y="${yt}" width="${bw}" height="${h}" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    r+=`<text x="${x+bw/2}" y="${yt+h/2+5}" text-anchor="middle" font-family="var(--f-num)" font-size="15" font-weight="600" fill="${stroke}" style="paint-order:stroke" stroke="var(--paper)" stroke-width="3">${label}</text>`;
+    const lx=x+bw+6;
+    r+=`<text x="${lx}" y="${yt+4}" font-family="var(--f-num)" font-size="12" fill="${stroke}">${devUm(F.es)}</text>`;
+    r+=`<text x="${lx}" y="${yb+4}" font-family="var(--f-num)" font-size="12" fill="${stroke}">${devUm(F.ei)}</text>`;
+    return r;
+  }
+  s+=zone(hx,H,"url(#hatch)","var(--hole)",H.name);
+  s+=`<rect x="${sx}" y="${y(S.es)}" width="${bw}" height="${Math.max(2,y(S.ei)-y(S.es))}" fill="var(--shaft-soft)" stroke="none"/>`;
+  s+=zone(sx,S,"none","var(--shaft)",S.name);
+  // размерные линии зазоров/натягов
+  function dimV(x,v1,v2,label){
+    const a=y(v1), b=y(v2); if(Math.abs(b-a)<3) return "";
+    let r=`<line x1="${x}" y1="${a}" x2="${x}" y2="${b}" stroke="var(--ink)" stroke-width="1" marker-start="url(#ah)" marker-end="url(#ah)"/>`;
+    r+=`<text x="${x+6}" y="${(a+b)/2+4}" font-family="var(--f-num)" font-size="12" fill="var(--ink)">${label}</text>`;
+    return r;
+  }
+  function ext(x1,x2,v){ return `<line x1="${x1}" y1="${y(v)}" x2="${x2}" y2="${y(v)}" stroke="var(--line-strong)" stroke-width="1" stroke-dasharray="3 3"/>`; }
+  const fmt=v=>Math.abs(v)%1?Math.abs(v).toFixed(1).replace(".",","):Math.abs(v);
+  // Smax / Nmax: между ES и ei либо es и EI
+  if(type==="gap"){
+    s+=ext(hx+bw,dx2,H.es)+ext(sx+bw,dx2,S.ei)+ext(hx+bw,dx1,H.ei)+ext(sx+bw,dx1,S.es);
+    s+=dimV(dx1,H.ei,S.es,"S"+"min "+fmt(Smin)); s+=dimV(dx2,H.es,S.ei,"Smax "+fmt(Smax));
+  } else if(type==="int"){
+    s+=ext(hx+bw,dx2,H.ei)+ext(sx+bw,dx2,S.es)+ext(hx+bw,dx1,H.es)+ext(sx+bw,dx1,S.ei);
+    s+=dimV(dx1,S.ei,H.es,"Nmin "+fmt(Smax)); s+=dimV(dx2,S.es,H.ei,"Nmax "+fmt(Smin));
+  } else {
+    s+=ext(hx+bw,dx1,H.es)+ext(sx+bw,dx1,S.ei)+ext(hx+bw,dx2,H.ei)+ext(sx+bw,dx2,S.es);
+    s+=dimV(dx1,H.es,S.ei,"Smax "+fmt(Smax)); s+=dimV(dx2,S.es,H.ei,"Nmax "+fmt(Smin));
+  }
+  s+=`<text x="${hx+bw/2}" y="${Hh-10}" text-anchor="middle" font-family="var(--f-ui)" font-size="12" fill="var(--hole)">отверстие</text>`;
+  s+=`<text x="${sx+bw/2}" y="${Hh-10}" text-anchor="middle" font-family="var(--f-ui)" font-size="12" fill="var(--shaft)">вал</text>`;
+  s+=`</svg>`;
+  $("diagram").innerHTML=s;
+}
+
+// ---------- Подбор посадки ----------
+const SH_L=["c","d","e","f","g","h","js","k","m","n","p","r","s"];
+function pick(){
+  const nom=toNum($("nom").value), a=toNum($("sMin").value), b=toNum($("sMax").value);
+  $("sMin").classList.toggle("bad",isNaN(a)); $("sMax").classList.toggle("bad",isNaN(b));
+  const out=$("pickOut");
+  if(isNaN(nom)||nom<=0||nom>500){ out.innerHTML=`<div class="note warn">Нужен номинальный размер от 0 до 500 мм.</div>`; return; }
+  if(isNaN(a)||isNaN(b)||a>=b){ out.innerHTML=`<div class="note warn">Задайте наименьший и наибольший зазор, наименьший — меньше наибольшего. Натяг — со знаком минус, например −0,050 … −0,010.</div>`; return; }
+  const lo=a*1000, hi=b*1000, res=[], seen=new Set();
+  for(let gs=5;gs<=11;gs++) for(const dg of [0,1]){
+    const gh=gs+dg; if(gh>11) continue;
+    for(const l of SH_L){
+      const pairs=[["h"+0,"H"+gh,l+gs],["s"+0,(l==="js"?"JS":l.toUpperCase())+gh,"h"+gs]];
+      for(const [,hc,sc] of pairs){
+        const key=hc+"/"+sc; if(seen.has(key)) continue; seen.add(key);
+        const H=field(hc,nom), S=field(sc,nom); if(H.err||S.err) continue;
+        const Smax=H.es-S.ei, Smin=H.ei-S.es;
+        if(Smin>=lo-1e-6 && Smax<=hi+1e-6) res.push({key,H,S,Smax,Smin,T:(H.es-H.ei)+(S.es-S.ei),common:COMMON.has(key)});
+      }
+    }
+  }
+  if(!res.length){ out.innerHTML=`<div class="note warn">Ни одна посадка из рядов 5–11 квалитетов не укладывается в ${abs3(a)} … ${abs3(b)} мм. Расширьте диапазон: в нём должно поместиться хотя бы ${mm(2*IT[5][rIdx(nom)])} мм (два допуска IT5) — или используйте селективную сборку.</div>`; return; }
+  res.sort((p,q)=>(q.common-p.common)||(q.T-p.T));
+  const top=res.slice(0,10);
+  const lab=v=>v>=0?"S "+mm(v):"N "+mm(-v);
+  out.innerHTML=`<p class="muted" style="margin:0;font-size:13px">Подходит посадок: ${res.length}. Показаны лучшие — сначала часто применяемые, затем с наибольшим допуском (дешевле в изготовлении).</p>
+  <div class="tbl"><table><thead><tr><th>Посадка</th><th class="n">Отверстие</th><th class="n">Вал</th><th class="n">Пределы</th><th class="n">Допуск посадки</th><th></th></tr></thead><tbody>
+  ${top.map(r=>`<tr><td class="num"><b>${r.key}</b>${r.common?'<span class="tag">частая</span>':""}</td><td class="n">${dev(r.H.es)} / ${dev(r.H.ei)}</td><td class="n">${dev(r.S.es)} / ${dev(r.S.ei)}</td><td class="n">${lab(r.Smin)} … ${lab(r.Smax)}</td><td class="n">${mm(r.T)}</td><td><button type="button" class="btn sm" data-use="${r.key}">Выбрать</button></td></tr>`).join("")}
+  </tbody></table></div>`;
+}
+$("pickOut").addEventListener("click",e=>{ const b=e.target.closest("[data-use]"); if(!b) return; const [h,s]=b.dataset.use.split("/"); $("hole").value=h; $("shaft").value=s; calc(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); toast("Посадка "+b.dataset.use+" выбрана"); });
+$("pickBtn").onclick=()=>{save();pick();};
+
+// ---------- ГОСТ 30893.1 ----------
+const GEN_R=["0,5–3","св. 3 до 6","св. 6 до 30","св. 30 до 120","св. 120 до 400","св. 400 до 1000","св. 1000 до 2000","св. 2000 до 4000"];
+const GEN_UP=[3,6,30,120,400,1000,2000,4000];
+const GEN={f:["0,05","0,05","0,1","0,15","0,2","0,3","0,5","—"],m:["0,1","0,1","0,2","0,3","0,5","0,8","1,2","2"],c:["0,2","0,3","0,5","0,8","1,2","2","3","4"],v:["—","0,5","1","1,5","2,5","4","6","8"]};
+const GEN_NAME={f:"f — точный",m:"m — средний",c:"c — грубый",v:"v — очень грубый"};
+function renderGeneral(nom){
+  if($("genStd").value==="g25670"){
+    const idx=rIdx(nom);
+    if(idx<0){ $("genTbl").innerHTML=`<div class="note warn">Для таблицы по квалитетам нужен номинал от 0 до 500 мм.</div>`; $("genNote").textContent=""; return; }
+    const rng=(idx===0?"до 3":"св. "+R_LO[idx]+" до "+R_UP[idx])+" мм";
+    $("genTbl").innerHTML=`<table><thead><tr><th>Квалитет</th><th class="n">Отверстия, H</th><th class="n">Валы, h</th><th class="n">Прочие, ±IT/2</th></tr></thead><tbody>
+     ${[12,13,14,15,16,17].map(g=>{const it=IT[g][idx];return `<tr${g===14?' class="cur"':""}><td>IT${g}</td><td class="n">+${mm(it)}</td><td class="n">−${mm(it)}</td><td class="n">±${mm(it/2)}</td></tr>`;}).join("")}</tbody></table>`;
+    $("genNote").innerHTML=`Отклонения для размера ${size(nom)} мм (интервал ${rng}). Типовая запись на старых чертежах: «Неуказанные предельные отклонения размеров: H14, h14, ±IT14/2». Стандарт заменён на ГОСТ 30893.1, но встречается в документации.`;
+    return;
+  }
+  $("genNote").innerHTML=`На чертеже: «Общие допуски по ГОСТ 30893.1-<span class="num">m</span>» или «ISO 2768-m». Значения ГОСТ 30893.1, ISO 2768-1 и DIN 7168 совпадают. Класс f — точный, m — средний, c — грубый, v — очень грубый. Подсвечен интервал для номинала из поля выше.`;
+  let ci=-1; if(nom>=0.5) for(let i=0;i<GEN_UP.length;i++) if(nom<=GEN_UP[i]){ci=i;break;}
+  $("genTbl").innerHTML=`<table><thead><tr><th>Класс</th>${GEN_R.map((r,i)=>`<th class="n${i===ci?" cur":""}">${r}</th>`).join("")}</tr></thead><tbody>
+   ${Object.keys(GEN).map(k=>`<tr><td>${GEN_NAME[k]}</td>${GEN[k].map((v,i)=>`<td class="n${i===ci?" cur":""}">${v==="—"?"—":"±"+v}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+}
+
+let tt=null;
+function toast(s){ const el=$("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),1800); }
+
+let t1=null;
+["nom","hole","shaft"].forEach(id=>$(id).addEventListener("input",()=>{clearTimeout(t1);t1=setTimeout(()=>{calc();if($("pickOut").innerHTML)pick();},120);}));
+["sMin","sMax"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")pick();}));
+calc(); pick();
+})();
+</script>
+
+</body>
+</html>

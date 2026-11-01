@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Калькулятор размерных цепей</title>
+<meta name="description" content="Онлайн-расчёт размерных цепей: максимум-минимум, вероятностный метод, Монте-Карло, посадки по ГОСТ 25347, подбор квалитета.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: один рабочий столбец, как расчётный лист — исходные данные, схема цепи, три метода рядом, затем диагностика вкладов и подбор квалитета */
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --inc:#1d5a7a; --dec:#a3512a; --dec-soft:#f4e6dd;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236;
+  --line-strong:#465056; --accent:#72b4d6; --accent-soft:#1c303a; --inc:#72b4d6; --dec:#e3935f; --dec-soft:#352419;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236;
+  --line-strong:#465056; --accent:#72b4d6; --accent-soft:#1c303a; --inc:#72b4d6; --dec:#e3935f; --dec-soft:#352419;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+
+/* Таблица звеньев */
+.links{display:flex;flex-direction:column;gap:0}
+.lrow{display:grid;grid-template-columns:64px 128px 110px minmax(120px,1fr) 170px 150px 34px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.lrow.head{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;padding-top:0}
+.lrow.head>span{white-space:nowrap}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:14px}
+input.num{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.dir{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:4px;padding:7px 8px;border:1px solid currentColor;background:transparent;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap}
+.dir.inc{color:var(--inc);background:var(--accent-soft)}
+.dir.dec{color:var(--dec);background:var(--dec-soft)}
+.dir .ar{font-family:var(--f-num);font-size:15px}
+.parsed{font-family:var(--f-num);font-size:13px;line-height:1.35;white-space:nowrap}
+.parsed .err{color:var(--bad);font-family:var(--f-ui);white-space:normal;font-size:12px}
+.del{width:34px;height:34px;border-radius:4px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+.del:hover{border-color:var(--line);color:var(--bad)}
+.lbl-m{display:none}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 14px;cursor:pointer;font-size:14px;font-weight:500}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{color:var(--paper);filter:brightness(1.08)}
+
+.req{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500}
+.field .ro{font-family:var(--f-num);padding:7px 0;font-size:15px;font-weight:600}
+
+/* Схема */
+.schema{overflow-x:auto}
+.schema svg{display:block;width:100%;min-width:560px;height:auto}
+
+/* Результаты */
+.methods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.mcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.mcard h3{font-size:15px;font-weight:600}
+.mcard .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.limits{font-family:var(--f-num);font-size:22px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.limits small{font-size:13px;color:var(--muted);font-weight:400}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:13px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right}
+.chip{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.none{background:var(--bg);color:var(--muted)}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.riskrow{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.riskrow select{width:auto;padding:4px 6px;font-size:13px}
+
+.hist{width:100%;height:190px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:0;border-top:2px solid;vertical-align:middle;margin-right:5px}
+
+.two{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px}
+table.contrib{width:100%;border-collapse:collapse;font-size:13px}
+table.contrib th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em;padding:0 8px 6px 0;border-bottom:1px solid var(--line)}
+table.contrib td{padding:7px 8px 7px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+table.contrib td.n{font-family:var(--f-num);text-align:right;white-space:nowrap}
+.bar{height:8px;border-radius:2px;background:var(--line);overflow:hidden;min-width:60px}
+.bar>span{display:block;height:100%;background:var(--accent)}
+tr.top .bar>span{background:var(--dec)}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft);color:var(--ink)}
+.note.bad{background:var(--bad-soft)}
+.grades{display:flex;flex-direction:column;gap:10px}
+.grade{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.grade b{font-family:var(--f-num);font-size:20px}
+
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+textarea#reportFallback{width:100%;height:160px;font-family:var(--f-num);font-size:12px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:8px}
+
+@media (max-width:900px){
+  .methods{grid-template-columns:1fr}
+  .two{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .lrow.head{display:none}
+  .lrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px;grid-template-areas:"name dir del" "nom tol tol" "par dist dist";gap:8px;padding:12px 0}
+  .c-name{grid-area:name}.c-dir{grid-area:dir}.c-del{grid-area:del}.c-nom{grid-area:nom}.c-tol{grid-area:tol}.c-par{grid-area:par}.c-dist{grid-area:dist}
+  .lbl-m{display:block;font-size:11px;color:var(--muted);margin-bottom:2px}
+  .req{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html" style="color:inherit;text-decoration:none">Основы металлообработки</a> · калькулятор</div>
+      <h1>Калькулятор размерных цепей</h1>
+      <p>Задайте звенья цепи и требование к замыкающему звену. Калькулятор посчитает цепь тремя методами, покажет, какое звено сильнее всего влияет на разброс, и подберёт квалитет.</p>
+    </div>
+    <div class="std">ГОСТ 25346-2013, 25347-2013<br>РД 50-635-87</div>
+  </header>
+
+  <section class="sheet" aria-labelledby="h-links">
+    <div class="sheet-head">
+      <h2 id="h-links">Составляющие звенья</h2>
+      <span class="muted" style="font-size:13px">Допуск: <span class="num">h9</span>, <span class="num">H7</span>, <span class="num">±0,1</span>, <span class="num">+0,1/−0,05</span>, <span class="num">−0,2</span></span>
+    </div>
+    <div class="links" id="links">
+      <div class="lrow head" aria-hidden="true">
+        <span>Звено</span><span>Тип</span><span>Номинал, мм</span><span>Допуск</span><span>Отклонения, мм</span><span>Распределение</span><span></span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="addRow" type="button">+ Добавить звено</button>
+      <button class="btn" id="loadExample" type="button">Загрузить пример</button>
+      <button class="btn" id="clearAll" type="button">Очистить</button>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-close">
+    <div class="sheet-head">
+      <h2 id="h-close">Замыкающее звено A<sub>Δ</sub></h2>
+      <span class="muted" style="font-size:13px">Пустые поля требования — расчёт без проверки</span>
+    </div>
+    <div class="req">
+      <div class="field"><label>Номинал (расчётный), мм</label><div class="ro" id="closeNom">—</div></div>
+      <div class="field"><label for="reqMin">Допустимый минимум, мм</label><input type="text" class="num" id="reqMin" inputmode="decimal" placeholder="напр. 0,1"></div>
+      <div class="field"><label for="reqMax">Допустимый максимум, мм</label><input type="text" class="num" id="reqMax" inputmode="decimal" placeholder="напр. 0,6"></div>
+      <div class="field"><label>Требуемый допуск T<sub>Δ</sub>, мм</label><div class="ro" id="reqT">—</div></div>
+    </div>
+    <div class="schema" id="schema" aria-label="Схема размерной цепи"></div>
+  </section>
+
+  <div id="banner"></div>
+
+  <section class="methods" aria-label="Результаты расчёта">
+    <article class="mcard" id="mWorst"></article>
+    <article class="mcard" id="mProb"></article>
+    <article class="mcard" id="mMC"></article>
+  </section>
+
+  <section class="two">
+    <div class="sheet">
+      <div class="sheet-head"><h2>Что больше всего влияет на разброс</h2></div>
+      <div id="contrib"></div>
+    </div>
+    <div class="sheet">
+      <div class="sheet-head"><h2>Подбор квалитета</h2><span class="muted" style="font-size:13px">способ одного квалитета</span></div>
+      <div id="grades"></div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head">
+      <h2>Отчёт</h2>
+      <button class="btn" id="copyReport" type="button">Скопировать отчёт</button>
+    </div>
+    <p class="muted" style="margin:0;font-size:13px">Текст для пояснительной записки или письма: звенья, отклонения и результаты трёх методов.</p>
+    <textarea id="reportFallback" readonly aria-label="Текст отчёта"></textarea>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p>Увеличивающие звенья (→) при увеличении увеличивают замыкающее звено, уменьшающие (←) — уменьшают. ES и EI — верхнее и нижнее отклонения, T = ES − EI, E<sub>c</sub> = (ES + EI)/2 — координата середины поля.</p>
+      <p><b>Максимум-минимум</b> гарантирует полную взаимозаменяемость:</p>
+      <div class="formula">A_Δ = ΣA_ув − ΣA_ум
+ES_Δ = ΣES_ув − ΣEI_ум
+EI_Δ = ΣEI_ув − ΣES_ум
+T_Δ = ΣT_i</div>
+      <p><b>Вероятностный метод</b> допускает малый процент риска выхода за пределы:</p>
+      <div class="formula">E_cΔ = ΣE_c,ув − ΣE_c,ум
+T_Δ = t · √(Σ λ_i² · T_i²)
+ES_Δ = E_cΔ + T_Δ/2,  EI_Δ = E_cΔ − T_Δ/2</div>
+      <p>Коэффициент риска t: 3,29 при 0,1 %, 3,0 при 0,27 %, 2,57 при 1 %, 2,0 при 4,5 %, 1,65 при 10 %. Коэффициент λ²: 1/9 для нормального закона, 1/6 для закона Симпсона, 1/3 для равновероятного.</p>
+      <p><b>Монте-Карло</b> разыгрывает 100 000 сборок: каждое звено случайно в своём поле допуска по выбранному закону. Нормальный закон — с центром в середине поля и σ = T/6.</p>
+      <p><b>Подбор квалитета</b>: единица допуска i = 0,45·∛D + 0,001·D мкм, где D — среднее геометрическое интервала размеров. Среднее число единиц a = T_Δ / Σi (максимум-минимум) или a = T_Δ / (t·√Σλ²i²) (вероятностный). Выбирается ближайший квалитет с числом единиц не больше a: IT5 — 7, IT6 — 10, IT7 — 16, IT8 — 25, IT9 — 40, IT10 — 64, IT11 — 100, IT12 — 160, IT13 — 250, IT14 — 400.</p>
+      <p>Поля допусков: валы d, e, f, g, h, js, k, m, n, p и отверстия D, E, F, G, H, JS, K, M, N, P, квалитеты 5–14, размеры до 500 мм. Для остальных полей введите отклонения числами.</p>
+    </div>
+  </details>
+
+  <footer style="display:flex;flex-direction:column;gap:10px"><span>Значения отклонений рассчитаны по таблицам ГОСТ 25346/25347 (ISO 286). Для ответственных узлов сверяйте результат со стандартом.</span><nav style="display:flex;flex-wrap:wrap;gap:6px 16px"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+// ---------- Таблицы ISO 286 / ГОСТ 25346 (мкм), интервалы до 500 мм ----------
+const R_UP=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const R_LO=[1,3,6,10,18,30,50,80,120,180,250,315,400];
+const IT={
+ 4:[3,4,4,5,6,7,8,10,12,14,16,18,20],
+ 5:[4,5,6,8,9,11,13,15,18,20,23,25,27],
+ 6:[6,8,9,11,13,16,19,22,25,29,32,36,40],
+ 7:[10,12,15,18,21,25,30,35,40,46,52,57,63],
+ 8:[14,18,22,27,33,39,46,54,63,72,81,89,97],
+ 9:[25,30,36,43,52,62,74,87,100,115,130,140,155],
+ 10:[40,48,58,70,84,100,120,140,160,185,210,230,250],
+ 11:[60,75,90,110,130,160,190,220,250,290,320,360,400],
+ 12:[100,120,150,180,210,250,300,350,400,460,520,570,630],
+ 13:[140,180,220,270,330,390,460,540,630,720,810,890,970],
+ 14:[250,300,360,430,520,620,740,870,1000,1150,1300,1400,1550]
+};
+// Основные отклонения валов: es (со знаком минус) для d…h
+const SH_ES={
+ d:[20,30,40,50,65,80,100,120,145,170,190,210,230],
+ e:[14,20,25,32,40,50,60,72,85,100,110,125,135],
+ f:[6,10,13,16,20,25,30,36,43,50,56,62,68],
+ g:[2,4,5,6,7,9,10,12,14,15,17,18,20],
+ h:[0,0,0,0,0,0,0,0,0,0,0,0,0]
+};
+// ei для k (IT4–IT7), m, n, p
+const SH_EI={
+ k:[0,1,1,1,2,2,2,3,3,4,4,4,5],
+ m:[2,4,6,7,8,9,11,13,15,17,20,21,23],
+ n:[4,8,10,12,15,17,20,23,27,31,34,37,40],
+ p:[6,12,15,18,22,26,32,37,43,50,56,62,68]
+};
+const A_UNITS={5:7,6:10,7:16,8:25,9:40,10:64,11:100,12:160,13:250,14:400};
+const LAM2={normal:1/9,simpson:1/6,uniform:1/3};
+const DIST_LABEL={normal:"Нормальное",simpson:"Симпсона",uniform:"Равновероятное"};
+const RISKS=[{p:0.1,t:3.29},{p:0.27,t:3},{p:1,t:2.57},{p:4.5,t:2},{p:10,t:1.65}];
+
+function rangeIdx(n){ if(!(n>0)||n>500) return -1; for(let i=0;i<R_UP.length;i++) if(n<=R_UP[i]) return i; return -1; }
+
+function fitDev(code,nom){
+  const m=code.match(/^([a-zA-Z]{1,2})(\d{1,2})$/); if(!m) return null;
+  const L=m[1], g=+m[2];
+  if(g<5||g>14) return {err:"Квалитет поддерживается от 5 до 14"};
+  const idx=rangeIdx(nom);
+  if(idx<0) return {err:nom>500?"Таблицы посадок — до 500 мм":"Для посадки нужен номинал больше 0"};
+  const it=IT[g][idx];
+  const isHole = L[0]>="A" && L[0]<="Z";
+  const l=L.toLowerCase();
+  let es,ei;
+  if(!isHole){
+    if(l==="js"){es=it/2;ei=-it/2;}
+    else if(SH_ES[l]){es=-SH_ES[l][idx];ei=es-it;}
+    else if(l==="k"){ei=(g<=7)?SH_EI.k[idx]:0;es=ei+it;}
+    else if(SH_EI[l]){ei=SH_EI[l][idx];es=ei+it;}
+    else return {err:"Поле «"+L+"» не поддерживается — введите отклонения числами"};
+  } else {
+    const D = idx===0 ? 0 : it-IT[g-1][idx];
+    if(l==="js"){es=it/2;ei=-it/2;}
+    else if(SH_ES[l]){ei=SH_ES[l][idx];es=ei+it;}
+    else if(l==="k"){es=(g<=8)?-SH_EI.k[idx]+D:0;ei=es-it;}
+    else if(l==="m"){es=(g<=8)?-SH_EI.m[idx]+D:-SH_EI.m[idx];ei=es-it;}
+    else if(l==="n"){es= idx===0 ? -4 : ((g<=8)?-SH_EI.n[idx]+D:0);ei=es-it;}
+    else if(l==="p"){es=(g<=7)?-SH_EI.p[idx]+D:-SH_EI.p[idx];ei=es-it;}
+    else return {err:"Поле «"+L+"» не поддерживается — введите отклонения числами"};
+  }
+  return {es:es/1000,ei:ei/1000,fit:true};
+}
+
+function toNum(s){
+  if(s==null) return NaN;
+  const t=String(s).trim().replace(/,/g,".").replace(/[−–—]/g,"-").replace(/\s+/g,"");
+  if(t==="") return NaN;
+  return /^[+-]?\d*\.?\d+$/.test(t)? +t : NaN;
+}
+
+function parseTol(s,nom){
+  let t=(s||"").trim().replace(/,/g,".").replace(/[−–—]/g,"-");
+  if(!t) return {err:"Укажите допуск"};
+  if(/^[a-zA-Z]{1,2}\d{1,2}$/.test(t)) return fitDev(t,nom);
+  let m=t.replace(/\s+/g,"").match(/^(?:±|\+-|\+\/-)(\d*\.?\d+)$/);
+  if(m){const v=+m[1];return {es:v,ei:-v};}
+  const stripped=t.replace(/[\s\/;]/g,"");
+  const nums=stripped.match(/[+-]?\d*\.?\d+/g);
+  if(nums && nums.join("")===stripped && nums.length>=1 && nums.length<=2){
+    if(nums.length===1){const v=+nums[0];return v>=0?{es:v,ei:0}:{es:0,ei:v};}
+    const a=+nums[0],b=+nums[1];return {es:Math.max(a,b),ei:Math.min(a,b)};
+  }
+  return {err:"Не понял запись. Примеры: h9, H7, ±0,1, +0,1/−0,05"};
+}
+
+// ---------- Формат ----------
+function fx(v,d){ if(Math.abs(v)<5e-7) v=0; return v.toFixed(d===undefined?3:d).replace(".",","); }
+function fDev(v){ if(Math.abs(v)<5e-7) return "0"; return (v>0?"+":"−")+fx(Math.abs(v)); }
+function fSize(v){ if(Math.abs(v)<5e-7) v=0; let s=(+v.toFixed(4)).toString().replace(".",","); return s.replace("-","−"); }
+function fAbs(v){ return fx(v).replace("-","−"); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+// ---------- Состояние ----------
+const EXAMPLE={
+  links:[
+    {name:"A1",dir:1,nom:"100",tol:"js10",dist:"normal"},
+    {name:"A2",dir:-1,nom:"40",tol:"h9",dist:"normal"},
+    {name:"A3",dir:-1,nom:"30",tol:"h11",dist:"normal"},
+    {name:"A4",dir:-1,nom:"29,7",tol:"±0,05",dist:"uniform"}
+  ],
+  reqMin:"0,1", reqMax:"0,6", risk:0.27
+};
+const KEY="razm-cepi-v1";
+let uid=0;
+let state=load()||clone(EXAMPLE);
+state.links.forEach(l=>l.id=++uid);
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function load(){ try{const s=localStorage.getItem(KEY); if(!s) return null; const o=JSON.parse(s); if(o&&Array.isArray(o.links)) return o;}catch(e){} return null; }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify({links:state.links.map(({id,...r})=>r),reqMin:state.reqMin,reqMax:state.reqMax,risk:state.risk})); }catch(e){} }
+
+// ---------- Таблица звеньев ----------
+const linksEl=document.getElementById("links");
+function rowHTML(l){
+  const id=l.id;
+  return `<div class="lrow" data-id="${id}">
+    <div class="c-name"><span class="lbl-m">Звено</span><input type="text" id="name-${id}" value="${esc(l.name)}" aria-label="Обозначение звена"></div>
+    <div class="c-dir"><span class="lbl-m">Тип</span><button type="button" class="dir ${l.dir>0?"inc":"dec"}" id="dir-${id}" aria-label="Переключить тип звена">${dirInner(l.dir)}</button></div>
+    <div class="c-nom"><span class="lbl-m">Номинал, мм</span><input type="text" class="num" id="nom-${id}" inputmode="decimal" value="${esc(l.nom)}" aria-label="Номинальный размер, мм"></div>
+    <div class="c-tol"><span class="lbl-m">Допуск</span><input type="text" class="num" id="tol-${id}" value="${esc(l.tol)}" aria-label="Поле допуска или отклонения" placeholder="h9 или ±0,1"></div>
+    <div class="c-par parsed" id="par-${id}"></div>
+    <div class="c-dist"><span class="lbl-m">Распределение</span><select id="dist-${id}" aria-label="Закон распределения">
+      ${Object.keys(DIST_LABEL).map(k=>`<option value="${k}"${k===l.dist?" selected":""}>${DIST_LABEL[k]}</option>`).join("")}
+    </select></div>
+    <div class="c-del"><button type="button" class="del" id="del-${id}" aria-label="Удалить звено" title="Удалить">×</button></div>
+  </div>`;
+}
+function dirInner(d){ return d>0?'<span class="ar">→</span> увелич.':'<span class="ar">←</span> уменьш.'; }
+function renderRows(){
+  linksEl.querySelectorAll(".lrow:not(.head)").forEach(n=>n.remove());
+  linksEl.insertAdjacentHTML("beforeend",state.links.map(rowHTML).join(""));
+}
+linksEl.addEventListener("input",e=>{
+  const row=e.target.closest(".lrow"); if(!row) return;
+  const l=state.links.find(x=>x.id==row.dataset.id); if(!l) return;
+  const f=e.target.id.split("-")[0];
+  if(f==="name") l.name=e.target.value;
+  if(f==="nom") l.nom=e.target.value;
+  if(f==="tol") l.tol=e.target.value;
+  schedule();
+});
+linksEl.addEventListener("change",e=>{
+  if(e.target.tagName!=="SELECT") return;
+  const row=e.target.closest(".lrow"); const l=state.links.find(x=>x.id==row.dataset.id);
+  l.dist=e.target.value; schedule();
+});
+linksEl.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  const row=b.closest(".lrow"); const l=state.links.find(x=>x.id==row.dataset.id); if(!l) return;
+  if(b.classList.contains("dir")){ l.dir=-l.dir; b.className="dir "+(l.dir>0?"inc":"dec"); b.innerHTML=dirInner(l.dir); schedule(); }
+  if(b.classList.contains("del")){ state.links=state.links.filter(x=>x!==l); row.remove(); schedule(); }
+});
+document.getElementById("addRow").onclick=()=>{
+  const n=state.links.length+1;
+  const l={id:++uid,name:"A"+n,dir:-1,nom:"",tol:"",dist:"normal"};
+  state.links.push(l);
+  linksEl.insertAdjacentHTML("beforeend",rowHTML(l));
+  document.getElementById("nom-"+l.id).focus();
+  schedule();
+};
+document.getElementById("loadExample").onclick=()=>{ const r=state.risk; state=clone(EXAMPLE); state.risk=r; state.links.forEach(l=>l.id=++uid); syncReq(); renderRows(); schedule(); toast("Загружен пример"); };
+document.getElementById("clearAll").onclick=()=>{
+  state={links:[{id:++uid,name:"A1",dir:1,nom:"",tol:"",dist:"normal"},{id:++uid,name:"A2",dir:-1,nom:"",tol:"",dist:"normal"}],reqMin:"",reqMax:"",risk:state.risk};
+  syncReq(); renderRows(); schedule();
+};
+const reqMinEl=document.getElementById("reqMin"), reqMaxEl=document.getElementById("reqMax");
+function syncReq(){ reqMinEl.value=state.reqMin||""; reqMaxEl.value=state.reqMax||""; }
+reqMinEl.addEventListener("input",()=>{state.reqMin=reqMinEl.value;schedule();});
+reqMaxEl.addEventListener("input",()=>{state.reqMax=reqMaxEl.value;schedule();});
+
+let timer=null;
+function schedule(){ clearTimeout(timer); timer=setTimeout(recalc,140); }
+
+// ---------- Случайные числа (детерминированные — отчёт воспроизводим) ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+
+// ---------- Расчёт ----------
+let last=null;
+function recalc(){
+  save();
+  const parsed=[]; let errors=0;
+  state.links.forEach(l=>{
+    const nomEl=document.getElementById("nom-"+l.id), tolEl=document.getElementById("tol-"+l.id), par=document.getElementById("par-"+l.id);
+    const nom=toNum(l.nom);
+    const nomBad=isNaN(nom)||nom<0;
+    nomEl&&nomEl.classList.toggle("bad",nomBad && l.nom!=="");
+    let r=nomBad?{err:l.nom===""?"Укажите номинал":"Номинал — число ≥ 0"}:parseTol(l.tol,nom);
+    if(!r) r={err:"Не понял запись"};
+    tolEl&&tolEl.classList.toggle("bad",!!r.err && l.tol!=="" && !nomBad);
+    if(r.err){ errors++; if(par) par.innerHTML=`<span class="err">${esc(r.err)}</span>`; return; }
+    if(par) par.innerHTML=`<span class="lbl-m">Отклонения, мм</span>ES ${fDev(r.es)}<br>EI ${fDev(r.ei)}`;
+    parsed.push({name:l.name||"?",dir:l.dir,nom,es:r.es,ei:r.ei,T:r.es-r.ei,em:(r.es+r.ei)/2,dist:l.dist,tol:l.tol.trim()});
+  });
+
+  const rMin=toNum(state.reqMin), rMax=toNum(state.reqMax);
+  const hasReq=!isNaN(rMin)||!isNaN(rMax);
+  reqMinEl.classList.toggle("bad",state.reqMin&&isNaN(rMin));
+  reqMaxEl.classList.toggle("bad",state.reqMax&&isNaN(rMax));
+  const reqBadOrder=!isNaN(rMin)&&!isNaN(rMax)&&rMin>=rMax;
+  document.getElementById("reqT").textContent=(!isNaN(rMin)&&!isNaN(rMax)&&!reqBadOrder)?fAbs(rMax-rMin):"—";
+
+  const banner=document.getElementById("banner");
+  let msgs=[];
+  if(errors) msgs.push(`<div class="note warn">Звеньев с ошибками: ${errors}. Они не участвуют в расчёте, пока не исправлены.</div>`);
+  if(reqBadOrder) msgs.push(`<div class="note bad">Допустимый минимум должен быть меньше максимума.</div>`);
+  if(parsed.length && !parsed.some(p=>p.dir>0)) msgs.push(`<div class="note warn">В цепи нет увеличивающих звеньев. Проверьте типы звеньев.</div>`);
+  banner.innerHTML=msgs.join("");
+  banner.style.display=msgs.length?"flex":"none"; banner.style.flexDirection="column"; banner.style.gap="8px";
+
+  if(!parsed.length){
+    document.getElementById("closeNom").textContent="—";
+    ["mWorst","mProb","mMC"].forEach(id=>document.getElementById(id).innerHTML=`<h3>${{mWorst:"Максимум-минимум",mProb:"Вероятностный",mMC:"Монте-Карло"}[id]}</h3><p class="muted" style="margin:0">Добавьте хотя бы одно звено с номиналом и допуском.</p>`);
+    document.getElementById("contrib").innerHTML=""; document.getElementById("grades").innerHTML=""; drawSchema([],0); last=null; report(); return;
+  }
+
+  const risk=RISKS.find(r=>r.p===state.risk)||RISKS[1];
+  let nom=0,wES=0,wEI=0,Em=0,sumT=0,sumVar=0;
+  parsed.forEach(p=>{
+    const lam2=LAM2[p.dist]||LAM2.normal; p.lam2=lam2;
+    if(p.dir>0){nom+=p.nom;wES+=p.es;wEI+=p.ei;Em+=p.em;}
+    else {nom-=p.nom;wES-=p.ei;wEI-=p.es;Em-=p.em;}
+    sumT+=p.T; sumVar+=lam2*p.T*p.T;
+  });
+  const pT=risk.t*Math.sqrt(sumVar), pES=Em+pT/2, pEI=Em-pT/2;
+
+  // Монте-Карло
+  const N=100000, rnd=mulberry32(20261101), vals=new Float64Array(N);
+  let spare=null;
+  function gauss(){ if(spare!==null){const s=spare;spare=null;return s;} let u=0,v=0; while(u===0)u=rnd(); v=rnd(); const r=Math.sqrt(-2*Math.log(u)); spare=r*Math.sin(2*Math.PI*v); return r*Math.cos(2*Math.PI*v); }
+  let bad=0, mcMin=Infinity, mcMax=-Infinity, s1=0, s2=0;
+  for(let k=0;k<N;k++){
+    let a=0;
+    for(let j=0;j<parsed.length;j++){
+      const p=parsed[j]; let d;
+      if(p.T===0) d=p.es;
+      else if(p.dist==="uniform") d=p.ei+p.T*rnd();
+      else if(p.dist==="simpson") d=p.ei+p.T*(rnd()+rnd())/2;
+      else d=p.em+(p.T/6)*gauss();
+      a+= p.dir>0 ? (p.nom+d) : -(p.nom+d);
+    }
+    vals[k]=a; if(a<mcMin)mcMin=a; if(a>mcMax)mcMax=a; s1+=a; s2+=a*a;
+    if((!isNaN(rMin)&&a<rMin-1e-9)||(!isNaN(rMax)&&a>rMax+1e-9)) bad++;
+  }
+  const mcMean=s1/N, mcSd=Math.sqrt(Math.max(0,s2/N-mcMean*mcMean));
+
+  function verdict(lo,hi){
+    if(!hasReq||reqBadOrder) return {cls:"none",txt:"Требование не задано"};
+    const okLo=isNaN(rMin)||lo>=rMin-1e-9, okHi=isNaN(rMax)||hi<=rMax+1e-9;
+    if(okLo&&okHi) return {cls:"ok",txt:"Проходит"};
+    const parts=[]; if(!okLo) parts.push("ниже минимума на "+fx(rMin-lo)); if(!okHi) parts.push("выше максимума на "+fx(hi-rMax));
+    return {cls:"bad",txt:"Не проходит",detail:parts.join(", ")+" мм"};
+  }
+  const vW=verdict(nom+wEI,nom+wES), vP=verdict(nom+pEI,nom+pES);
+  const badPct=bad/N*100;
+  const vM=(!hasReq||reqBadOrder)?{cls:"none",txt:"Требование не задано"}:(bad===0?{cls:"ok",txt:"Брака нет"}:{cls:badPct<0.27?"ok":"bad",txt:"Брак "+fmtPct(badPct)});
+
+  document.getElementById("closeNom").textContent=fSize(nom);
+
+  document.getElementById("mWorst").innerHTML=card("Максимум-минимум","Полная взаимозаменяемость",nom,wES,wEI,wES-wEI,vW,"");
+  document.getElementById("mProb").innerHTML=card("Вероятностный",`Риск <select id="riskSel" aria-label="Процент риска">${RISKS.map(r=>`<option value="${r.p}"${r.p===risk.p?" selected":""}>${String(r.p).replace(".",",")} %</option>`).join("")}</select> &nbsp;t = ${String(risk.t).replace(".",",")}`,nom,pES,pEI,pT,vP,"",true);
+  document.getElementById("riskSel").onchange=e=>{state.risk=+e.target.value;schedule();};
+  document.getElementById("mMC").innerHTML=`<div><h3>Монте-Карло</h3><div class="sub">100 000 виртуальных сборок</div></div>
+    <div class="limits">${fAbs(mcMin)} <small>…</small> ${fAbs(mcMax)}</div>
+    <span class="chip ${vM.cls}">${vM.txt}</span>
+    <canvas class="hist" id="hist" role="img" aria-label="Гистограмма замыкающего звена"></canvas>
+    <div class="legend"><span><i style="border-color:var(--ink)"></i>требование</span><span><i style="border-color:var(--muted);border-top-style:dashed"></i>максимум-минимум</span></div>
+    <dl class="kv"><dt>Среднее</dt><dd>${fAbs(mcMean)}</dd><dt>σ</dt><dd>${fx(mcSd,4)}</dd><dt>±3σ</dt><dd>${fAbs(mcMean-3*mcSd)} … ${fAbs(mcMean+3*mcSd)}</dd></dl>`;
+
+  last={parsed,nom,wES,wEI,pES,pEI,pT,risk,mcMin,mcMax,mcMean,mcSd,badPct,bad,rMin,rMax,hasReq,vW,vP,vM,vals,sumT,sumVar};
+  drawHist();
+  renderContrib(parsed,sumT,sumVar);
+  renderGrades(parsed,rMin,rMax,risk,reqBadOrder);
+  drawSchema(parsed,nom);
+  report();
+}
+function fmtPct(p){ if(p===0) return "0 %"; if(p<0.01) return "<0,01 %"; return (p<1?p.toFixed(2):p.toFixed(1)).replace(".",",")+" %"; }
+
+function card(title,sub,nom,ES,EI,T,v,extra,isProb){
+  return `<div><h3>${title}</h3><div class="sub${isProb?" riskrow":""}">${sub}</div></div>
+   <div class="limits">${fAbs(nom+EI)} <small>…</small> ${fAbs(nom+ES)}</div>
+   <span class="chip ${v.cls}">${v.txt}</span>
+   ${v.detail?`<div class="muted" style="font-size:13px;margin-top:-6px">${v.detail}</div>`:""}
+   <dl class="kv"><dt>Номинал</dt><dd>${fSize(nom)}</dd><dt>ES<sub>Δ</sub></dt><dd>${fDev(ES)}</dd><dt>EI<sub>Δ</sub></dt><dd>${fDev(EI)}</dd><dt>T<sub>Δ</sub></dt><dd>${fx(T)}</dd><dt>Середина поля</dt><dd>${fDev((ES+EI)/2)}</dd></dl>${extra}`;
+}
+
+function renderContrib(parsed,sumT,sumVar){
+  if(sumT<=0){ document.getElementById("contrib").innerHTML=`<p class="muted" style="margin:0">У всех звеньев нулевой допуск.</p>`; return; }
+  const rows=parsed.map(p=>({p,w:p.T/sumT*100,v:sumVar>0?p.lam2*p.T*p.T/sumVar*100:0}));
+  const top=rows.reduce((a,b)=>b.v>a.v?b:a,rows[0]);
+  const sorted=[...rows].sort((a,b)=>b.v-a.v);
+  document.getElementById("contrib").innerHTML=`
+   <div class="note">Главный вклад — <b>${esc(top.p.name)}</b>: ${fx(top.v,0)} % дисперсии замыкающего звена. Ужесточение его допуска даст наибольший эффект.</div>
+   <div style="overflow-x:auto"><table class="contrib"><thead><tr><th>Звено</th><th style="text-align:right">T, мм</th><th>Доля дисперсии</th><th style="text-align:right">В сумме T</th></tr></thead><tbody>
+   ${sorted.map(r=>`<tr class="${r===top?"top":""}"><td>${esc(r.p.name)} <span class="muted">${r.p.dir>0?"→":"←"}</span></td><td class="n">${fx(r.p.T)}</td>
+   <td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="flex:1"><span style="width:${r.v.toFixed(1)}%"></span></div><span class="num" style="font-size:12px;min-width:38px;text-align:right">${fx(r.v,0)} %</span></div></td>
+   <td class="n">${fx(r.w,0)} %</td></tr>`).join("")}
+   </tbody></table></div>`;
+}
+
+function unitI(nom){
+  const idx=rangeIdx(nom); if(idx<0) return null;
+  const D=Math.sqrt(R_LO[idx]*R_UP[idx]);
+  return 0.45*Math.cbrt(D)+0.001*D;
+}
+function pickGrade(a){ let g=null; for(let q=5;q<=14;q++) if(A_UNITS[q]<=a+1e-9) g=q; return g; }
+function renderGrades(parsed,rMin,rMax,risk,badOrder){
+  const el=document.getElementById("grades");
+  if(isNaN(rMin)||isNaN(rMax)||badOrder){ el.innerHTML=`<p class="muted" style="margin:0">Задайте допустимый минимум и максимум замыкающего звена — калькулятор подберёт квалитет для составляющих звеньев.</p>`; return; }
+  const TD=(rMax-rMin)*1000;
+  const use=parsed.filter(p=>unitI(p.nom)!==null);
+  const skipped=parsed.length-use.length;
+  if(!use.length){ el.innerHTML=`<p class="muted" style="margin:0">Нет звеньев с номиналом от 0 до 500 мм.</p>`; return; }
+  const sumI=use.reduce((s,p)=>s+unitI(p.nom),0);
+  const sumI2=use.reduce((s,p)=>s+p.lam2*unitI(p.nom)**2,0);
+  const aW=TD/sumI, aP=TD/(risk.t*Math.sqrt(sumI2));
+  const gW=pickGrade(aW), gP=pickGrade(aP);
+  const line=(label,a,g)=>`<div class="grade"><div><div>${label}</div><div class="muted num" style="font-size:12px">a = ${fx(a,1)} ед. допуска</div></div><b>${g?"IT"+g:"—"}</b></div>`;
+  let note="";
+  if(!gW&&!gP) note=`<div class="note bad">Требование жёстче IT5 даже по вероятностному методу. Рассмотрите звено-компенсатор (прокладку, регулировочное кольцо) или селективную сборку.</div>`;
+  else if(!gW) note=`<div class="note warn">По максимуму-минимуму нужна точность выше IT5. Вероятностный метод даёт IT${gP} — если допустим риск ${String(risk.p).replace(".",",")} %, это реальный путь.</div>`;
+  else note=`<div class="note">Назначьте звеньям квалитет IT${gW}${gP&&gP!==gW?` (или IT${gP} при вероятностном расчёте)`:""}, одно звено оставьте увязочным и пересчитайте его отклонения так, чтобы цепь замкнулась.</div>`;
+  el.innerHTML=`<div class="grades">${line("Максимум-минимум",aW,gW)}${line("Вероятностный, риск "+String(risk.p).replace(".",",")+" %",aP,gP)}</div>${note}
+   <p class="muted" style="font-size:12px;margin:0">Требуемый T<sub>Δ</sub> = ${fx(TD/1000)} мм, Σi = ${fx(sumI,2)} мкм${skipped?`. Не учтено звеньев вне 0–500 мм: ${skipped}`:""}.</p>`;
+}
+
+// ---------- Цвета темы ----------
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+// ---------- Гистограмма ----------
+function drawHist(){
+  const cv=document.getElementById("hist"); if(!cv||!last) return;
+  const {vals,mcMin,mcMax,rMin,rMax,nom,wES,wEI}=last;
+  const dpr=window.devicePixelRatio||1, W=cv.clientWidth||300, H=cv.clientHeight||190;
+  cv.width=W*dpr; cv.height=H*dpr; const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+  let lo=Math.min(mcMin,nom+wEI), hi=Math.max(mcMax,nom+wES);
+  if(!isNaN(rMin)) lo=Math.min(lo,rMin); if(!isNaN(rMax)) hi=Math.max(hi,rMax);
+  if(hi-lo<1e-9){hi+=0.01;lo-=0.01;}
+  const pad=(hi-lo)*0.04; lo-=pad; hi+=pad;
+  const B=56, bins=new Array(B).fill(0), w=(hi-lo)/B;
+  for(let i=0;i<vals.length;i++){ let b=Math.floor((vals[i]-lo)/w); if(b<0)b=0; if(b>=B)b=B-1; bins[b]++; }
+  const mx=Math.max(...bins)||1, top=8, bottom=H-22, x=v=>(v-lo)/(hi-lo)*W;
+  const cOk=cssVar("--accent"), cBad=cssVar("--bad"), cInk=cssVar("--ink"), cMut=cssVar("--muted"), cLine=cssVar("--line");
+  g.strokeStyle=cLine; g.lineWidth=1; g.beginPath(); g.moveTo(0,bottom+.5); g.lineTo(W,bottom+.5); g.stroke();
+  for(let b=0;b<B;b++){
+    if(!bins[b]) continue;
+    const c=lo+(b+.5)*w, out=(!isNaN(rMin)&&c<rMin)||(!isNaN(rMax)&&c>rMax);
+    const h=(bottom-top)*bins[b]/mx;
+    g.fillStyle=out?cBad:cOk; g.globalAlpha=out?0.9:0.75;
+    g.fillRect(x(lo+b*w)+0.5,bottom-h,Math.max(1,W/B-1),h);
+  }
+  g.globalAlpha=1;
+  function vline(v,color,dash){ g.strokeStyle=color; g.setLineDash(dash||[]); g.lineWidth=1.5; g.beginPath(); g.moveTo(Math.round(x(v))+.5,top-4); g.lineTo(Math.round(x(v))+.5,bottom); g.stroke(); g.setLineDash([]); }
+  vline(nom+wEI,cMut,[4,3]); vline(nom+wES,cMut,[4,3]);
+  if(!isNaN(rMin)) vline(rMin,cInk); if(!isNaN(rMax)) vline(rMax,cInk);
+  g.fillStyle=cMut; g.font="11px "+cssVar("--f-num"); g.textBaseline="top";
+  const ticks=[lo+pad,(lo+hi)/2,hi-pad];
+  ticks.forEach((t,i)=>{ const s=fAbs(t); const tw=g.measureText(s).width; let px=x(t)-tw/2; px=Math.max(0,Math.min(W-tw,px)); g.fillText(s,px,bottom+6); });
+}
+
+// ---------- Схема цепи ----------
+function drawSchema(parsed,nom){
+  const el=document.getElementById("schema");
+  if(!parsed.length){ el.innerHTML=""; return; }
+  const inc=parsed.filter(p=>p.dir>0), dec=parsed.filter(p=>p.dir<0);
+  const W=860, L=30, R=W-30, gapW=70;
+  const span=R-L, rowH=46;
+  const y1=40, y2=y1+rowH+14, yC=y2+rowH+6, H=yC+40;
+  const sumInc=inc.reduce((s,p)=>s+Math.max(p.nom,0.0001),0)||1;
+  const sumDec=dec.reduce((s,p)=>s+Math.max(p.nom,0.0001),0)||1;
+  const cInc="var(--inc)", cDec="var(--dec)", cAcc="var(--ink)";
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема размерной цепи, не в масштабе">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,1.5 L10,5 L0,8.5 z" fill="context-stroke"/></marker>
+  </defs>`;
+  // стенки
+  svg+=`<line x1="${L}" y1="${y1-26}" x2="${L}" y2="${yC+8}" stroke="var(--line-strong)" stroke-width="1"/>`;
+  svg+=`<line x1="${R}" y1="${y1-26}" x2="${R}" y2="${yC+8}" stroke="var(--line-strong)" stroke-width="1"/>`;
+  function dim(x1,x2,y,color,label,sub,arrow){
+    const w=x2-x1, mid=(x1+x2)/2;
+    let s=`<line x1="${x1}" y1="${y-12}" x2="${x1}" y2="${y+6}" stroke="${color}" stroke-width="1"/><line x1="${x2}" y1="${y-12}" x2="${x2}" y2="${y+6}" stroke="${color}" stroke-width="1"/>`;
+    s+=`<line x1="${x1+1}" y1="${y}" x2="${x2-1}" y2="${y}" stroke="${color}" stroke-width="1.4" marker-start="url(#ah)" marker-end="url(#ah)" style="color:${color}"/>`;
+    if(w>34){
+      s+=`<text x="${mid}" y="${y-8}" text-anchor="middle" font-family="var(--f-ui)" font-size="13" font-weight="600" fill="${color}">${esc(label)}${arrow?` ${arrow}`:""}</text>`;
+      if(w>70) s+=`<text x="${mid}" y="${y+18}" text-anchor="middle" font-family="var(--f-num)" font-size="11" fill="var(--muted)">${esc(sub)}</text>`;
+    }
+    return s;
+  }
+  let x=L;
+  inc.forEach(p=>{ const w=span*Math.max(p.nom,0.0001)/sumInc; svg+=dim(x,x+w,y1,cInc,p.name,fSize(p.nom)+" "+p.tol,"→"); x+=w; });
+  if(!inc.length) svg+=`<text x="${(L+R)/2}" y="${y1}" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="var(--f-ui)">нет увеличивающих звеньев</text>`;
+  x=L; const decSpan=span-gapW;
+  dec.forEach(p=>{ const w=decSpan*Math.max(p.nom,0.0001)/sumDec; svg+=dim(x,x+w,y2,cDec,p.name,fSize(p.nom)+" "+p.tol,"←"); x+=w; });
+  const cx1=dec.length?L+decSpan:L, cx2=R;
+  svg+=`<line x1="${cx1+1}" y1="${yC}" x2="${cx2-1}" y2="${yC}" stroke="${cAcc}" stroke-width="1.6" marker-start="url(#ah)" marker-end="url(#ah)"/>`;
+  svg+=`<line x1="${cx1}" y1="${y2+4}" x2="${cx1}" y2="${yC+6}" stroke="${cAcc}" stroke-width="1"/>`;
+  svg+=`<text x="${(cx1+cx2)/2}" y="${yC+20}" text-anchor="middle" font-family="var(--f-ui)" font-size="13" font-weight="700" fill="${cAcc}">AΔ = ${fSize(nom)}</text>`;
+  svg+=`<text x="${R}" y="14" text-anchor="end" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">схема не в масштабе</text>`;
+  svg+=`</svg>`;
+  el.innerHTML=svg;
+}
+
+// ---------- Отчёт ----------
+function reportText(){
+  if(!last) return "Добавьте звенья цепи.";
+  const L=last, rk=String(L.risk.p).replace(".",",");
+  const lines=["РАСЧЁТ РАЗМЕРНОЙ ЦЕПИ",""," Звено  Тип   Номинал   Допуск     ES        EI"];
+  L.parsed.forEach(p=>lines.push(` ${p.name.padEnd(6)} ${p.dir>0?"ув. ":"ум. "}  ${fSize(p.nom).padStart(8)}   ${p.tol.padEnd(9)} ${fDev(p.es).padStart(8)}  ${fDev(p.ei).padStart(8)}`));
+  lines.push("");
+  lines.push(`Замыкающее звено AΔ: номинал ${fSize(L.nom)} мм`);
+  if(L.hasReq) lines.push(`Требование: ${isNaN(L.rMin)?"—":fAbs(L.rMin)} … ${isNaN(L.rMax)?"—":fAbs(L.rMax)} мм`);
+  lines.push("");
+  lines.push(`Максимум-минимум: ES ${fDev(L.wES)}, EI ${fDev(L.wEI)}, T ${fx(L.wES-L.wEI)} → ${fAbs(L.nom+L.wEI)} … ${fAbs(L.nom+L.wES)} мм. ${L.vW.txt}${L.vW.detail?" ("+L.vW.detail+")":""}`);
+  lines.push(`Вероятностный (риск ${rk} %, t = ${String(L.risk.t).replace(".",",")}): ES ${fDev(L.pES)}, EI ${fDev(L.pEI)}, T ${fx(L.pT)} → ${fAbs(L.nom+L.pEI)} … ${fAbs(L.nom+L.pES)} мм. ${L.vP.txt}${L.vP.detail?" ("+L.vP.detail+")":""}`);
+  lines.push(`Монте-Карло (100 000 сборок): ${fAbs(L.mcMin)} … ${fAbs(L.mcMax)} мм, среднее ${fAbs(L.mcMean)}, σ ${fx(L.mcSd,4)}.${L.hasReq?" Брак "+fmtPct(L.badPct)+".":""}`);
+  lines.push("");
+  lines.push("Методика: РД 50-635-87; допуски по ГОСТ 25346-2013 / 25347-2013.");
+  return lines.join("\n");
+}
+function report(){ document.getElementById("reportFallback").value=reportText(); }
+document.getElementById("copyReport").onclick=()=>{
+  const t=reportText(), ta=document.getElementById("reportFallback");
+  ta.value=t;
+  try{
+    navigator.clipboard.writeText(t).then(()=>toast("Отчёт скопирован"),()=>{ta.focus();ta.select();toast("Выделил текст — нажмите Ctrl+C");});
+  }catch(e){ ta.focus(); ta.select(); toast("Выделил текст — нажмите Ctrl+C"); }
+};
+let tt=null;
+function toast(s){ const el=document.getElementById("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),1800); }
+
+// ---------- Тема и размер ----------
+const mq=window.matchMedia("(prefers-color-scheme: dark)");
+mq.addEventListener&&mq.addEventListener("change",()=>drawHist());
+new MutationObserver(()=>drawHist()).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+let rt=null; window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(drawHist,120);});
+
+syncReq(); renderRows(); recalc();
+})();
+</script>
+
+</body>
+</html>

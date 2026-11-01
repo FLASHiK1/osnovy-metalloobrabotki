@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Калькулятор режимов резания</title>
+<meta name="description" content="Онлайн-расчёт режимов резания для точения, фрезерования и сверления: обороты, подача, мощность, крутящий момент, машинное время, шероховатость.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: слева исходные данные (операция, материал, инструмент, геометрия, станок), справа крупные результаты и проверка станка — как карта наладки */
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hint{font-size:12px;color:var(--muted)}
+
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-strong);border:1px solid var(--line-strong);border-radius:5px;overflow:hidden}
+.seg button{border:0;background:var(--paper);padding:9px 6px;cursor:pointer;font-weight:600;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.seg button small{font-weight:400;font-size:11px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+.seg button[aria-pressed="true"] small{color:var(--paper);opacity:.8}
+
+.vcrow{display:flex;gap:8px;align-items:end}
+.vcrow .field{flex:1}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.src{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);color:var(--muted)}
+.src.manual{background:var(--hot-soft);color:var(--hot)}
+
+.results{position:sticky;top:calc(12px + env(safe-area-inset-top, 0px))}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+.meter{display:flex;flex-direction:column;gap:4px}
+.meter .top{display:flex;justify-content:space-between;font-size:13px}
+.meter .bar{height:8px;border-radius:2px;background:var(--line);overflow:hidden}
+.meter .bar>span{display:block;height:100%;background:var(--ok)}
+.meter.warn .bar>span{background:var(--warn)}
+.meter.bad .bar>span{background:var(--bad)}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.notes{display:flex;flex-direction:column;gap:8px}
+.gcode{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+code.g{font-family:var(--f-num);font-size:15px;background:var(--ink);color:var(--paper);border-radius:4px;padding:8px 12px;overflow-x:auto;white-space:pre;max-width:100%;line-height:1.5}
+
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:6px 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td.n,th.n{text-align:right;font-family:var(--f-num)}
+tr.cur td{background:var(--accent-soft)}
+.iso{display:inline-block;width:20px;text-align:center;font-weight:700;font-size:11px;border-radius:3px;margin-right:6px;color:#fff}
+.iso.P{background:#2f6db3}.iso.M{background:#b8962e}.iso.K{background:#b5352c}.iso.N{background:#3c8a4a}.iso.S{background:#c46a1d}.iso.H{background:#6b6f73}
+
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+footer nav{display:flex;gap:14px;flex-wrap:wrap}
+
+@media (max-width:860px){ .main{grid-template-columns:1fr} .results{position:static} }
+@media (max-width:560px){ .seg{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+details.help{border:1px solid var(--line);border-radius:5px;padding:10px 12px;font-size:14px;margin-top:12px}
+details.help summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details.help .hb{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+details.help p{margin:0}
+details.help ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.amp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px;align-items:end;background:var(--bg);border-radius:4px;padding:10px}
+@media (max-width:480px){ .amp{grid-template-columns:repeat(3,minmax(0,1fr))} .amp .btn{grid-column:1/-1} }
+.machnote{font-size:12px;color:var(--muted);margin-top:4px}
+details.qhelp{margin-top:6px;font-size:13px}
+details.qhelp summary{cursor:pointer;color:var(--accent);font-weight:500;list-style:none;display:inline-flex;align-items:center;gap:6px}
+details.qhelp summary::-webkit-details-marker{display:none}
+details.qhelp summary::before{content:"?";display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;font-size:11px;font-weight:700}
+details.qhelp[open] summary{margin-bottom:8px}
+.qb{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);border-radius:5px;padding:12px;background:var(--bg)}
+.qb svg{display:block;width:100%;max-width:420px;height:auto}
+.qb p{margin:0}
+.qb ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.krp{display:flex;flex-wrap:wrap;gap:6px}
+.krp button{font-size:12px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 8px;cursor:pointer;text-align:left}
+.krp button:hover{border-color:var(--accent);color:var(--accent)}
+.krp button.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html" style="color:inherit;text-decoration:none">Основы металлообработки</a> · калькулятор</div>
+      <h1>Калькулятор режимов резания</h1>
+      <p>Выберите операцию, материал и инструмент. Калькулятор подставит стартовую скорость резания и посчитает обороты, подачу, мощность, момент и машинное время, а затем проверит, потянет ли станок.</p>
+    </div>
+    <div class="std">Группы материалов ISO 513<br>Удельная сила резания k<sub>c1</sub></div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="seg" role="group" aria-label="Операция">
+        <button type="button" data-op="turn" aria-pressed="true">Точение<small>токарная</small></button>
+        <button type="button" data-op="mill" aria-pressed="false">Фрезерование<small>концевое, торцевое</small></button>
+        <button type="button" data-op="drill" aria-pressed="false">Сверление<small>спиральное сверло</small></button>
+        <button type="button" data-op="thread" aria-pressed="false">Резьбо&shy;фрезерование<small>винтовая интерполяция</small></button>
+      </div>
+
+      <div class="grid2">
+        <div class="field" style="grid-column:1/-1"><label for="mat">Обрабатываемый материал</label><select id="mat"></select></div>
+        <div class="field"><label for="tool">Материал инструмента</label><select id="tool">
+          <option value="carb">Твёрдый сплав с покрытием</option>
+          <option value="hss">Быстрорежущая сталь Р6М5</option>
+        </select></div>
+        <div class="field"><label for="hard">Твёрдость</label><div class="num" id="hard" style="padding:7px 0">—</div></div>
+      </div>
+
+      <div class="vcrow">
+        <div class="field"><label for="vc"><span>Скорость резания V<sub>c</sub>, м/мин</span> <span class="src" id="vcSrc">по таблице</span></label><input type="text" id="vc" inputmode="decimal"></div>
+        <button type="button" class="btn" id="vcReset">Сбросить к таблице</button>
+      </div>
+      <div class="hint" id="vcHint"></div>
+
+      <div id="geo"></div>
+
+      <div>
+        <h3 style="margin-bottom:10px">Станок</h3>
+        <div class="field" style="margin-bottom:12px"><label for="mach">Тип станка</label><select id="mach"></select><div class="machnote" id="machNote"></div></div>
+        <div class="grid3">
+          <div class="field"><label for="nmax">Макс. обороты, об/мин</label><input type="text" id="nmax" inputmode="numeric" value="4000"></div>
+          <div class="field"><label for="pmax">Мощность шпинделя, кВт</label><input type="text" id="pmax" inputmode="decimal" value="11"></div>
+          <div class="field"><label for="eta">КПД привода</label><input type="text" id="eta" inputmode="decimal" value="0,8"></div>
+        </div>
+        <details class="help" id="help">
+          <summary>Не знаю мощность или КПД станка</summary>
+          <div class="hb">
+            <p><b>Где найти мощность</b></p>
+            <ul>
+              <li>Паспорт станка, раздел «Основные технические данные» — строка «Мощность электродвигателя главного движения».</li>
+              <li>Табличка (шильдик) на двигателе главного привода — значение в кВт. Если указано в л. с., умножьте на 0,736.</li>
+              <li>На станках с ЧПУ — данные привода шпинделя: для длительной работы берите мощность S1, а не кратковременную S6.</li>
+              <li>Ничего нет — выберите тип станка выше: подставятся типичные значения.</li>
+            </ul>
+            <p><b>Посчитать по току двигателя</b> — ток с таблички или замер токовыми клещами под нагрузкой:</p>
+            <div class="amp">
+              <div class="field"><label for="ampI">Ток, А</label><input type="text" id="ampI" inputmode="decimal" placeholder="напр. 21"></div>
+              <div class="field"><label for="ampU">Напряжение, В</label><input type="text" id="ampU" inputmode="decimal" value="380"></div>
+              <div class="field"><label for="ampC">cos φ</label><input type="text" id="ampC" inputmode="decimal" value="0,85"></div>
+              <button type="button" class="btn" id="ampUse">Подставить</button>
+            </div>
+            <div class="hint" id="ampOut">P = √3 · U · I · cos φ · η<sub>дв</sub> / 1000, где η<sub>дв</sub> ≈ 0,88 — КПД самого двигателя. cos φ — с таблички, обычно 0,8–0,88.</div>
+            <p><b>Какой КПД взять</b></p>
+            <ul>
+              <li>0,85–0,9 — станок с ЧПУ, шпиндель с прямым или ременным приводом.</li>
+              <li>0,75–0,8 — универсальный станок с коробкой скоростей (16К20, 6Р12).</li>
+              <li>0,65–0,7 — старый станок с изношенной коробкой.</li>
+              <li>Не уверены — оставьте 0,8. Для черновой работы держите загрузку не выше 75–80 % мощности.</li>
+            </ul>
+            <p class="hint">На низких оборотах станок отдаёт не всю мощность. У шпинделей с ЧПУ ниже базовой частоты двигателя мощность падает пропорционально оборотам. У станков с коробкой на нижних ступенях ограничение — допустимый крутящий момент привода.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="sheet results" aria-label="Результаты" aria-live="polite">
+      <div class="kpis" id="kpis"></div>
+      <div id="extra"></div>
+      <div id="machine" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div class="notes" id="notes"></div>
+      <div>
+        <h3 style="margin-bottom:8px">Для программы ЧПУ</h3>
+        <div class="gcode"><code class="g" id="gcode"></code><button type="button" class="btn" id="copyG">Копировать</button></div>
+        <div class="hint" id="gHint" style="margin-top:6px"></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="sheet" aria-labelledby="h-tab">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline">
+      <h2 id="h-tab">Стартовые скорости резания</h2>
+      <span class="hint">м/мин, твёрдый сплав / Р6М5 · k<sub>c1</sub> в Н/мм²</span>
+    </div>
+    <div class="tbl" id="matTbl"></div>
+    <p class="hint" style="margin:0">Это ориентир для первого прохода. Точные значения зависят от марки сплава, покрытия, геометрии и жёсткости системы — берите их из каталога производителя инструмента и корректируйте по стойкости.</p>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p><b>Обороты и подача</b> — одинаково для всех операций:</p>
+      <div class="formula">n = 1000 · Vc / (π · D)          об/мин
+Vf = f · n   (точение, сверление) мм/мин
+Vf = fz · z · n   (фрезерование)</div>
+      <p><b>Удельная сила резания</b> зависит от толщины стружки h<sub>m</sub>:</p>
+      <div class="formula">kc = kc1 · hm^(−mc)
+точение:   hm = f · sin κr
+фрезерование: hm = sin κr · ae · fz / (Dc · arcsin(ae/Dc))
+сверление: hm = (f/2) · sin 59°</div>
+      <p><b>Мощность резания</b>, кВт:</p>
+      <div class="formula">точение:      Pc = Vc · ap · f · kc / 60 000
+фрезерование: Pc = ap · ae · Vf · kc / 60 000 000
+сверление:    Pc = f · Vc · D · kc / 240 000
+мощность на шпинделе = Pc / η</div>
+      <p><b>Шероховатость при точении</b> (теоретическая): Rz ≈ f² / (8 · rε) · 1000, Ra ≈ 50 · f² / rε, мкм. Реальная шероховатость хуже из-за вибраций и износа.</p>
+      <p>Скорости в таблице — средние стартовые значения для токарной обработки. Для фрезерования калькулятор берёт 90 % от них, для сверления твёрдым сплавом — 55 %, быстрорежущим сверлом — 80 % от значения для Р6М5, для резьбофрезерования — 65 % (твёрдый сплав) и 70 % (Р6М5).</p>
+      <p><b>Резьбофрезерование.</b> Фреза идёт по винтовой линии: за один оборот вокруг оси резьбы опускается или поднимается на шаг P. Подача на кромке и подача по центру фрезы различаются, и в программу ЧПУ задаётся подача по центру:</p>
+      <div class="formula">Vf кромки = fz · z · n
+внутренняя: Vf центра = Vf кромки · (D − Dc) / D
+наружная:   Vf центра = Vf кромки · (D + Dc) / D
+глубина профиля: внутр. 0,5413·P, наруж. 0,6134·P</div>
+      <p>Многониточная (гребенчатая) фреза нарезает всю длину за один виток 360° плюс около ¼ витка на вход и выход. Однониточная проходит L/P витков. Мощность при резьбофрезеровании оценивается приближённо — по объёму треугольного профиля.</p>
+    </div>
+  </details>
+
+  <footer style="display:flex;flex-direction:column;gap:10px"><span>Результат — расчётный ориентир. Окончательные режимы уточняйте по каталогу инструмента и пробному проходу.</span><nav style="display:flex;flex-wrap:wrap;gap:6px 16px"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezby.html">Резьбы</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a></nav></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// Материалы: ISO-группа, марки, твёрдость, kc1 (Н/мм²), mc, Vc точения твёрдым сплавом и Р6М5 (м/мин)
+const MATS=[
+ {iso:"P",name:"Сталь углеродистая",grades:"Ст3, 10, 20",hb:"до 150 HB",kc1:1500,mc:.25,vc:260,hss:40},
+ {iso:"P",name:"Сталь среднеуглеродистая",grades:"35, 45, 50",hb:"170–230 HB",kc1:1600,mc:.25,vc:220,hss:30},
+ {iso:"P",name:"Сталь легированная",grades:"40Х, 30ХГСА, 18ХГТ",hb:"180–260 HB",kc1:1700,mc:.25,vc:180,hss:25},
+ {iso:"P",name:"Сталь инструментальная, отожжённая",grades:"У8, ХВГ, 9ХС",hb:"до 250 HB",kc1:1950,mc:.25,vc:150,hss:18},
+ {iso:"M",name:"Нержавеющая аустенитная",grades:"12Х18Н10Т, 08Х18Н10",hb:"до 200 HB",kc1:2000,mc:.21,vc:160,hss:15},
+ {iso:"K",name:"Чугун серый",grades:"СЧ15, СЧ20, СЧ25",hb:"до 230 HB",kc1:1100,mc:.28,vc:220,hss:25},
+ {iso:"K",name:"Чугун высокопрочный",grades:"ВЧ45, ВЧ50, ВЧ60",hb:"до 250 HB",kc1:1350,mc:.28,vc:160,hss:18},
+ {iso:"N",name:"Алюминиевые сплавы",grades:"Д16Т, АМг6, АК6",hb:"до 120 HB",kc1:700,mc:.25,vc:500,hss:150},
+ {iso:"N",name:"Медь, латунь, бронза",grades:"М1, Л63, БрАЖ9-4",hb:"до 150 HB",kc1:700,mc:.25,vc:300,hss:60},
+ {iso:"S",name:"Титановые сплавы",grades:"ВТ1-0, ВТ6, ВТ20",hb:"до 350 HB",kc1:1400,mc:.23,vc:50,hss:12},
+ {iso:"S",name:"Жаропрочные никелевые",grades:"ХН77ТЮР, ЭИ437, Inconel 718",hb:"до 350 HB",kc1:2800,mc:.25,vc:35,hss:5},
+ {iso:"H",name:"Закалённая сталь",grades:"45, 40Х, ШХ15 после закалки",hb:"45–55 HRC",kc1:3600,mc:.22,vc:90,hss:null}
+];
+const OPF={turn:{carb:1,hss:1},mill:{carb:.9,hss:.9},drill:{carb:.55,hss:.8},thread:{carb:.65,hss:.7}};
+const GEO={
+ turn:[
+  {id:"D",l:"Диаметр заготовки D",u:"мм",v:"50"},
+  {id:"ap",l:"Глубина резания a<sub>p</sub>",u:"мм",v:"2"},
+  {id:"f",l:"Подача f",u:"мм/об",v:"0,25",h:"Чистовая 0,08–0,2, получистовая 0,2–0,35, черновая 0,3–0,6"},
+  {id:"re",l:"Радиус при вершине r<sub>ε</sub>",u:"мм",v:"0,8"},
+  {id:"kr",l:"Главный угол в плане κ<sub>r</sub>",u:"°",v:"95",help:"turn"},
+  {id:"L",l:"Длина прохода L",u:"мм",v:"100"}
+ ],
+ mill:[
+  {id:"D",l:"Диаметр фрезы D<sub>c</sub>",u:"мм",v:"20"},
+  {id:"z",l:"Число зубьев z",u:"шт",v:"4"},
+  {id:"fz",l:"Подача на зуб f<sub>z</sub>",u:"мм/зуб",v:"0,08",h:"Твёрдый сплав по стали 0,05–0,15, по алюминию 0,08–0,25; Р6М5 — примерно вдвое меньше"},
+  {id:"ap",l:"Глубина a<sub>p</sub> (вдоль оси)",u:"мм",v:"5"},
+  {id:"ae",l:"Ширина a<sub>e</sub> (радиальная)",u:"мм",v:"10"},
+  {id:"kr",l:"Угол в плане κ<sub>r</sub>",u:"°",v:"90",help:"mill"},
+  {id:"L",l:"Длина прохода L",u:"мм",v:"200"}
+ ],
+ drill:[
+  {id:"D",l:"Диаметр сверла D",u:"мм",v:"10"},
+  {id:"f",l:"Подача f",u:"мм/об",v:"0,15",h:"Ориентир: Р6М5 ≈ 0,01–0,02·D, твёрдый сплав ≈ 0,015–0,03·D (по стали)"},
+  {id:"L",l:"Глубина сверления L",u:"мм",v:"30"}
+ ],
+ thread:[
+  {id:"type",l:"Резьба",u:"",v:"int",opts:[["int","Внутренняя (гайка)"],["ext","Наружная (болт)"]]},
+  {id:"size",l:"Типоразмер",u:"",v:"16|2",opts:[["3|0.5","M3×0,5"],["4|0.7","M4×0,7"],["5|0.8","M5×0,8"],["6|1","M6×1"],["8|1.25","M8×1,25"],["10|1.5","M10×1,5"],["12|1.75","M12×1,75"],["16|2","M16×2"],["20|2.5","M20×2,5"],["24|3","M24×3"],["30|3.5","M30×3,5"],["36|4","M36×4"],["42|4.5","M42×4,5"],["48|5","M48×5"],["custom","Свой — ввести D и P"]]},
+  {id:"D",l:"Номинальный диаметр резьбы d",u:"мм",v:"16"},
+  {id:"P",l:"Шаг P",u:"мм",v:"2"},
+  {id:"Dc",l:"Диаметр фрезы D<sub>c</sub>",u:"мм",v:"10"},
+  {id:"z",l:"Число зубьев z",u:"шт",v:"3"},
+  {id:"fz",l:"Подача на зуб f<sub>z</sub>",u:"мм/зуб",v:"0,05",h:"Твёрдосплавные резьбофрезы по стали 0,03–0,1; по нержавейке и на малых диаметрах — нижняя граница"},
+  {id:"L",l:"Длина резьбы L",u:"мм",v:"20"},
+  {id:"kind",l:"Тип фрезы",u:"",v:"multi",opts:[["multi","Многониточная (гребенчатая)"],["single","Однониточная"]]},
+  {id:"passes",l:"Радиальных проходов",u:"шт",v:"1",h:"2–3 прохода — для крупного шага, длинного вылета или труднообрабатываемого материала"}
+ ]
+};
+const KR_HELP={
+ turn:{text:"Угол между главной режущей кромкой и направлением подачи, если смотреть сверху. В советских справочниках обозначается φ.",
+  ref:"подача",
+  presets:[[95,"95° — проходной, точение в упор"],[93,"93° — контурный, копирование"],[90,"90° — подрезка уступа"],[75,"75° — черновой"],[45,"45° — черновой с ударом, фаски"]],
+  tips:["Меньше угол — тоньше стружка: при 45° подачу можно поднять в 1,4 раза при той же нагрузке на кромку. Но резец сильнее отжимает деталь.","Длинные тонкие валы точите резцом 90–95°: радиальная сила минимальна, меньше вибраций и конусности.","В коде державки ISO угол — 3-я буква: PCLNR — L (95°), DDJNR — J (93°), PCBNR и PSKNR — B и K (75°), PSSNR и PSDNN — S и D (45°)."]},
+ mill:{text:"Угол между главной режущей кромкой фрезы и обработанной поверхностью.",
+  ref:"обработанная поверхность",
+  presets:[[90,"90° — концевая фреза, уступы"],[75,"75° — торцевая, усиленная кромка"],[45,"45° — торцевая фреза"],[15,"15° — высокоподачная фреза"]],
+  tips:["При 45° подачу на зуб можно поднять в 1,4 раза, при 15° — почти в 4 раза при той же нагрузке на кромку: стружка тоньше подачи.","Фрезой с углом меньше 90° прямой уступ не получить — останется скос.","Угол указан в каталоге фрезы; у обычной концевой — 90°."]}
+};
+function krHelpHTML(kind){
+  const h=KR_HELP[kind];
+  return `<details class="qhelp"><summary>Что это и какое значение взять</summary><div class="qb">
+    <p>${h.text}</p>
+    <svg id="krSvg" viewBox="0 0 420 200" role="img" aria-label="Схема главного угла в плане"></svg>
+    <div class="krp" id="krp">${h.presets.map(([v,t])=>`<button type="button" data-kr="${v}">${t}</button>`).join("")}</div>
+    <ul>${h.tips.map(t=>`<li>${t}</li>`).join("")}</ul></div></details>`;
+}
+function drawKr(){
+  const svg=$("krSvg"); if(!svg) return;
+  const kind=st.op==="mill"?"mill":"turn";
+  let k=num(($("g-kr")||{}).value); const ok=k>0&&k<180; if(!ok) k=kind==="mill"?90:95;
+  const r=Math.PI/180, tx=200, ty=130, depth=k<90?Math.min(70,130*Math.tan(k*r)):70, yTop=ty-depth, L=depth/Math.sin(k*r);
+  const ex=tx+L*Math.cos(k*r), ey=yTop;
+  const ar=34, ax=tx+ar*Math.cos(k*r), ay=ty-ar*Math.sin(k*r);
+  const tool=`${tx},${ty} ${ex},${ey} ${ex+70},${ey} ${ex+70},${ty+50} ${tx+10},${ty+50}`;
+  const wp=`0,10 420,10 420,${yTop} ${ex},${yTop} ${tx},${ty} 0,${ty}`;
+  svg.innerHTML=`<defs><pattern id="hw" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--muted)" stroke-width="1" opacity=".45"/></pattern>
+   <marker id="ka" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1.5 L10,5 L0,8.5 z" fill="var(--ink)"/></marker></defs>
+   <polygon points="${wp}" fill="url(#hw)" stroke="var(--line-strong)" stroke-width="1"/>
+   <text x="12" y="30" font-family="var(--f-ui)" font-size="12" fill="var(--muted)">${kind==="mill"?"деталь":"заготовка"}</text>
+   <polygon points="${tool}" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1"/>
+   <line x1="${tx}" y1="${ty}" x2="${ex}" y2="${ey}" stroke="var(--hot)" stroke-width="3"/>
+   <text x="${ex+76}" y="${ey+16}" font-family="var(--f-ui)" font-size="12" fill="var(--hot)">главная кромка</text>
+   <line x1="${tx}" y1="${ty}" x2="${tx+150}" y2="${ty}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="4 3"/>
+   <path d="M${tx+ar},${ty} A${ar},${ar} 0 0 0 ${ax.toFixed(1)},${ay.toFixed(1)}" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+   <text x="${tx+ar*1.35*Math.cos(k/2*r)}" y="${ty-ar*1.35*Math.sin(k/2*r)+4}" font-family="var(--f-num)" font-size="13" font-weight="600" fill="var(--ink)">${Math.round(k)}°</text>
+   <line x1="${tx-120}" y1="${ty+30}" x2="${tx-40}" y2="${ty+30}" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#ka)"/>
+   <text x="${tx-120}" y="${ty+48}" font-family="var(--f-ui)" font-size="12" fill="var(--ink)">${kind==="mill"?"подача фрезы":"подача резца"}</text>
+   <text x="414" y="${ty+16}" text-anchor="end" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">${kind==="mill"?"плоскость обработки":"направление подачи"}</text>`;
+  document.querySelectorAll("#krp button").forEach(b=>b.classList.toggle("on",ok&&+b.dataset.kr===Math.round(k)));
+}
+const MACH=[
+ {id:"custom",l:"Свой станок — ввести вручную"},
+ {id:"lathe",l:"Токарно-винторезный (16К20, 1К62, 16В20)",n:1600,p:10,e:.75,t:"Типично 1600–2000 об/мин, 10–11 кВт"},
+ {id:"lathecnc",l:"Токарный с ЧПУ (16А20Ф3, CK6140, CK6150)",n:2000,p:7.5,e:.85,t:"Типично 2000–3000 об/мин, 5,5–11 кВт"},
+ {id:"millk",l:"Фрезерный консольный (6Р12, 6Р82, 6Т13)",n:1600,p:7.5,e:.75,t:"Типично 1600–2000 об/мин, 7,5–11 кВт"},
+ {id:"vmc",l:"Вертикальный обрабатывающий центр (VMC 850, VMC 1060)",n:8000,p:11,e:.9,t:"Типично 8000–12 000 об/мин, 7,5–15 кВт (S1)"},
+ {id:"drillv",l:"Вертикально-сверлильный (2Н135, 2Н125)",n:1400,p:4,e:.8,t:"2Н125 — около 2,2 кВт и 2000 об/мин, 2Н135 — около 4 кВт и 1400 об/мин"},
+ {id:"drillb",l:"Настольно-сверлильный (2М112, НС-12)",n:4500,p:.6,e:.8,t:"Типично 0,5–0,75 кВт, до 4500 об/мин"},
+ {id:"hobby",l:"Настольный ЧПУ-фрезер (шпиндель 1,5–2,2 кВт)",n:24000,p:1.5,e:.85,t:"Высокооборотный шпиндель: на низких оборотах мощности почти нет"}
+];
+const KEY="rezhimy-v1";
+let st={op:"turn",mat:1,tool:"carb",vcManual:null,vals:{turn:{},mill:{},drill:{},thread:{}},nmax:"4000",pmax:"11",eta:"0,8",mach:"custom"};
+try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s&&s.vals) st=Object.assign(st,s); }catch(e){}
+st.vals.thread=st.vals.thread||{}; if(!GEO[st.op]) st.op="turn";
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+// материалы
+$("mat").innerHTML=MATS.map((m,i)=>`<option value="${i}">${m.iso} · ${m.name} (${m.grades})</option>`).join("");
+$("mat").value=st.mat; $("tool").value=st.tool; $("nmax").value=st.nmax; $("pmax").value=st.pmax; $("eta").value=st.eta;
+
+function tableVc(){
+  const m=MATS[st.mat], base=st.tool==="carb"?m.vc:m.hss;
+  if(base==null) return null;
+  return Math.round(base*OPF[st.op][st.tool]);
+}
+function syncVc(){
+  const t=tableVc();
+  if(st.vcManual==null){ $("vc").value=t==null?"":String(t); }
+  else $("vc").value=st.vcManual;
+  const man=st.vcManual!=null;
+  $("vcSrc").textContent=man?"введена вручную":"по таблице"; $("vcSrc").className="src"+(man?" manual":"");
+  $("vcReset").hidden=!man;
+  const m=MATS[st.mat];
+  $("hard").textContent=m.hb;
+  $("vcHint").textContent=t==null?"Быстрорежущая сталь закалённую сталь не режет — выберите твёрдый сплав (лучше CBN).":`Табличное значение: ${t} м/мин. Диапазон для первого прохода — примерно ${Math.round(t*.8)}–${Math.round(t*1.2)} м/мин.`;
+}
+function renderGeo(){
+  const vals=st.vals[st.op];
+  $("geo").innerHTML=`<h3 style="margin-bottom:10px">Инструмент и резание</h3><div class="grid2">${GEO[st.op].map(g=>{const v=vals[g.id]!=null?vals[g.id]:g.v;
+    const ctl=g.opts?`<select id="g-${g.id}">${g.opts.map(([k,t])=>`<option value="${k}"${k===v?" selected":""}>${t}</option>`).join("")}</select>`:`<input type="text" id="g-${g.id}" inputmode="decimal" value="${esc(v)}">`;
+    return `<div class="field"${g.help?' style="grid-column:1/-1"':""}><label for="g-${g.id}"><span>${g.l}</span><i>${g.u}</i></label>${ctl}${g.h?`<span class="hint">${g.h}</span>`:""}${g.help?krHelpHTML(g.help):""}</div>`;}).join("")}</div>`;
+  drawKr();
+}
+function renderMatTbl(){
+  $("matTbl").innerHTML=`<table><thead><tr><th>Материал</th><th>Марки</th><th class="n">Точение</th><th class="n">Фрезер.</th><th class="n">Сверление</th><th class="n">k<sub>c1</sub></th></tr></thead><tbody>
+  ${MATS.map((m,i)=>{const c=(f,h)=>`${Math.round(m.vc*f)} / ${m.hss==null?"—":Math.round(m.hss*h)}`;return `<tr${i==st.mat?' class="cur"':""}><td><span class="iso ${m.iso}">${m.iso}</span>${m.name}</td><td class="muted">${m.grades}</td><td class="n">${c(1,1)}</td><td class="n">${c(.9,.9)}</td><td class="n">${c(.55,.8)}</td><td class="n">${m.kc1}</td></tr>`;}).join("")}</tbody></table>`;
+}
+
+document.querySelector(".seg").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-op]"); if(!b) return;
+  st.op=b.dataset.op; st.vcManual=null;
+  document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+  renderGeo(); syncVc(); calc();
+});
+$("mat").addEventListener("change",()=>{ st.mat=+$("mat").value; st.vcManual=null; syncVc(); renderMatTbl(); calc(); });
+$("tool").addEventListener("change",()=>{ st.tool=$("tool").value; st.vcManual=null; syncVc(); calc(); });
+$("vc").addEventListener("input",()=>{ st.vcManual=$("vc").value; $("vcSrc").textContent="введена вручную"; $("vcSrc").className="src manual"; $("vcReset").hidden=false; calc(); });
+$("vcReset").addEventListener("click",()=>{ st.vcManual=null; syncVc(); calc(); });
+function onGeo(e){
+  const id=e.target.id.replace("g-",""); st.vals[st.op][id]=e.target.value;
+  if(st.op==="thread"){
+    if(id==="size"&&e.target.value!=="custom"){ const [d,pp]=e.target.value.split("|"); const dv=d, pv=pp.replace(".",","); $("g-D").value=dv; $("g-P").value=pv; st.vals.thread.D=dv; st.vals.thread.P=pv; }
+    if(id==="D"||id==="P"){ $("g-size").value="custom"; st.vals.thread.size="custom"; }
+  }
+  calc();
+}
+$("geo").addEventListener("input",onGeo);
+$("geo").addEventListener("click",e=>{ const b=e.target.closest("[data-kr]"); if(!b) return; $("g-kr").value=b.dataset.kr; st.vals[st.op].kr=b.dataset.kr; calc(); });
+$("geo").addEventListener("change",e=>{ if(e.target.tagName==="SELECT") onGeo(e); });
+// станки
+$("mach").innerHTML=MACH.map(m=>`<option value="${m.id}">${m.l}</option>`).join("");
+$("mach").value=st.mach||"custom";
+function machNote(){ const m=MACH.find(x=>x.id===$("mach").value); $("machNote").textContent=m&&m.t?m.t+". Ориентировочно — уточните по паспорту станка.":""; }
+machNote();
+$("mach").addEventListener("change",()=>{
+  const m=MACH.find(x=>x.id===$("mach").value); st.mach=m.id; machNote();
+  if(m.n){ const f=v=>String(v).replace(".",","); $("nmax").value=m.n; $("pmax").value=f(m.p); $("eta").value=f(m.e); st.nmax=$("nmax").value; st.pmax=$("pmax").value; st.eta=$("eta").value; }
+  calc();
+});
+function ampCalc(){
+  const I=num($("ampI").value), U=num($("ampU").value), c=num($("ampC").value);
+  if(!(I>0&&U>0&&c>0&&c<=1)){ $("ampOut").innerHTML="P = √3 · U · I · cos φ · η<sub>дв</sub> / 1000, где η<sub>дв</sub> ≈ 0,88 — КПД самого двигателя. cos φ — с таблички, обычно 0,8–0,88."; return null; }
+  const P=Math.sqrt(3)*U*I*c*0.88/1000;
+  $("ampOut").innerHTML=`Мощность на валу двигателя ≈ <b class="num">${fmt(P,2)} кВт</b>. Если ток замерен на холостом ходу — это не мощность станка, нужен ток с таблички или под нагрузкой.`;
+  return P;
+}
+["ampI","ampU","ampC"].forEach(id=>$(id).addEventListener("input",ampCalc));
+$("ampUse").addEventListener("click",()=>{ const P=ampCalc(); if(P==null){ toast("Введите ток, напряжение и cos φ"); return; } $("pmax").value=fmt(P,1).replace(/\s/g,""); st.pmax=$("pmax").value; $("mach").value="custom"; st.mach="custom"; machNote(); calc(); toast("Мощность подставлена"); });
+["nmax","pmax","eta"].forEach(id=>$(id).addEventListener("input",()=>{ st[id]=$(id).value; if(st.mach!=="custom"){ st.mach="custom"; $("mach").value="custom"; machNote(); } calc(); }));
+
+function g(id){ const el=$("g-"+id); const v=num(el?el.value:""); if(el) el.classList.toggle("bad",!(v>0)); return v; }
+
+function calc(){
+  save(); drawKr();
+  const m=MATS[st.mat], op=st.op;
+  const vcIn=num($("vc").value); $("vc").classList.toggle("bad",!(vcIn>0));
+  const nmax=num($("nmax").value), pmax=num($("pmax").value), eta=num($("eta").value);
+  const notes=[];
+  const P={}; GEO[op].forEach(x=>P[x.id]=x.opts?$("g-"+x.id).value:g(x.id));
+  const bad=GEO[op].some(x=>!x.opts&&!(P[x.id]>0))||!(vcIn>0);
+  if(bad){
+    $("kpis").innerHTML=`<div class="kpi" style="grid-column:1/-1"><span class="l">Нет результата</span><span class="muted">Заполните все поля положительными числами${!(vcIn>0)&&tableVc()==null?" и выберите твёрдый сплав":""}.</span></div>`;
+    $("extra").innerHTML=""; $("machine").innerHTML=""; $("notes").innerHTML=""; $("gcode").textContent="—"; $("gHint").textContent=""; return;
+  }
+  const D=op==="thread"?P.Dc:P.D;
+  let n=1000*vcIn/(Math.PI*D), vc=vcIn, limited=false;
+  if(nmax>0 && n>nmax){ n=nmax; vc=Math.PI*D*n/1000; limited=true; }
+  let vf,Q,hm,kc,Pc,Mc,T,extra=[],gc="",gh="",fatal=null;
+  const rad=x=>x*Math.PI/180;
+  if(op==="turn"){
+    const kr=Math.min(Math.max(P.kr,1),180);
+    vf=P.f*n; Q=vc*P.ap*P.f; hm=P.f*Math.sin(rad(kr>90?180-kr:kr));
+    kc=m.kc1*Math.pow(hm,-m.mc); Pc=vc*P.ap*P.f*kc/60000; const Fc=kc*P.ap*P.f; Mc=Fc*D/2000; T=P.L/vf;
+    const Rz=P.f*P.f/(8*P.re)*1000, Ra=50*P.f*P.f/P.re;
+    extra=[["Сила резания F<sub>c</sub>",fmt(Fc,0)+" Н"],["Толщина стружки h<sub>m</sub>",fmt(hm,3)+" мм"],["Удельная сила k<sub>c</sub>",fmt(kc,0)+" Н/мм²"],["Шероховатость Ra (теор.)",fmt(Ra,2)+" мкм"],["Шероховатость Rz (теор.)",fmt(Rz,1)+" мкм"]];
+    if(P.ap>D/2) notes.push(["bad","Глубина резания больше радиуса заготовки — проверьте a<sub>p</sub> и D."]);
+    if(P.f>P.re*0.8) notes.push(["warn",`Подача больше 0,8·r<sub>ε</sub> (${fmt(P.re*.8,2)} мм/об) — пластина будет работать неустойчиво, ухудшится шероховатость.`]);
+    if(P.ap<P.re*0.67) notes.push(["warn",`Глубина меньше ⅔ радиуса при вершине (${fmt(P.re*.67,2)} мм): стружка будет плохо ломаться. Возьмите пластину с меньшим r<sub>ε</sub>.`]);
+    gc=`G50 S${Math.round(nmax>0?nmax:n)}\nG96 S${Math.round(vc)} M3\nG95 F${P.f.toString().replace(",",".")}`;
+    gh="Постоянная скорость резания G96 с ограничением оборотов G50 (Fanuc-совместимые стойки, в т. ч. GSK, KND). На Siemens вместо G50 — LIMS.";
+  } else if(op==="mill"){
+    const z=Math.round(P.z), ae=Math.min(P.ae,D);
+    vf=P.fz*z*n; Q=P.ap*ae*vf/1000;
+    const kr=Math.min(Math.max(P.kr,1),90);
+    hm=Math.sin(rad(kr))*ae*P.fz/(D*Math.asin(Math.min(ae/D,1)));
+    kc=m.kc1*Math.pow(hm,-m.mc); Pc=P.ap*ae*vf*kc/6e7; Mc=Pc*30000/(Math.PI*n); T=(P.L+D)/vf;
+    extra=[["Минутная подача на зуб",fmt(P.fz*z,2)+" мм/об"],["Средняя толщина стружки h<sub>m</sub>",fmt(hm,3)+" мм"],["Удельная сила k<sub>c</sub>",fmt(kc,0)+" Н/мм²"],["Доля врезания a<sub>e</sub>/D<sub>c</sub>",fmt(ae/D*100,0)+" %"]];
+    if(P.ae>D) notes.push(["warn","Ширина фрезерования больше диаметра фрезы — в расчёте взята равной D<sub>c</sub>."]);
+    if(ae/D<0.3) notes.push(["note",`Малое радиальное врезание: средняя толщина стружки ${fmt(hm,3)} мм заметно меньше f<sub>z</sub>. Подачу на зуб можно поднять примерно до ${fmt(P.fz*P.fz/hm,3)} мм, чтобы h<sub>m</sub> стала равна f<sub>z</sub>.`]);
+    if(P.ap>2*D) notes.push(["warn","Глубина больше двух диаметров фрезы — риск отжима и поломки, снизьте подачу или a<sub>e</sub>."]);
+    gc=`S${Math.round(n)} M3\nG94 F${Math.round(vf)}`;
+    gh="Обороты и минутная подача (G94, мм/мин). Время учитывает врезание и выход фрезы на её диаметр.";
+  } else if(op==="thread"){
+    const isInt=P.type==="int", d=P.D, z=Math.round(P.z), passes=Math.max(1,Math.round(P.passes));
+    const h=(isInt?0.5413:0.6134)*P.P, hp=h/passes;
+    const dPath=isInt?d-D:d+D, r=dPath/2;
+    const vfEdge=P.fz*z*n; vf=vfEdge*dPath/d;
+    const revs=P.kind==="single"?(P.L/P.P+0.25):1.25;
+    const helix=Math.sqrt(Math.pow(Math.PI*dPath,2)+P.P*P.P);
+    const ap=P.kind==="single"?P.P:P.L;
+    Q=0.5*ap*hp*vfEdge/1000;
+    hm=hp>=D?P.fz:hp*P.fz/(D*Math.asin(Math.min(hp/D,1)));
+    kc=m.kc1*Math.pow(hm,-m.mc); Pc=Q*kc/60000; Mc=Pc*30000/(Math.PI*n);
+    T=revs*helix*passes/vf;
+    const hole=isInt?d-P.P:d-0.1*P.P;
+    extra=[["Подача на кромке",fmt(vfEdge,0)+" мм/мин"],["Глубина профиля",fmt(h,3)+" мм"+(passes>1?` (по ${fmt(hp,3)} за проход)`:"")],["Диаметр траектории центра",fmt(dPath,2)+" мм"],["Витков по траектории",fmt(revs*passes,2)],[isInt?"Отверстие под резьбу":"Диаметр стержня",isInt?`≈ ${fmt(hole,2)} мм (D − P)`:`≈ ${fmt(hole,2)} мм`]];
+    if(isInt && D>=d-P.P) fatal=`Фреза Ø${fmt(D,1)} не войдёт в отверстие под резьбу Ø${fmt(d-P.P,2)} мм. Для M${fmt(d,0)} возьмите фрезу до Ø${fmt(Math.min(0.7*d,d-P.P-0.2),1)} мм.`;
+    else if(isInt && D/d>0.7) notes.push(["warn",`Фреза больше 70 % диаметра резьбы (${fmt(D/d*100,0)} %): большая дуга контакта, возможны подрезание профиля и вибрации. Лучше D<sub>c</sub> ≤ ${fmt(0.7*d,1)} мм.`]);
+    if(P.kind==="multi") notes.push(["note","Многониточная фреза: длина её режущей части должна быть не меньше длины резьбы, иначе фрезеруйте в несколько ярусов со смещением на целое число шагов."]);
+    if(P.P>=2.5&&passes===1) notes.push(["note","Крупный шаг: при вибрациях разбейте глубину на 2–3 радиальных прохода."]);
+    const ff=x=>(+x.toFixed(3)).toString();
+    if(isInt){
+      gc=`S${Math.round(n)} M3\n(фреза в центре отверстия на дне резьбы)\nG91 G1 X${ff(r)} F${Math.round(vf/2)}\nG3 X0 Y0 I-${ff(r)} J0 Z${ff(P.P)} F${Math.round(vf)}${P.kind==="single"?"\n(повторить G3 "+Math.ceil(P.L/P.P)+" раз)":""}\nG1 X-${ff(r)}\nG90`;
+      gh="Правая внутренняя резьба, попутное фрезерование: G03 снизу вверх. Вход по прямой упрощён — на практике лучше по дуге. F — подача по центру фрезы. Левая резьба: G02 снизу вверх.";
+    } else {
+      gc=`S${Math.round(n)} M3\n(фреза на ${ff(r)} мм справа от оси, вверху резьбы)\nG91 G2 X0 Y0 I-${ff(r)} J0 Z-${ff(P.P)} F${Math.round(vf)}${P.kind==="single"?"\n(повторить G2 "+Math.ceil(P.L/P.P)+" раз)":""}\nG90`;
+      gh="Правая наружная резьба, попутное фрезерование: G02 сверху вниз. F — подача по центру фрезы. Левая резьба: G03 сверху вниз.";
+    }
+  } else {
+    vf=P.f*n; Q=Math.PI*D*D/4*vf/1000; hm=(P.f/2)*Math.sin(rad(59));
+    kc=m.kc1*Math.pow(hm,-m.mc); Pc=P.f*vc*D*kc/240000; Mc=Pc*30000/(Math.PI*n);
+    const Ff=0.5*kc*(D/2)*P.f*Math.sin(rad(59)); T=(P.L+0.3*D)/vf;
+    extra=[["Осевая сила (≈)",fmt(Ff,0)+" Н"],["Толщина стружки h<sub>m</sub>",fmt(hm,3)+" мм"],["Удельная сила k<sub>c</sub>",fmt(kc,0)+" Н/мм²"],["Глубина в диаметрах",fmt(P.L/D,1)+"·D"]];
+    if(P.L/D>5) notes.push(["warn",`Глубина ${fmt(P.L/D,1)}·D: нужен вывод сверла для удаления стружки (цикл G83) или сверло с внутренним подводом СОЖ, подачу снизьте на 20–30 %.`]);
+    const fr=P.f/D; if(fr>0.035) notes.push(["warn","Подача велика для этого диаметра (больше 0,035·D) — риск поломки сверла."]);
+    gc=`S${Math.round(n)} M3\nG95 F${P.f.toString().replace(",",".")}`;
+    gh="Подача на оборот (G95). Время включает выход вершины сверла ≈ 0,3·D.";
+  }
+  if(fatal){
+    $("kpis").innerHTML=`<div class="kpi" style="grid-column:1/-1"><span class="l">Нет результата</span><span>${fatal}</span></div>`;
+    $("extra").innerHTML=""; $("machine").innerHTML=""; $("notes").innerHTML=""; $("gcode").textContent="—"; $("gHint").textContent=""; return;
+  }
+  if(limited) notes.unshift(["warn",`Обороты упёрлись в предел станка ${fmt(nmax,0)} об/мин. Фактическая скорость резания — ${fmt(vc,0)} м/мин вместо ${fmt(vcIn,0)}.`]);
+  if(op!=="turn" && st.tool==="hss" && MATS[st.mat].iso==="H") notes.push(["bad","Быстрорежущий инструмент не подходит для закалённой стали."]);
+
+  const Pspindle=Pc/(eta>0&&eta<=1?eta:1);
+  $("kpis").innerHTML=[
+    ["Обороты шпинделя",fmt(n,0),"об/мин"],
+    [op==="mill"?"Минутная подача":op==="thread"?"Подача по центру фрезы":"Подача",fmt(vf,0),"мм/мин"],
+    ["Мощность резания",fmt(Pc,2),"кВт"],
+    ["Машинное время",T<1?fmt(T*60,0):fmt(T,2),T<1?"с":"мин"]
+  ].map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("extra").innerHTML=`<dl class="kv">
+    <dt>Фактическая V<sub>c</sub></dt><dd>${fmt(vc,0)} м/мин</dd>
+    <dt>Съём металла Q</dt><dd>${fmt(Q,1)} см³/мин</dd>
+    <dt>Крутящий момент</dt><dd>${fmt(Mc,1)} Н·м</dd>
+    ${extra.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl>`;
+
+  const meters=[];
+  if(pmax>0){ const u=Pspindle/pmax; meters.push(["Загрузка шпинделя по мощности",`${fmt(Pspindle,2)} из ${fmt(pmax,1)} кВт`,u]); if(u>1) notes.unshift(["bad",`Не хватит мощности: нужно ${fmt(Pspindle,1)} кВт на шпинделе (с учётом КПД), у станка ${fmt(pmax,1)} кВт. Уменьшите глубину или подачу.`]); }
+  if(nmax>0){ meters.push(["Использование оборотов",`${fmt(n,0)} из ${fmt(nmax,0)} об/мин`,n/nmax]); }
+  $("machine").innerHTML=`<h3>Проверка станка</h3>`+meters.map(([l,t,u])=>`<div class="meter ${u>1?"bad":u>0.85?"warn":""}"><div class="top"><span>${l}</span><span class="num">${t}</span></div><div class="bar"><span style="width:${Math.min(100,u*100).toFixed(1)}%"></span></div></div>`).join("");
+  $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
+  $("gcode").textContent=gc;
+  $("gcode").dataset.full=gc;
+  $("gHint").textContent=gh;
+}
+$("copyG").addEventListener("click",()=>{
+  const el=$("gcode"), t=el.dataset.full||el.textContent;
+  const sel=()=>{ const r=document.createRange(); r.selectNodeContents(el); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); toast("Выделено — нажмите Ctrl+C"); };
+  try{ navigator.clipboard.writeText(t).then(()=>toast("Скопировано"),sel); }catch(e){ sel(); }
+});
+let tt=null;
+function toast(s){ const el=$("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),1800); }
+
+document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.op===st.op?"true":"false"));
+renderGeo(); syncVc(); renderMatTbl(); calc();
+})();
+</script>
+
+</body>
+</html>
