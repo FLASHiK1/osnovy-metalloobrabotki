@@ -13,7 +13,8 @@
 .sb-btn:hover,.sb-menu>summary:hover{border-color:var(--accent,#1d5a7a);color:var(--accent,#1d5a7a)}
 .sb-btn svg,.sb-menu>summary svg{width:18px;height:18px;flex:none}
 .sb-btn:focus-visible,.sb-menu>summary:focus-visible,.sb-drop a:focus-visible{outline:2px solid var(--accent,#1d5a7a);outline-offset:2px}
-.sb-menu{position:relative}
+.sb-menu{position:static}
+.sb-act{position:relative}
 .sb-menu[open]>summary{background:var(--accent,#1d5a7a);border-color:var(--accent,#1d5a7a);color:var(--paper,#fff)}
 .sb-drop{position:absolute;right:0;top:calc(100% + 6px);width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 90px);overflow:auto;
   background:var(--paper,#fbfbf9);border:1px solid var(--line,#d6dad6);border-radius:6px;box-shadow:0 12px 32px rgba(0,0,0,.14);
@@ -32,7 +33,10 @@
 @media (max-width:640px){
   .sb-lbl{display:none}
   .sb-btn,.sb-menu>summary{padding:0 10px;width:40px;justify-content:center}
-  .sb-drop{grid-template-columns:1fr;right:-4px}
+  .sb-drop{position:fixed;grid-template-columns:1fr;
+    top:calc(env(safe-area-inset-top,0px) + 58px);left:max(16px, env(safe-area-inset-left,0px));right:max(16px, env(safe-area-inset-right,0px));
+    width:auto;max-height:calc(100vh - env(safe-area-inset-top,0px) - 74px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - 74px);overscroll-behavior:contain}
+  .sb-drop a{padding:9px 6px;font-size:16px}
   .sb-brand{font-size:14px}
 }
 @media (prefers-reduced-motion:reduce){.sb-toast{transition:none}}
