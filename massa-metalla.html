@@ -155,6 +155,12 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
         <div class="field"><label for="L"><span id="Llabel">Длина L</span><i>мм</i></label><input type="text" id="L" inputmode="decimal" value="1000"></div>
         <div class="field"><label for="qty"><span>Количество</span><i>шт</i></label><input type="text" id="qty" inputmode="numeric" value="1"></div>
       </div>
+      <div class="grid3">
+        <div class="field"><label for="hn"><span>Отверстий</span><i>шт</i></label><input type="text" id="hn" inputmode="numeric" placeholder="0"></div>
+        <div class="field"><label for="hd"><span>Диаметр отверстия</span><i>мм</i></label><input type="text" id="hd" inputmode="decimal"></div>
+        <div class="field"><label for="hh"><span>Глубина</span><i>мм</i></label><input type="text" id="hh" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Отверстия вычитаются из массы — например, отверстия под крепёж во фланце или пластине.</div>
       <div id="err" class="note bad" hidden></div>
     </section>
 
@@ -189,7 +195,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     </div>
   </details>
 
-  <footer><span>Расчёт по номинальным размерам. Реальная масса проката зависит от допусков на размер.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a></nav></footer>
+  <footer><span>Расчёт по номинальным размерам. Реальная масса проката зависит от допусков на размер.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
 </div>
 
 <script>
@@ -209,9 +215,13 @@ const SH={
  pipe:{n:"Труба",dims:[["D","Наружный диаметр D"],["s","Толщина стенки s"]],S:v=>Math.PI*(v.D-v.s)*v.s,chk:v=>2*v.s<v.D||"Стенка толще радиуса",ic:'<circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="9" class="hole"/>'},
  rect:{n:"Профильная труба",dims:[["a","Ширина a"],["b","Высота b"],["s","Толщина стенки s"]],S:v=>2*v.s*(v.a+v.b-2*v.s),chk:v=>2*v.s<Math.min(v.a,v.b)||"Стенка слишком толстая",note:"Скругления углов не учтены — масса по ГОСТ 8639 немного меньше.",ic:'<rect x="6" y="9" width="28" height="22"/><rect x="11" y="14" width="18" height="12" class="hole"/>'},
  angle:{n:"Уголок",dims:[["b","Ширина полки b"],["t","Толщина полки t"]],S:v=>v.t*(2*v.b-v.t),chk:v=>v.t<v.b||"Толщина больше полки",note:"Равнополочный уголок, радиусы скруглений не учтены — расхождение с ГОСТ 8509 1–3 %.",ic:'<polygon points="8,6 15,6 15,27 34,27 34,34 8,34"/>'},
+ cone:{n:"Конус",dims:[["D","Больший диаметр D"],["d","Меньший диаметр d (0 — острый)"]],V:(v,L)=>Math.PI*L/12*(v.D*v.D+v.D*v.d+v.d*v.d),zero:["d"],chk:v=>v.d<v.D||"Меньший диаметр больше большего",ic:'<polygon points="6,8 34,14 34,26 6,32"/>'},
+ sphere:{n:"Шар",dims:[["D","Диаметр D"]],V:v=>Math.PI*v.D**3/6,noL:true,ic:'<circle cx="20" cy="20" r="14"/><ellipse cx="20" cy="20" rx="14" ry="5" fill="none"/>'},
+ hextube:{n:"Шестигранная труба",dims:[["s","Размер под ключ s"],["t","Толщина стенки t"]],S:v=>Math.sqrt(3)/2*(v.s*v.s-(v.s-2*v.t)**2),chk:v=>2*v.t<v.s||"Стенка слишком толстая",ic:'<polygon points="20,5 33,12.5 33,27.5 20,35 7,27.5 7,12.5"/><polygon points="20,11 28,15.5 28,24.5 20,29 12,24.5 12,15.5" class="hole"/>'},
+ tri:{n:"Треугольник",dims:[["a","Сторона a"]],S:v=>Math.sqrt(3)/4*v.a*v.a,ic:'<polygon points="20,6 34,32 6,32"/>'},
  bush:{n:"Втулка, кольцо",dims:[["D","Наружный диаметр D"],["d","Внутренний диаметр d"]],S:v=>Math.PI*(v.D*v.D-v.d*v.d)/4,chk:v=>v.d<v.D||"Внутренний диаметр больше наружного",ic:'<circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="6" class="hole"/>'}
 };
-const DEF={round:{d:"50"},square:{a:"40"},hex:{s:"24"},sheet:{b:"1000",t:"5"},pipe:{D:"57",s:"3,5"},rect:{a:"40",b:"20",s:"2"},angle:{b:"50",t:"5"},bush:{D:"80",d:"40"}};
+const DEF={cone:{D:"60",d:"30"},sphere:{D:"50"},hextube:{s:"40",t:"3"},tri:{a:"50"},round:{d:"50"},square:{a:"40"},hex:{s:"24"},sheet:{b:"1000",t:"5"},pipe:{D:"57",s:"3,5"},rect:{a:"40",b:"20",s:"2"},angle:{b:"50",t:"5"},bush:{D:"80",d:"40"}};
 const KEY="massa-v1";
 let st={shape:"round",mat:0,rho:"7850",vals:JSON.parse(JSON.stringify(DEF)),L:"1000",qty:"1"};
 try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s&&s.vals&&SH[s.shape]) st=Object.assign(st,s); }catch(e){}
@@ -230,31 +240,37 @@ function renderDims(){
   document.querySelectorAll(".shape").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===st.shape?"true":"false"));
   const v=st.vals[st.shape]||{};
   $("dims").innerHTML=SH[st.shape].dims.map(([id,l])=>`<div class="field"><label for="dm-${id}"><span>${l}</span><i>мм</i></label><input type="text" id="dm-${id}" inputmode="decimal" value="${v[id]!=null?v[id]:""}"></div>`).join("");
-  $("Llabel").textContent=st.shape==="sheet"?"Длина листа L":st.shape==="bush"?"Длина (высота) L":"Длина L";
+  $("Llabel").textContent=st.shape==="sheet"?"Длина листа L":st.shape==="bush"?"Длина (высота) L":st.shape==="cone"?"Длина конуса L":st.shape==="sphere"?"Длина (не нужна для шара)":"Длина L";
 }
 $("shapes").addEventListener("click",e=>{ const b=e.target.closest(".shape"); if(!b) return; st.shape=b.dataset.s; renderDims(); calc(); });
 $("dims").addEventListener("input",e=>{ const id=e.target.id.replace("dm-",""); st.vals[st.shape][id]=e.target.value; calc(); });
 $("mat").addEventListener("change",()=>{ st.mat=+$("mat").value; if(st.mat>=0){ $("rho").value=MATS[st.mat][1]; st.rho=$("rho").value; } else $("rho").focus(); calc(); });
 $("rho").addEventListener("input",()=>{ st.rho=$("rho").value; const i=MATS.findIndex(m=>m[1]===num(st.rho)); if(i<0||MATS[st.mat]&&MATS[st.mat][1]!==num(st.rho)){ $("mat").value=i>=0?i:-1; st.mat=+$("mat").value; } calc(); });
-["L","qty"].forEach(id=>$(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }));
+["L","qty","hn","hd","hh"].forEach(id=>{ if(st[id]!=null) $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }); });
 
 function calc(){
   save();
   const sh=SH[st.shape], v={}; let ok=true;
-  sh.dims.forEach(([id])=>{ const x=num($("dm-"+id).value); v[id]=x; const b=!(x>0); $("dm-"+id).classList.toggle("bad",b); if(b) ok=false; });
+  sh.dims.forEach(([id])=>{ const x=num($("dm-"+id).value); v[id]=x; const b=!(x>0||(sh.zero&&sh.zero.includes(id)&&x===0)); $("dm-"+id).classList.toggle("bad",b); if(b) ok=false; });
+  const hn=Math.round(num(st.hn)||0), hd=num(st.hd)||0, hh=num(st.hh)||0;
   const rho=num($("rho").value), L=num($("L").value), q=num($("qty").value);
-  [["rho",rho],["L",L],["qty",q]].forEach(([id,x])=>{ $(id).classList.toggle("bad",!(x>0)); if(!(x>0)) ok=false; });
+  [["rho",rho],["L",sh.noL?1:L],["qty",q]].forEach(([id,x])=>{ $(id).classList.toggle("bad",!(x>0)); if(!(x>0)) ok=false; });
+  $("L").disabled=!!sh.noL;
   let msg=ok?"":"Заполните все поля положительными числами.";
   if(ok&&sh.chk){ const c=sh.chk(v); if(c!==true){ ok=false; msg=c+"."; } }
   $("err").hidden=ok; $("err").textContent=msg;
   if(!ok){ $("m1").textContent="—"; $("kpis").innerHTML=""; $("extra").innerHTML=""; $("shapeNote").hidden=true; return; }
-  const S=sh.S(v);                     // мм²
-  const mpm=rho*S/1e6;                 // кг/м
-  const m1=mpm*L/1000, mt=m1*Math.round(q);
+  const S=sh.S?sh.S(v):NaN;            // мм²
+  const Vgross=sh.V?sh.V(v,L):S*L;      // мм³
+  const Vholes=hn>0&&hd>0&&hh>0?hn*Math.PI*hd*hd/4*hh:0;
+  const Vnet=Math.max(0,Vgross-Vholes);
+  const mpm=sh.S?rho*S/1e6:NaN;        // кг/м
+  const m1=rho*Vnet/1e9, mt=m1*Math.round(q);
   $("m1").innerHTML=`${smart(m1)}<small>кг</small>`;
-  $("kpis").innerHTML=[["Партия, "+fmt(Math.round(q),0)+" шт",mt>=1000?fmt(mt/1000,3):smart(mt),mt>=1000?"т":"кг"],["Погонный метр",smart(mpm),"кг/м"],["Метров в тонне",smart(1000/mpm),"м"],["Площадь сечения",smart(S),"мм²"]]
+  $("kpis").innerHTML=[["Партия, "+fmt(Math.round(q),0)+" шт",mt>=1000?fmt(mt/1000,3):smart(mt),mt>=1000?"т":"кг"]].concat(sh.S?[["Погонный метр",smart(mpm),"кг/м"],["Метров в тонне",smart(1000/mpm),"м"],["Площадь сечения",smart(S),"мм²"]]:[["Объём",fmt(Vnet/1000,1),"см³"],["Площадь поверхности",sh===SH.sphere?fmt(Math.PI*v.D*v.D/100,1):fmt((Math.PI/4*(v.D*v.D+v.d*v.d)+Math.PI*(v.D+v.d)/2*Math.sqrt(L*L+((v.D-v.d)/2)**2))/100,1),"см²"],["Деталей в тонне",fmt(Math.floor(1000/m1),0),"шт"]])
    .map(([l,val,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${val}<small>${u}</small></span></div>`).join("");
-  const ex=[["Объём одной детали",fmt(S*L/1000,1)+" см³"]];
+  const ex=[["Объём одной детали",fmt(Vnet/1000,1)+" см³"]];
+  if(Vholes>0) ex.push(["Минус отверстия",fmt(Vholes/1000,1)+" см³ ("+fmt(rho*Vholes/1e9,3)+" кг)"]);
   if(st.shape==="sheet") ex.push(["Масса 1 м² листа",smart(rho*v.t/1000)+" кг"]);
   if(st.shape==="pipe") ex.push(["Внутренний диаметр",fmt(v.D-2*v.s,2)+" мм"],["Наружная поверхность 1 м",fmt(Math.PI*v.D/1000,3)+" м²"]);
   if(st.shape==="hex") ex.push(["Диаметр описанной окружности",fmt(v.s*2/Math.sqrt(3),2)+" мм"]);

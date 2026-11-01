@@ -30,6 +30,9 @@
 | podshipniki.html | Расшифровка подшипников |
 | dopuski-formy.html | Допуски формы и расположения |
 | cveta-pobezhalosti.html | Цвета побежалости и каления |
+| rezba-rezcom.html | Нарезание резьбы резцом, G76/G92 |
+| edinicy.html | Конвертер единиц |
+| glossariy.html | Глоссарий |
 | massa-metalla.html | Масса металла |
 | analogi-staley.html | Аналоги сталей и сплавов |
 

@@ -1,0 +1,88 @@
+<title>Конвертер единиц для цеха</title>
+<meta name="description" content="Перевод единиц, которые встречаются в металлообработке: МПа и кгс/мм², Н·м и кгс·м и lbf·ft, бар и psi, кВт и л. с., мм/мин и дюйм/мин, SFM и м/мин, температура, масса.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: вкладки величин, поле ввода и сразу все единицы этой величины «плитками»; справа короткая шпаргалка */
+.qs{display:flex;flex-wrap:wrap;gap:6px}
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.u{border:1px solid var(--line);border-radius:5px;padding:10px 12px;background:var(--paper);display:flex;flex-direction:column;gap:2px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.u:hover{border-color:var(--accent)}
+.u.src{border-color:var(--accent);background:var(--accent-soft)}
+.u .v{font-family:var(--f-num);font-size:20px;font-weight:600;overflow-wrap:anywhere}
+.u .n{font-size:12px;color:var(--muted)}
+.inrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;max-width:560px}
+.inrow input{font-size:20px}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Конвертер единиц для цеха</h1>
+      <p>Выберите величину, введите значение — сразу видно его во всех единицах: метрических, старых технических (кгс) и дюймовых. Нажмите на любую плитку, чтобы вводить в ней.</p>
+    </div>
+    <div class="std">СИ, МКГСС, дюймовая система<br>1 кгс = 9,80665 Н, 1″ = 25,4 мм</div>
+  </header>
+
+  <section class="sheet">
+    <div class="qs" id="qs" role="group" aria-label="Величина"></div>
+    <div class="inrow">
+      <div class="field"><label for="val">Значение</label><input type="text" id="val" inputmode="decimal"></div>
+      <div class="field"><label for="from">Единица</label><select id="from"></select></div>
+    </div>
+    <div class="units" id="units" aria-live="polite"></div>
+    <div class="hint" id="qhint"></div>
+  </section>
+
+  <footer><span>Коэффициенты — точные определения единиц; результат округлён до 5 значащих цифр.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// величина: [название, подсказка, [[ключ, название, коэффициент к базовой единице]]]
+const Q={
+ stress:["Напряжение, прочность","Прочность материалов: в старых справочниках — кгс/мм², в современных — МПа (Н/мм²). σв стали 45 ≈ 600 МПа ≈ 61 кгс/мм².",[["mpa","МПа = Н/мм²",1],["kgfmm2","кгс/мм²",9.80665],["kgfcm2","кгс/см² (ат)",0.0980665],["gpa","ГПа",1000],["ksi","ksi (тыс. psi)",6.894757],["psi","psi (фунт/дюйм²)",0.006894757]]],
+ pressure:["Давление","Гидравлика, пневматика, СОЖ под давлением. 1 бар ≈ 1 кгс/см² (точнее 1,0197).",[["bar","бар",1],["mpa","МПа",10],["kpa","кПа",0.01],["atm","кгс/см² (ат)",0.980665],["psi","psi",0.0689476],["mmhg","мм рт. ст.",0.00133322]]],
+ torque:["Момент силы","Затяжка болтов: динамометрические ключи бывают в Н·м, кгс·м и фунт-футах.",[["nm","Н·м",1],["kgfm","кгс·м",9.80665],["kgfcm","кгс·см",0.0980665],["lbfft","lbf·ft (фунт-фут)",1.355818],["lbfin","lbf·in (фунт-дюйм)",0.1129848]]],
+ force:["Сила","Усилие прессов и листогибов часто указывают в тоннах-силы.",[["kn","кН",1],["n","Н",0.001],["kgf","кгс",0.00980665],["tf","тс (тонна-сила)",9.80665],["lbf","lbf (фунт-сила)",0.004448222]]],
+ power:["Мощность","Двигатели станков: кВт и лошадиные силы (метрическая л. с. и английская hp различаются на 1,4 %).",[["kw","кВт",1],["w","Вт",0.001],["hp_m","л. с. (метрическая)",0.7354988],["hp","hp (английская)",0.7456999]]],
+ speed:["Скорость резания","Американские каталоги дают скорость в SFM (футов в минуту).",[["mmin","м/мин",1],["sfm","SFM (фут/мин)",0.3048],["ms","м/с",60]]],
+ feed:["Минутная подача","Подача стола в мм/мин и дюймах в минуту (IPM).",[["mmmin","мм/мин",1],["ipm","дюйм/мин (IPM)",25.4],["mmin","м/мин",1000]]],
+ frev:["Подача на оборот и на зуб","Дюймовые каталоги: IPR (дюйм/об) и IPT (дюйм/зуб).",[["mm","мм/об (мм/зуб)",1],["in","дюйм/об (дюйм/зуб)",25.4],["thou","тысячные дюйма/об",0.0254]]],
+ len:["Длина","Чертежи в дюймах и тысячных (thou, mil), микроны для допусков.",[["mm","мм",1],["um","мкм",0.001],["cm","см",10],["m","м",1000],["in","дюйм",25.4],["thou","thou (0,001″)",0.0254],["ft","фут",304.8]]],
+ mass:["Масса","Металл, заготовки, поковки.",[["kg","кг",1],["g","г",0.001],["t","т",1000],["lb","фунт (lb)",0.45359237],["oz","унция (oz)",0.028349523]]],
+ temp:["Температура","Термообработка в американских документах — в °F.",[["c","°C",null],["f","°F",null],["k","K",null]]],
+ energy:["Энергия, работа","Ударная вязкость (KCU, KCV) в старых справочниках — в кгс·м/см².",[["j","Дж",1],["kgfm","кгс·м",9.80665],["kwh","кВт·ч",3600000],["kcal","ккал",4186.8],["ftlbf","ft·lbf",1.355818]]]
+};
+const KEY="edinicy-v1";
+let st={q:"stress",from:"mpa",val:"600"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x&&Q[x.q]) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^-?\d*\.?\d+(e-?\d+)?$/i.test(t)?+t:NaN; }
+function sig(v){ if(!isFinite(v)) return "—"; if(v===0) return "0"; const a=Math.abs(v); let s; if(a>=1e6||a<1e-4) s=v.toExponential(4).replace("e+","·10^").replace("e-","·10^-"); else { const d=Math.max(0,4-Math.floor(Math.log10(a))); s=(+v.toFixed(Math.min(d,8))).toString(); } const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?","+f:""); }
+$("qs").innerHTML=Object.keys(Q).map(k=>`<button type="button" class="pbtn" data-q="${k}">${Q[k][0]}</button>`).join("");
+$("qs").addEventListener("click",e=>{ const b=e.target.closest("[data-q]"); if(!b) return; st.q=b.dataset.q; st.from=Q[st.q][2][0][0]; st.val=st.q==="temp"?"850":"1"; $("val").value=st.val; setQ(); });
+function setQ(){
+  document.querySelectorAll("[data-q]").forEach(b=>b.classList.toggle("on",b.dataset.q===st.q));
+  $("from").innerHTML=Q[st.q][2].map(u=>`<option value="${u[0]}">${u[1]}</option>`).join(""); $("from").value=st.from;
+  $("qhint").textContent=Q[st.q][1]; calc();
+}
+$("from").addEventListener("change",()=>{ st.from=$("from").value; calc(); });
+$("val").addEventListener("input",()=>{ st.val=$("val").value; calc(); });
+$("units").addEventListener("click",e=>{ const b=e.target.closest("[data-u]"); if(!b) return; st.val=b.dataset.raw; st.from=b.dataset.u; $("val").value=st.val; $("from").value=st.from; calc(); });
+function tempTo(c){ return {c:c,f:c*9/5+32,k:c+273.15}; }
+function calc(){
+  save();
+  const v=num(st.val); $("val").classList.toggle("bad",isNaN(v)&&st.val!=="");
+  const U=Q[st.q][2];
+  let vals={};
+  if(st.q==="temp"){ const c=st.from==="c"?v:st.from==="f"?(v-32)*5/9:v-273.15; vals=tempTo(c); }
+  else { const base=v*U.find(u=>u[0]===st.from)[2]; U.forEach(u=>vals[u[0]]=base/u[2]); }
+  $("units").innerHTML=U.map(u=>`<button type="button" class="u${u[0]===st.from?" src":""}" data-u="${u[0]}" data-raw="${isFinite(vals[u[0]])?String(+vals[u[0]].toPrecision(6)).replace(".",","):""}"><span class="v">${sig(vals[u[0]])}</span><span class="n">${u[1]}</span></button>`).join("");
+}
+$("val").value=st.val; setQ();
+})();
+</script>

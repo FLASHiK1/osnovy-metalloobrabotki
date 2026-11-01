@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/stati-termoobrabotka.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Виды термообработки стали простыми словами — Основы металлообработки">
+<meta property="og:description" content="Отжиг, нормализация, закалка, отпуск, улучшение, цементация, азотирование и закалка ТВЧ: что происходит со сталью, зачем и для каких деталей.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/stati-termoobrabotka.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Виды термообработки стали простыми словами</title>
+<meta name="description" content="Отжиг, нормализация, закалка, отпуск, улучшение, цементация, азотирование и закалка ТВЧ: что происходит со сталью, зачем и для каких деталей.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+
+/* Layout: статья в одну колонку ~70 знаков, примеры и таблицы в рамках, в конце — переход в калькулятор */
+.wrap{max-width:780px}
+article{display:flex;flex-direction:column;gap:14px;font-size:16px;line-height:1.65}
+article h2{font-size:21px;margin-top:14px}
+article p{margin:0;max-width:68ch}
+article ul,article ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px;max-width:68ch}
+article code{font-family:var(--f-num);font-size:.95em;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:0 4px}
+.lead{font-size:18px;color:var(--muted)}
+.ex{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:4px;padding:12px 14px;font-size:15px}
+.ex .formula{margin-top:6px;background:var(--bg)}
+.cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--accent-soft);border-radius:6px;padding:16px 18px}
+.cta b{font-size:16px}
+.cta a.go{background:var(--accent);color:var(--paper);text-decoration:none;font-weight:600;border-radius:5px;padding:10px 16px;white-space:nowrap}
+.cta a.go:hover{filter:brightness(1.08)}
+.meta{font-size:13px;color:var(--muted)}
+.more{display:flex;flex-direction:column;gap:6px}
+
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Виды термообработки стали простыми словами", "description": "Отжиг, нормализация, закалка, отпуск, улучшение, цементация, азотирование и закалка ТВЧ: что происходит со сталью, зачем и для каких деталей.", "inLanguage": "ru", "publisher": {"@type": "Organization", "name": "Основы металлообработки"}}</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · статья</div>
+      <h1>Виды термообработки стали простыми словами</h1>
+    </div>
+  </header>
+  <article>
+
+<p class="lead">Термообработка меняет не форму, а структуру стали: ту же деталь из стали 45 можно сделать мягкой, как пластилин для резца, или твёрдой, как напильник. Всё решают температура нагрева и скорость охлаждения.</p>
+<h2>Отжиг</h2>
+<p>Нагрев выше критической температуры (для стали 45 — около 830–850 °C) и <b>очень медленное</b> охлаждение вместе с печью. Сталь становится максимально мягкой, снимаются напряжения. Отжигают заготовки перед механической обработкой, особенно инструментальные стали.</p>
+<h2>Нормализация</h2>
+<p>Тот же нагрев, но охлаждение <b>на спокойном воздухе</b>. Структура мельче и прочнее, чем после отжига. Дешёвая операция для поковок и сварных конструкций.</p>
+<h2>Закалка</h2>
+<p>Нагрев выше критической температуры и <b>быстрое</b> охлаждение: углеродистые стали — в воде, легированные — в масле. Сталь становится твёрдой и хрупкой. Ориентиры: сталь 45 — 820–840 °C, вода; 40Х — 830–860 °C, масло; У8 — 770–790 °C, вода. Точный режим для марки — в марочнике или ГОСТ.</p>
+<h2>Отпуск — всегда после закалки</h2>
+<ul>
+<li><b>Низкий, 150–250 °C</b>: снимает напряжения, твёрдость почти не падает (58–63 HRC). Режущий и мерительный инструмент.</li>
+<li><b>Средний, 350–500 °C</b>: высокая упругость. Пружины, рессоры.</li>
+<li><b>Высокий, 500–650 °C</b>: лучшее сочетание прочности и вязкости. Валы, шестерни, шатуны.</li>
+</ul>
+<p>Закалку с высоким отпуском называют <b>улучшением</b> — это стандартная обработка ответственных деталей из сталей 40Х, 45, 40ХН. После улучшения деталь ещё обрабатывается резанием (обычно 240–300 HB).</p>
+<h2>Поверхностное упрочнение</h2>
+<ul>
+<li><b>Цементация</b>: малоуглеродистую сталь (20, 20Х, 18ХГТ) насыщают углеродом на глубину 0,5–2 мм, затем закаливают и низко отпускают. Твёрдая износостойкая поверхность (58–62 HRC) и вязкая сердцевина — так делают шестерни коробок передач.</li>
+<li><b>Азотирование</b>: насыщение азотом при 500–600 °C без последующей закалки. Тонкий (0,2–0,5 мм), очень твёрдый слой, деталь почти не коробится. Сталь 38Х2МЮА, гильзы, шпиндели.</li>
+<li><b>Закалка ТВЧ</b>: токами высокой частоты быстро нагревают только поверхность и сразу охлаждают. Стали 40–50, шейки валов, зубья колёс, направляющие.</li>
+</ul>
+<h2>Что важно технологу</h2>
+<ul>
+<li>Окончательную точную обработку (шлифование) делают после термообработки: деталь коробится.</li>
+<li>Резьбу и точные отверстия, которые нельзя шлифовать, защищают от цементации обмазкой или оставляют припуск.</li>
+<li>На чертеже требование пишут в технических требованиях: «Улучшить 240…280 HB» или «Цементировать h 0,8…1,2; закалить 58…62 HRC».</li>
+</ul>
+
+    <div class="cta"><b>Цвета побежалости и каления — температура на глаз</b><a class="go" href="cveta-pobezhalosti.html">Открыть калькулятор →</a></div>
+    <h2>Ещё по теме</h2>
+    <div class="more"><a href="stati-posadka-h7-g6.html">Как читать обозначение посадки H7/g6</a><a href="stati-rezba-6g-6h.html">Что значат 6g и 6H в обозначении резьбы</a><a href="stati-sherokhovatost-ra-rz.html">Шероховатость Ra и Rz: разница и перевод старых классов ▽</a><a href="stati-razvertka-gibka-k-faktor.html">Как рассчитать развёртку при гибке листа: K-фактор простыми словами</a><a href="stati-rezhimy-rezaniya-raschet.html">Как рассчитать режимы резания: скорость, обороты, подача</a><a href="stati-sverlo-pod-rezbu.html">Сверло под резьбу: таблица для метрических метчиков</a><a href="stati-kvalitet.html">Квалитет — что это и какой выбрать</a><a href="stati-posadka-podshipnika.html">Как выбрать посадку подшипника на вал и в корпус</a><a href="stati-rezba-rezcom.html">Как нарезать резьбу резцом на токарном станке</a><a href="stati-lomayutsya-metchiki.html">Почему ломаются метчики и как этого избежать</a><a href="stati-chertezh-oboznacheniya.html">Как читать чертёж: основные обозначения</a></div>
+  </article>
+  <footer><span>Основы металлообработки — бесплатные калькуляторы и объяснения для технологов, конструкторов и станочников.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="cveta-pobezhalosti.html">Калькулятор по теме</a></nav></footer>
+</div>
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

@@ -3,8 +3,8 @@
   "use strict";
   var PAGES = [
     ["Точность", [["posadki.html", "Посадки и допуски"], ["razmernye-cepi.html", "Размерные цепи"], ["sherokhovatost.html", "Шероховатость"]]],
-    ["Обработка", [["rezhimy-rezaniya.html", "Режимы резания"], ["rezby.html", "Резьбы"], ["konusy.html", "Конусы"]]],
-    ["Справочник", [["vybor-instrumenta.html", "Выбор режущего инструмента"], ["plastiny.html", "Пластины и державки"], ["gkody.html", "G-коды и M-коды"], ["marki-staley.html", "Расшифровка марки стали"], ["podshipniki.html", "Подшипники"], ["dopuski-formy.html", "Допуски формы и расположения"], ["cveta-pobezhalosti.html", "Цвета побежалости"]]],
+    ["Обработка", [["rezhimy-rezaniya.html", "Режимы резания"], ["rezby.html", "Резьбы"], ["rezba-rezcom.html", "Резьба резцом, G76"], ["konusy.html", "Конусы"]]],
+    ["Справочник", [["vybor-instrumenta.html", "Выбор режущего инструмента"], ["plastiny.html", "Пластины и державки"], ["gkody.html", "G-коды и M-коды"], ["marki-staley.html", "Расшифровка марки стали"], ["podshipniki.html", "Подшипники"], ["dopuski-formy.html", "Допуски формы и расположения"], ["cveta-pobezhalosti.html", "Цвета побежалости"], ["edinicy.html", "Конвертер единиц"], ["glossariy.html", "Глоссарий"]]],
     ["Конструирование", [["zatyazhka.html", "Момент затяжки болтов"], ["shesterni.html", "Зубчатые колёса"], ["natyag.html", "Сборка с натягом"]]],
     ["Лист и сварка", [["gibka-lista.html", "Гибка листа"], ["raskroy-lista.html", "Раскрой листа"], ["rashod-elektrodov.html", "Расход на сварку"]]],
     ["Материалы", [["massa-metalla.html", "Масса металла"], ["analogi-staley.html", "Аналоги сталей"]]],

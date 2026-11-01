@@ -173,6 +173,21 @@ section.sheet p{margin:0;max-width:78ch;font-size:14px}
     <p class="hint">Форма пластины, угол в плане, глубина и подача берутся из ответов выше: поменяйте операцию или «что точим» — и посмотрите, как изменится снимаемый слой и стружка.</p>
   </section>
 
+  <section class="sheet" aria-labelledby="h-bore">
+    <div class="sheet-head"><h2 id="h-bore">Расточная оправка: допустимый вылет</h2><span class="hint">вылет в диаметрах оправки, L/D</span></div>
+    <div class="grid3">
+      <div class="field"><label for="bD"><span>Диаметр оправки</span><i>мм</i></label><input type="text" id="bD" inputmode="decimal" value="20"></div>
+      <div class="field"><label for="bL"><span>Вылет из державки</span><i>мм</i></label><input type="text" id="bL" inputmode="decimal" value="90"></div>
+      <div class="field"><label for="bT">Оправка</label><select id="bT"><option value="4">Стальная</option><option value="6">Твердосплавная</option><option value="10">Стальная демпфированная</option><option value="14">Твердосплавная демпфированная</option></select></div>
+    </div>
+    <div id="bOut" aria-live="polite"></div>
+    <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:4px;max-width:78ch">
+      <li>Берите оправку максимального диаметра, который проходит в отверстие с зазором под стружку, и минимальный вылет.</li>
+      <li>Чем ближе к пределу, тем меньше радиус при вершине (0,2–0,4), угол в плане ближе к 90° и острее позитивная пластина — это снижает радиальную силу.</li>
+      <li>Зажим оправки — на длине не меньше 3–4 диаметров; цанговые и гидравлические держатели жёстче винтового зажима.</li>
+    </ul>
+  </section>
+
   <nav class="toc" aria-label="Разделы справочника"><a href="#s-grades">Сплавы и группы ISO</a><a href="#s-coat">Покрытия</a><a href="#s-mill">Фрезы</a><a href="#s-drill">Свёрла</a><a href="#s-tap">Метчики</a><a href="#s-cool">СОЖ</a><a href="#s-trouble">Если что-то не так</a></nav>
 
   <section class="sheet" id="s-grades">
@@ -282,7 +297,7 @@ section.sheet p{margin:0;max-width:78ch;font-size:14px}
     </tbody></table></div>
   </section>
 
-  <footer><span>Рекомендации общего характера. Точные марки сплавов, стружколомы и режимы — в каталоге производителя инструмента.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a></nav></footer>
+  <footer><span>Рекомендации общего характера. Точные марки сплавов, стружколомы и режимы — в каталоге производителя инструмента.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
 </div>
 
 <script src="assets/anim3d.js"></script>
@@ -353,7 +368,15 @@ function rec(){
   const mi={P:1,M:4,K:5,N:7,S:9,H:11}[mat];
   $("links").innerHTML=window.siteLink?`<a class="btn sm" href="${siteLink("plastiny.html",{kind:"ins",ins:code})}">Расшифровать ${code.split(" ")[0]} →</a><a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"turn",mat:mi,tool:mat==="H"?"carb":"carb",vcManual:null,vals:{turn:{f:String(+((fRange[0]+fRange[1])/2).toFixed(2)).replace(".",","),re:String(rv).replace(".",",")}}})}">Режимы резания →</a>`:"";
 }
-rec();
+function bore(){
+  const D=+String($("bD").value).replace(",","."), L=+String($("bL").value).replace(",","."), lim=+$("bT").value;
+  if(!(D>0&&L>0)){ $("bOut").innerHTML=""; return; }
+  const r=L/D, safe=lim*0.75;
+  const st2=r<=safe?["ok","Нормально",`вылет ${r.toFixed(1).replace(".",",")}·D — с запасом для этой оправки (предел ≈ ${lim}·D).`]:r<=lim?["warn","На пределе",`вылет ${r.toFixed(1).replace(".",",")}·D близок к пределу ${lim}·D: уменьшите подачу и глубину, радиус при вершине 0,2–0,4.`]:["bad","Будут вибрации",`вылет ${r.toFixed(1).replace(".",",")}·D больше предела ${lim}·D для этой оправки. Нужна ${lim<6?"твердосплавная":lim<10?"демпфированная":"оправка большего диаметра"} или меньший вылет: не больше ${Math.floor(lim*D)} мм.`];
+  $("bOut").innerHTML=`<div class="note ${st2[0]==="ok"?"":st2[0]}" style="${st2[0]==="ok"?"background:var(--ok-soft)":""}"><b>${st2[1]}:</b> ${st2[2]}</div>`;
+}
+["bD","bL"].forEach(id=>$(id).addEventListener("input",bore)); $("bT").addEventListener("change",bore);
+rec(); bore();
 })();
 </script>
 

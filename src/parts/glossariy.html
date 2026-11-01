@@ -1,0 +1,93 @@
+<title>Глоссарий металлообработки</title>
+<meta name="description" content="Термины металлообработки простыми словами: глубина резания, подача на зуб, квалитет, посадка, натяг, шероховатость Ra и Rz, K-фактор, модуль, конусность, закалка, отпуск, G-коды — со ссылками на калькуляторы.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: одна колонка словаря с фильтром сверху; термин — моноширинной меткой, объяснение — абзацем */
+.wrap{max-width:860px}
+dl.gl{margin:0;display:flex;flex-direction:column}
+.gi{padding:12px 0;border-bottom:1px solid var(--line)}
+.gi dt{font-weight:700;font-size:16px}
+.gi .tk{font-family:var(--f-num);color:var(--accent)}
+.gi dd{margin:4px 0 0;font-size:15px;line-height:1.55;max-width:70ch}
+.gi dd a{white-space:nowrap}
+#q{font-size:17px;padding:10px 12px}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Глоссарий металлообработки</h1>
+      <p>Термины и обозначения простыми словами — коротко и со ссылкой на калькулятор или статью, где тема разобрана подробно.</p>
+    </div>
+    <div class="std">53 терминов</div>
+  </header>
+  <section class="sheet">
+    <div class="field"><label for="q">Найти термин</label><input type="search" id="q" placeholder="например: натяг, fz, квалитет" autocomplete="off"></div>
+    <dl class="gl" id="gl">
+      <div class="gi" id="k-фактор"><dt><span class="tk">K-фактор</span></dt><dd>Положение нейтрального слоя при гибке в долях толщины листа, обычно 0,3–0,5. Нужен для расчёта развёртки. <a href="stati-razvertka-gibka-k-faktor.html">Подробнее →</a></dd></div>
+      <div class="gi" id="v-матрица"><dt><span class="tk">V-матрица</span></dt><dd>Нижний инструмент листогиба с V-образным пазом. Ширина V ≈ 8·s для тонкого листа; от неё зависит радиус и усилие. <a href="gibka-lista.html">Подробнее →</a></dd></div>
+      <div class="gi" id="база"><dt><span class="tk">База</span> — База на чертеже</dt><dd>Поверхность или ось, от которой задаётся расположение. Обозначается зачернённым треугольником с буквой. <a href="dopuski-formy.html">Подробнее →</a></dd></div>
+      <div class="gi" id="биение"><dt><span class="tk">Биение</span></dt><dd>Размах показаний индикатора за оборот детали — суммарная погрешность формы и расположения. <a href="dopuski-formy.html">Подробнее →</a></dd></div>
+      <div class="gi" id="вылет"><dt><span class="tk">Вылет</span> — Вылет инструмента</dt><dd>Расстояние от точки крепления до вершины. Жёсткость падает пропорционально кубу вылета. <a href="vybor-instrumenta.html">Подробнее →</a></dd></div>
+      <div class="gi" id="r"><dt><span class="tk">κr</span> — Главный угол в плане</dt><dd>Угол между главной режущей кромкой и направлением подачи. Меньше угол — тоньше стружка, но сильнее отжим детали. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="ap"><dt><span class="tk">ap</span> — Глубина резания</dt><dd>Толщина слоя, снимаемого за один проход: при точении — на сторону (на радиус), при фрезеровании — вдоль оси фрезы. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="iso-p-m-k-n-s-h"><dt><span class="tk">ISO P M K N S H</span> — Группы обрабатываемых материалов</dt><dd>P — сталь, M — нержавейка, K — чугун, N — цветные, S — жаропрочные и титан, H — закалённые. По ним подбирают сплав и режимы. <a href="vybor-instrumenta.html">Подробнее →</a></dd></div>
+      <div class="gi" id="длина-общей-нормали"><dt><span class="tk">Длина общей нормали</span></dt><dd>Размер через несколько зубьев, который меряют зубомерным микрометром для контроля толщины зуба. <a href="shesterni.html">Подробнее →</a></dd></div>
+      <div class="gi" id="задний-угол"><dt><span class="tk">Задний угол</span> — Задний угол пластины</dt><dd>Угол между задней поверхностью и обработанной. 0° — негативная пластина (прочная, двусторонняя), 5–11° — позитивная (острая). <a href="plastiny.html">Подробнее →</a></dd></div>
+      <div class="gi" id="зазор"><dt><span class="tk">Зазор</span></dt><dd>Разность размеров отверстия и вала, когда отверстие больше — вал вращается или перемещается. <a href="posadki.html">Подробнее →</a></dd></div>
+      <div class="gi" id="закалка"><dt><span class="tk">Закалка</span></dt><dd>Нагрев выше критической температуры и быстрое охлаждение: сталь становится твёрдой и хрупкой. <a href="stati-termoobrabotka.html">Подробнее →</a></dd></div>
+      <div class="gi" id="замыкающее-звено"><dt><span class="tk">Замыкающее звено</span></dt><dd>Размер, который получается в результате обработки или сборки остальных звеньев: зазор, длина ступени. <a href="razmernye-cepi.html">Подробнее →</a></dd></div>
+      <div class="gi" id="катет-шва"><dt><span class="tk">Катет шва</span> — Катет углового шва</dt><dd>Длина стороны треугольника, вписанного в сечение углового шва. По нему считают прочность и расход материала. <a href="rashod-elektrodov.html">Подробнее →</a></dd></div>
+      <div class="gi" id="квалитет"><dt><span class="tk">Квалитет</span> — Квалитет (IT)</dt><dd>Степень точности размера: чем больше номер, тем шире допуск. IT7 для Ø25 — 21 мкм, IT11 — 130 мкм. <a href="stati-kvalitet.html">Подробнее →</a></dd></div>
+      <div class="gi" id="конусность"><dt><span class="tk">Конусность</span></dt><dd>Отношение разности диаметров к длине конуса, записывается 1:20, 7:24. Угол уклона = половине угла конуса. <a href="konusy.html">Подробнее →</a></dd></div>
+      <div class="gi" id="g41-g42"><dt><span class="tk">G41, G42</span> — Коррекция на радиус</dt><dd>Смещение траектории на радиус инструмента влево или вправо от контура. <a href="gkody.html">Подробнее →</a></dd></div>
+      <div class="gi" id="cbn"><dt><span class="tk">CBN</span> — Кубический нитрид бора</dt><dd>Сверхтвёрдый материал для точения закалённых сталей (45–65 HRC) и чугунов. <a href="vybor-instrumenta.html">Подробнее →</a></dd></div>
+      <div class="gi" id="межосевое-расстояние"><dt><span class="tk">Межосевое расстояние</span></dt><dd>Расстояние между осями колёс в передаче: a = (d₁ + d₂)/2 без смещения. <a href="shesterni.html">Подробнее →</a></dd></div>
+      <div class="gi" id="vf"><dt><span class="tk">Vf</span> — Минутная подача</dt><dd>Скорость перемещения инструмента, мм/мин — именно её задают в программе при G94. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="модуль"><dt><span class="tk">Модуль</span> — Модуль зубчатого колеса</dt><dd>Основной размер зуба: m = d/z. Шаг зубьев p = π·m, высота зуба 2,25·m. <a href="shesterni.html">Подробнее →</a></dd></div>
+      <div class="gi" id="накл-п"><dt><span class="tk">Наклёп</span></dt><dd>Упрочнение поверхности при деформации. Сильно проявляется у нержавейки: нельзя «тереть» кромкой — нужна постоянная подача. <a href="vybor-instrumenta.html">Подробнее →</a></dd></div>
+      <div class="gi" id="нарост"><dt><span class="tk">Нарост</span> — Нарост на кромке</dt><dd>Налипание металла на режущую кромку при низкой скорости или вязком материале. Портит шероховатость и размер. <a href="vybor-instrumenta.html">Подробнее →</a></dd></div>
+      <div class="gi" id="натяг"><dt><span class="tk">Натяг</span></dt><dd>Разность размеров, когда вал больше отверстия — соединение собирают прессом или нагревом. <a href="natyag.html">Подробнее →</a></dd></div>
+      <div class="gi" id="основное-отклонение"><dt><span class="tk">Основное отклонение</span></dt><dd>Буква в обозначении поля допуска: положение поля относительно номинала. H — отверстие не меньше номинала, h — вал не больше. <a href="posadki.html">Подробнее →</a></dd></div>
+      <div class="gi" id="отпуск"><dt><span class="tk">Отпуск</span></dt><dd>Нагрев закалённой стали до 150–650 °C: снимает напряжения, снижает хрупкость. Чем выше температура, тем мягче и вязче. <a href="cveta-pobezhalosti.html">Подробнее →</a></dd></div>
+      <div class="gi" id="fz"><dt><span class="tk">fz</span> — Подача на зуб</dt><dd>Перемещение фрезы за поворот на один зуб, мм/зуб. Минутная подача Vf = fz · z · n. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="f"><dt><span class="tk">f</span> — Подача на оборот</dt><dd>Перемещение инструмента за один оборот шпинделя, мм/об — для точения и сверления. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="cvd-pvd"><dt><span class="tk">CVD, PVD</span> — Покрытия пластин</dt><dd>CVD — толстое покрытие для стали и чугуна, PVD — тонкое, сохраняет острую кромку: нержавейка, жаропрочные, чистовая обработка. <a href="vybor-instrumenta.html">Подробнее →</a></dd></div>
+      <div class="gi" id="поле-допуска"><dt><span class="tk">Поле допуска</span></dt><dd>Зона между наибольшим и наименьшим допустимым размером: буква + квалитет, например H7 или g6. <a href="posadki.html">Подробнее →</a></dd></div>
+      <div class="gi" id="6g-6h"><dt><span class="tk">6g, 6H</span> — Поле допуска резьбы</dt><dd>Цифра — степень точности, буква — основное отклонение. 6H/6g — средний класс для крепежа. <a href="stati-rezba-6g-6h.html">Подробнее →</a></dd></div>
+      <div class="gi" id="посадка"><dt><span class="tk">Посадка</span></dt><dd>Характер соединения отверстия и вала: с зазором, переходная или с натягом. Записывается дробью: H7/g6. <a href="stati-posadka-h7-g6.html">Подробнее →</a></dd></div>
+      <div class="gi" id="g96"><dt><span class="tk">G96</span> — Постоянная скорость резания</dt><dd>Станок сам меняет обороты при изменении диаметра, чтобы Vc оставалась постоянной. Обязательно ограничивайте обороты (G50 S). <a href="gkody.html">Подробнее →</a></dd></div>
+      <div class="gi" id="es-ei-es-ei"><dt><span class="tk">ES, EI, es, ei</span> — Предельные отклонения</dt><dd>ES и EI — верхнее и нижнее отклонение отверстия, es и ei — вала. <a href="posadki.html">Подробнее →</a></dd></div>
+      <div class="gi" id="g54"><dt><span class="tk">G54</span> — Рабочая система координат</dt><dd>Нуль детали, от которого ведётся программа. G54–G59 — шесть смещений нуля. <a href="gkody.html">Подробнее →</a></dd></div>
+      <div class="gi" id="r"><dt><span class="tk">rε</span> — Радиус при вершине</dt><dd>Скругление вершины пластины. Больше радиус — прочнее вершина и лучше шероховатость, но больше вибрации. <a href="plastiny.html">Подробнее →</a></dd></div>
+      <div class="gi" id="размерная-цепь"><dt><span class="tk">Размерная цепь</span></dt><dd>Замкнутый контур размеров детали или сборки. Замыкающее звено получается последним, его точность зависит от всех остальных. <a href="razmernye-cepi.html">Подробнее →</a></dd></div>
+      <div class="gi" id="система-отверстия"><dt><span class="tk">Система отверстия</span></dt><dd>Отверстие основное (H), характер посадки задаётся полем вала. Применяется чаще всего. <a href="stati-posadka-h7-g6.html">Подробнее →</a></dd></div>
+      <div class="gi" id="vc"><dt><span class="tk">Vc</span> — Скорость резания</dt><dd>Скорость, с которой режущая кромка проходит по металлу, м/мин. По ней считают обороты: n = 1000·Vc/(π·D). <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="соосность"><dt><span class="tk">Соосность</span></dt><dd>Допуск смещения оси поверхности относительно базовой оси. <a href="dopuski-formy.html">Подробнее →</a></dd></div>
+      <div class="gi" id="средний-диаметр"><dt><span class="tk">Средний диаметр</span> — Средний диаметр резьбы</dt><dd>Диаметр, на котором ширина витка равна ширине впадины. По нему витки болта и гайки контактируют — главный контролируемый размер. <a href="stati-rezba-6g-6h.html">Подробнее →</a></dd></div>
+      <div class="gi" id="hm"><dt><span class="tk">hm</span> — Средняя толщина стружки</dt><dd>При фрезеровании с малым врезанием стружка тоньше подачи на зуб — поэтому подачу можно поднимать. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="стойкость"><dt><span class="tk">Стойкость</span> — Стойкость инструмента</dt><dd>Время работы кромки до допустимого износа, обычно 15–20 мин для пластин. Сильно зависит от скорости резания (формула Тейлора). <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="стружколом"><dt><span class="tk">Стружколом</span></dt><dd>Канавка или выступы на передней поверхности пластины, которые завивают и ломают стружку. Подбирается под режим: F — чистовой, M — средний, R — черновой. <a href="vybor-instrumenta.html">Подробнее →</a></dd></div>
+      <div class="gi" id="сэкв"><dt><span class="tk">Сэкв</span> — Углеродный эквивалент</dt><dd>Показатель свариваемости стали по составу. До 0,35 — варится без подогрева, выше 0,45 — нужен подогрев. <a href="marki-staley.html">Подробнее →</a></dd></div>
+      <div class="gi" id="kc"><dt><span class="tk">kc</span> — Удельная сила резания</dt><dd>Сила резания на 1 мм² сечения стружки, Н/мм². Зависит от материала и толщины стружки; нужна для расчёта мощности. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+      <div class="gi" id="улучшение"><dt><span class="tk">Улучшение</span></dt><dd>Закалка + высокий отпуск (500–650 °C). Лучшее сочетание прочности и вязкости для валов и шестерён. <a href="stati-termoobrabotka.html">Подробнее →</a></dd></div>
+      <div class="gi" id="побежалость"><dt><span class="tk">Побежалость</span> — Цвета побежалости</dt><dd>Цвет плёнки окислов на нагретой стали — по нему определяют температуру отпуска. <a href="cveta-pobezhalosti.html">Подробнее →</a></dd></div>
+      <div class="gi" id="цементация"><dt><span class="tk">Цементация</span></dt><dd>Насыщение поверхности малоуглеродистой стали углеродом с последующей закалкой: твёрдая поверхность и вязкая сердцевина. <a href="stati-termoobrabotka.html">Подробнее →</a></dd></div>
+      <div class="gi" id="g76"><dt><span class="tk">G76</span> — Цикл нарезания резьбы</dt><dd>Многопроходный цикл Fanuc для резьбы резцом: глубины проходов стойка считает сама. <a href="rezba-rezcom.html">Подробнее →</a></dd></div>
+      <div class="gi" id="шаг-резьбы"><dt><span class="tk">Шаг резьбы</span></dt><dd>Расстояние между соседними витками вдоль оси. У крупной метрической резьбы на чертеже не указывается. <a href="rezby.html">Подробнее →</a></dd></div>
+      <div class="gi" id="ra-rz"><dt><span class="tk">Ra, Rz</span> — Шероховатость</dt><dd>Ra — среднее отклонение профиля, Rz — высота неровностей. Для обработки резанием Rz ≈ 4·Ra. <a href="sherokhovatost.html">Подробнее →</a></dd></div>
+      <div class="gi" id="ae"><dt><span class="tk">ae</span> — Ширина фрезерования</dt><dd>Радиальное врезание фрезы — какую часть диаметра фрезы занимает контакт с деталью. <a href="rezhimy-rezaniya.html">Подробнее →</a></dd></div>
+    </dl>
+    <p class="hint" id="none" hidden style="margin:0">Такого термина пока нет. Попробуйте поиск по сайту в меню.</p>
+  </section>
+  <footer><span>Глоссарий пополняется вместе с сайтом.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+<script>
+(function(){
+const q=document.getElementById("q"), items=[...document.querySelectorAll(".gi")];
+const norm=s=>s.toLowerCase().replace(/ё/g,"е");
+q.addEventListener("input",()=>{ const v=norm(q.value.trim()); let n=0; items.forEach(i=>{ const on=!v||norm(i.textContent).includes(v); i.hidden=!on; if(on) n++; }); document.getElementById("none").hidden=n>0; });
+})();
+</script>

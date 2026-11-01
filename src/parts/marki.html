@@ -104,7 +104,8 @@ function decode(raw){
   if((m=s.match(/^Л(\d+)$/))){ R.group="Латунь (медь + цинк)"; R.iso="N"; R.els.push(["Cu","Медь",`~${m[1]} %`],["Zn","Цинк",`~${100-m[1]} %`]); R.facts.push("Обрабатывается очень легко, стружка короткая, СОЖ обычно не нужна."); R.analog=true; return R; }
   if((m=s.match(/^Л([А-Я]+)(\d+)((?:-\d+(?:[,.]\d+)?)+)$/))){ R.group="Легированная латунь"; R.iso="N"; const nums=m[3].split("-").filter(Boolean); R.els.push(["Cu","Медь",`~${m[2]} %`]); const ls=m[1].split(""); let tot=+m[2]; ls.forEach((l,i)=>{ const v=nums[i]?+nums[i].replace(",","."):null; const nm={С:"Свинец",А:"Алюминий",Ж:"Железо",Мц:"Марганец",Н:"Никель",К:"Кремний",О:"Олово"}[l]||l; R.els.push([l,nm,v!=null?`~${n2(v)} %`:"—"]); if(v) tot+=v; }); R.els.push(["Zn","Цинк",`~${n2(100-tot)} % (остальное)`]); if(m[1].includes("С")) R.facts.push("Свинцовая латунь — автоматная: даёт ломкую стружку, отлично обрабатывается на автоматах."); R.analog=true; return R; }
   if((m=s.match(/^БР([А-Я]+)(\d+(?:[,.]\d+)?(?:-\d+(?:[,.]\d+)?)*)$/))){ R.group="Бронза (медь + легирующие, кроме цинка как основного)"; R.iso="N"; const nm={О:"Олово",Ц:"Цинк",С:"Свинец",А:"Алюминий",Ж:"Железо",Н:"Никель",Б:"Бериллий",К:"Кремний",Мц:"Марганец",Ф:"Фосфор",Х:"Хром"}; const ls=m[1].split(""), nums=m[2].split("-"); let tot=0; ls.forEach((l,i)=>{ const v=nums[i]?+nums[i].replace(",","."):null; R.els.push([l,nm[l]||l,v!=null?`~${n2(v)} %`:"—"]); if(v) tot+=v; }); R.els.push(["Cu","Медь",`~${n2(100-tot)} % (остальное)`]); R.facts.push("Цифры через дефис — содержание элементов в том же порядке, что и буквы."); R.analog=/^БРАЖ/.test(s); return R; }
-  if((m=s.match(/^СТ(\d)(СП|ПС|КП)?(\d)?$/))){ R.group="Сталь углеродистая обыкновенного качества"; R.iso="P"; R.els.push(["№","Номер марки",m[1]]); const dx={СП:"спокойная — полностью раскислена, однородная",ПС:"полуспокойная",КП:"кипящая — дешевле, хуже свариваемость и однородность"}; if(m[2]) R.facts.push(`${m[2].toLowerCase()} — ${dx[m[2]]}.`); R.facts.push("Чем больше номер, тем больше углерода и прочность, но хуже свариваемость. Ст3 — самая массовая конструкционная сталь, хорошо сваривается."); if(m[3]) R.facts.push(`Цифра ${m[3]} в конце — категория по нормируемым свойствам.`); R.analog=true; return R; }
+  if((m=s.match(/^СТ(\d)(СП|ПС|КП)?(\d)?$/))){ R.group="Сталь углеродистая обыкновенного качества"; R.iso="P"; R.els.push(["№","Номер марки",m[1]]); const dx={СП:"спокойная — полностью раскислена, однородная",ПС:"полуспокойная",КП:"кипящая — дешевле, хуже свариваемость и однородность"}; if(m[2]) R.facts.push(`${m[2].toLowerCase()} — ${dx[m[2]]}.`); R.facts.push("Чем больше номер, тем больше углерода и прочность, но хуже свариваемость. Ст3 — самая массовая конструкционная сталь, хорошо сваривается.");
+    R.ce={C:[0.06,0.08,0.12,0.18,0.22,0.32,0.42][+m[1]]||0.18,Mn:0.5}; if(m[3]) R.facts.push(`Цифра ${m[3]} в конце — категория по нормируемым свойствам.`); R.analog=true; return R; }
   if((m=s.match(/^У(\d{1,2})(А)?$/))){ R.group="Сталь инструментальная углеродистая"; R.iso="P"; R.els.push(["C","Углерод",`~${n2(m[1]/10)} %`]); if(m[2]) R.facts.push("А в конце — высококачественная."); R.facts.push("Зубила, керны, напильники, ручной инструмент. Красностойкость низкая — до ~200 °C."); R.analog=true; return R; }
   if((m=s.match(/^Р(\d+)(.*)$/))){ R.group="Сталь быстрорежущая"; R.iso="P"; R.els.push(["C","Углерод","~0,8–1,1 %"],["W","Вольфрам",`~${m[1]} %`]); steelElements(m[2]).forEach(([l,v])=>R.els.push([SYM[l],EL[l],v!=null?`~${n2(v)} %`:"до 1–1,5 %"])); R.els.push(["Cr","Хром","~4 % (не указывается)"]); if(!/Ф/.test(m[2])) R.els.push(["V","Ванадий","~1–2 % (не указывается)"]); R.facts.push("Свёрла, метчики, фрезы, резцы. Красностойкость до ~600 °C. В отожжённом состоянии обрабатывается как легированная сталь, после закалки — 62–65 HRC."); R.analog=true; return R; }
   if((m=s.match(/^ШХ(\d+)(.*)$/))){ R.group="Сталь шарикоподшипниковая"; R.iso="P"; R.els.push(["C","Углерод","~1 %"],["Cr","Хром",`~${n2(m[1]/10)} %`]); steelElements(m[2]).forEach(([l,v])=>R.els.push([SYM[l],EL[l],v!=null?`~${n2(v)} %`:"до 1–1,5 %"])); R.facts.push("Важно: в ШХ хром указан в десятых долях процента — ШХ15 содержит 1,5 % хрома."); R.facts.push("Кольца и тела качения подшипников, плунжеры, калибры. После закалки — 60–64 HRC."); R.analog=true; return R; }
@@ -134,6 +135,7 @@ function decode(raw){
   else group=sumAlloy>10?"Сталь высоколегированная":"Сталь легированная конструкционная";
   if(lit&&!group.includes("Гадфильда")) group+=", литейная";
   const R2={mark:s,group,iso,els:[],facts:[],analog:true};
+  { const g2=l=>{ const e=els.find(x=>x[0]===l); return e?(e[1]!=null?e[1]:1):0; }; R2.ce={C:C!=null?C:1,Mn:g2("Г")||(els.length?0.6:0.65),Cr:g2("Х"),Mo:g2("М"),V:g2("Ф"),Ni:g2("Н"),Cu:g2("Д")}; R2.austenitic=group.includes("аустенитная"); }
   R2.els.push(["C","Углерод",C!=null?`~${n2(C)} %`:"~1 % и больше"]);
   els.forEach(([l,v])=>{ if(l==="Х"&&v==null&&cd==="") {} R2.els.push([SYM[l],EL[l],v!=null?`~${n2(v)} %`:"до 1–1,5 %"]); });
   if(hq) R2.facts.push("А в конце — высококачественная: меньше серы и фосфора (обычно не более 0,025 %).");
@@ -159,6 +161,16 @@ $("ex").innerHTML=EX.map(e=>`<button type="button" class="pbtn" data-e="${e}">${
 $("ex").addEventListener("click",e=>{ const b=e.target.closest("[data-e]"); if(!b) return; $("mark").value=b.dataset.e; st.mark=b.dataset.e; run(); });
 $("mark").addEventListener("input",()=>{ st.mark=$("mark").value; run(); });
 const ISO_N={P:"сталь",M:"нержавеющая сталь",K:"чугун",N:"цветные металлы",S:"жаропрочные и титан",H:"закалённая сталь"};
+function weld(R){
+  const c=R.ce, ce=c.C+c.Mn/6+((c.Cr||0)+(c.Mo||0)+(c.V||0))/5+((c.Ni||0)+(c.Cu||0))/15;
+  let cls,txt,col;
+  if(R.austenitic){ return `<div class="note"><b>Свариваемость.</b> Аустенитная нержавейка варится хорошо и без подогрева, но формула Сэкв для неё не показательна. Главное — не перегреть: малый ток, быстрое охлаждение, межслойная температура не выше 150 °C, электроды и проволока аустенитного класса (ЦЛ-11, ОЗЛ-8, ER308/347).</div>`; }
+  if(ce<0.35){ cls="хорошая"; col="var(--ok-soft)"; txt="Сваривается без подогрева и последующей термообработки."; }
+  else if(ce<0.45){ cls="удовлетворительная"; col="var(--accent-soft)"; txt="При толщине больше 20–25 мм и на морозе — подогрев 100–150 °C."; }
+  else if(ce<0.6){ cls="ограниченная"; col="var(--warn-soft)"; txt="Нужен подогрев 150–250 °C (тем выше, чем толще металл), медленное охлаждение; ответственные швы — отпуск после сварки. Электроды с основным покрытием (УОНИ-13/55)."; }
+  else { cls="плохая"; col="var(--bad-soft)"; txt="Высокий риск холодных трещин: подогрев 250–350 °C, отпуск сразу после сварки, специальные электроды. По возможности избегайте сварки — болты, заклёпки, пайка."; }
+  return `<div class="note" style="background:${col}"><b>Свариваемость: ${cls}</b>, Сэкв ≈ ${String(ce.toFixed(2)).replace(".",",")}. ${txt}<br><span class="hint">Сэкв = C + Mn/6 + (Cr + Mo + V)/5 + (Ni + Cu)/15 (МИС) по номинальному составу — оценка; точнее — по сертификату на плавку.</span></div>`;
+}
 function run(){
   save();
   const R=decode($("mark").value);
@@ -169,6 +181,7 @@ function run(){
    <div><span class="iso ${R.iso}">${R.iso}</span> <span class="muted" style="font-size:14px">группа обрабатываемости ISO — ${ISO_N[R.iso]}</span></div>
    ${R.els.length?`<div class="els">${R.els.map(e=>card(e[0],e[1],e[2])).join("")}</div>`:""}
    ${R.facts.length?`<div class="facts">${R.facts.map(f=>`<div>${f}</div>`).join("")}</div>`:""}
+   ${R.ce?weld(R):""}
    <div class="chips">${R.analog?`<a class="btn sm" href="analogi-staley.html#q=${encodeURIComponent(R.mark)}">Зарубежные аналоги →</a>`:""}<a class="btn sm" href="vybor-instrumenta.html">Выбрать инструмент →</a></div>`;
 }
 $("letters").innerHTML=`<table class="ref"><thead><tr><th>Буква</th><th>Элемент</th><th>Обозн.</th></tr></thead><tbody>${Object.keys(EL).map(l=>`<tr><td>${l}</td><td>${EL[l]}</td><td class="muted">${SYM[l]}</td></tr>`).join("")}</tbody></table>`;

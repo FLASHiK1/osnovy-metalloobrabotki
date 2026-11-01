@@ -1,0 +1,133 @@
+<title>Нарезание резьбы резцом</title>
+<meta name="description" content="Расчёт нарезания резьбы резцом на токарном станке: число проходов, глубина каждого прохода с уменьшающимся врезанием, обороты, готовые кадры G76 и G92 для Fanuc, GSK, KND.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: слева резьба и станок, справа таблица проходов со столбиковой диаграммой глубин; ниже готовая программа G76 / G92 */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px;align-items:start}
+table.ps td,table.ps th{font-size:14px}
+.barc{display:flex;align-items:center;gap:6px}
+.barc .b{height:10px;border-radius:2px;background:var(--accent);min-width:2px}
+.barc .b.sp{background:var(--hot)}
+pre.prog{font-family:var(--f-num);font-size:13px;line-height:1.55;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:12px 14px;overflow-x:auto;margin:0;white-space:pre}
+.progs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:900px){ .main,.progs{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Нарезание резьбы резцом</h1>
+      <p>Задайте резьбу — калькулятор разобьёт глубину профиля на проходы с уменьшающимся врезанием, посчитает обороты и выдаст готовые кадры G76 и G92 для стоек Fanuc, GSK и KND.</p>
+    </div>
+    <div class="std">метрическая резьба, профиль 60°<br>Fanuc 0i-T (система A)</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="type">Резьба</label><select id="type"><option value="ext">Наружная (болт)</option><option value="int">Внутренняя (гайка)</option></select></div>
+        <div class="field"><label for="size">Типоразмер</label><select id="size"></select></div>
+        <div class="field"><label for="d"><span>Номинальный диаметр</span><i>мм</i></label><input type="text" id="d" inputmode="decimal"></div>
+        <div class="field"><label for="P"><span>Шаг P</span><i>мм</i></label><input type="text" id="P" inputmode="decimal"></div>
+        <div class="field"><label for="n"><span>Число проходов</span><i>шт</i></label><input type="text" id="n" inputmode="numeric" placeholder="авто"></div>
+        <div class="field"><label for="spring"><span>Зачистных проходов</span><i>шт</i></label><input type="text" id="spring" inputmode="numeric"></div>
+        <div class="field"><label for="L"><span>Длина резьбы</span><i>мм</i></label><input type="text" id="L" inputmode="decimal"></div>
+        <div class="field"><label for="vc"><span>Скорость резания</span><i>м/мин</i></label><input type="text" id="vc" inputmode="decimal"></div>
+        <div class="field"><label for="nmax"><span>Макс. обороты при резьбе</span><i>об/мин</i></label><input type="text" id="nmax" inputmode="numeric"></div>
+        <div class="field"><label for="inf">Способ врезания</label><select id="inf"><option value="mod">По боковой стороне (модифицированный), 29°–30°</option><option value="rad">Радиальный</option></select></div>
+      </div>
+      <div class="hint">Скорость резания при резьбе обычно на 25–30 % ниже, чем при точении. Обороты ограничены станком: суппорт должен успеть разогнаться до подачи P мм/об — слишком быстрые обороты срывают шаг в начале резьбы.</div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div class="kpis" id="kpis"></div>
+      <div class="tbl" id="passes"></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Готовая программа</h2><span class="hint">проверьте точку подхода и коррекцию резца перед запуском</span></div>
+    <div class="progs">
+      <div><h3 style="margin-bottom:6px">Цикл G76 (многопроходный)</h3><pre class="prog" id="g76"></pre><div class="hint" id="g76h" style="margin-top:6px"></div></div>
+      <div><h3 style="margin-bottom:6px">Цикл G92 (проход за кадром)</h3><pre class="prog" id="g92"></pre><div class="hint" style="margin-top:6px">G92 повторяет один проход на каждый кадр — удобно, когда нужны свои глубины проходов. На стойках, где G92 — установка координат, используйте G76.</div></div>
+    </div>
+    <div class="chips"><button type="button" class="btn sm" id="copy76">Копировать G76</button><button type="button" class="btn sm" id="copy92">Копировать G92</button><a class="btn sm" id="toG" href="gkody.html">Разобрать в справочнике G-кодов →</a></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p><b>Глубина профиля</b> на сторону: наружная резьба h = 0,6134·P, внутренняя h = 0,5413·P. Внутренний диаметр болта для программы: d − 2h; наружный диаметр гайки: D + 2·(0,6134 − 0,5413)·P ≈ D + 0,144·P.</p>
+      <p><b>Уменьшающееся врезание</b> — сечение стружки на всех проходах примерно одинаковое, кромка нагружена равномерно:</p>
+      <div class="formula">глубина после прохода x:  aₓ = h · √(φ / (n − 1))
+φ = 0,3 для первого прохода, φ = x − 1 для остальных</div>
+      <p><b>Число проходов</b> по умолчанию — по шагу: 0,5–0,75 мм — 4, 1 мм — 5, 1,25–1,5 — 6, 1,75–2 — 8, 2,5 — 9, 3 — 10, 3,5 — 11, 4 — 12. Для нержавейки и жаропрочных добавьте 1–2 прохода, для латуни можно меньше.</p>
+      <p><b>Врезание по боковой стороне</b> (на 29–30°, на полградуса меньше половины угла профиля) — стружка сходит с одной стороны, меньше вибраций и лучше стружкоотвод; режет в основном одна кромка. Радиальное — проще, но обе кромки работают одновременно: подходит для мелких шагов и твёрдых материалов.</p>
+      <p><b>G76 у Fanuc</b>: <code>G76 P(m)(r)(a) Q(Δdmin) R(d)</code> — m число чистовых проходов, r сбег в десятых долях шага, a угол инструмента; <code>G76 X Z P(k) Q(Δd) F</code> — k высота профиля и Δd глубина первого прохода в микронах.</p>
+    </div>
+  </details>
+
+  <footer><span>Глубины — расчётные; для резьбы под калибр сделайте пробный проход и подстройте последний проход по калибру-кольцу или пробке.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const COARSE={6:1,8:1.25,10:1.5,12:1.75,14:2,16:2,18:2.5,20:2.5,22:2.5,24:3,27:3,30:3.5,33:3.5,36:4,42:4.5,48:5};
+const FINE=[[10,1],[12,1.5],[12,1.25],[16,1.5],[20,1.5],[24,2],[30,2],[36,3],[42,3],[48,3]];
+const NP={0.5:4,0.75:4,0.8:4,1:5,1.25:6,1.5:6,1.75:8,2:8,2.5:9,3:10,3.5:11,4:12,4.5:12,5:13,6:14};
+function npass(P){ const ks=Object.keys(NP).map(Number).sort((a,b)=>a-b); let r=NP[ks[0]]; ks.forEach(k=>{ if(P>=k-1e-9) r=NP[k]; }); return r; }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+const g3=v=>(+v.toFixed(3)).toFixed(3).replace(/0+$/,"").replace(/\.$/,".");
+const fn=v=>String(+v.toFixed(3)).replace(".",",");
+const opts=Object.keys(COARSE).map(d=>[`${d}|${COARSE[d]}`,`M${d}×${fn(COARSE[d])}`]).concat(FINE.map(([d,p])=>[`${d}|${p}`,`M${d}×${fn(p)}`])).concat([["custom","Свой"]]);
+$("size").innerHTML=opts.map(([v,t])=>`<option value="${v}">${t}</option>`).join("");
+const KEY="rezcom-v1";
+let st={type:"ext",size:"24|3",d:"24",P:"3",n:"",spring:"1",L:"30",vc:"120",nmax:"1500",inf:"mod"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+["type","size","inf"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("change",()=>{ st[id]=$(id).value; if(id==="size"&&st.size!=="custom"){ const [d,p]=st.size.split("|"); st.d=d; st.P=fn(+p); $("d").value=st.d; $("P").value=st.P; } calc(); }); });
+["d","P","n","spring","L","vc","nmax"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; if(id==="d"||id==="P"){ st.size="custom"; $("size").value="custom"; } calc(); }); });
+let last={g76:"",g92:""};
+function calc(){
+  save();
+  const isExt=st.type==="ext", d=num(st.d), P=num(st.P), L=num(st.L), vc=num(st.vc), nmax=num(st.nmax);
+  let n=num(st.n); const auto=!(n>=2); if(auto) n=npass(P);
+  const sp=Math.max(0,Math.round(num(st.spring)||0));
+  const ok=d>0&&P>0&&P<d/2&&L>0&&vc>0;
+  [["d",d>0],["P",P>0&&P<d/2],["L",L>0],["vc",vc>0]].forEach(([id,v])=>$(id).classList.toggle("bad",!v));
+  $("err").hidden=ok; $("err").textContent="Проверьте диаметр, шаг (меньше половины диаметра), длину и скорость.";
+  if(!ok){ ["kpis","passes"].forEach(id=>$(id).innerHTML=""); $("g76").textContent=""; $("g92").textContent=""; return; }
+  n=Math.round(n);
+  const h=(isExt?0.6134:0.5413)*P;
+  const xFinal=isExt?d-2*h:d+2*(0.6134-0.5413)*P;   // внутр. ⌀ болта или наружный ⌀ гайки
+  const xStart=isExt?d:d-1.0825*P;                    // начальный диаметр
+  const cum=[]; for(let x=1;x<=n;x++){ const phi=x===1?0.3:x-1; cum.push(h*Math.sqrt(phi/(n-1))); }
+  let rpm=1000*vc/(Math.PI*d), lim=false; if(nmax>0&&rpm>nmax){ rpm=nmax; lim=true; }
+  const rows=cum.map((a,i)=>({i:i+1,a,da:a-(i?cum[i-1]:0),X:isExt?xStart-2*a:xStart+2*a}));
+  for(let s=0;s<sp;s++) rows.push({i:n+s+1,a:h,da:0,X:xFinal,spring:true});
+  const maxDa=Math.max(...rows.map(r=>r.da));
+  $("kpis").innerHTML=[["Глубина профиля h",fmt(h,3),"мм"],[isExt?"Внутренний ⌀ (последний X)":"Наружный ⌀ (последний X)",fmt(xFinal,3),"мм"],["Обороты",fmt(rpm,0),"об/мин"],["Проходов",String(n+sp),auto?"авто":""]]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("passes").innerHTML=`<table class="ps"><thead><tr><th>Проход</th><th class="n">Глубина за проход</th><th class="n">Суммарная</th><th class="n">X (диаметр)</th><th></th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.i}${r.spring?" · зачистной":""}</td><td class="n">${fmt(r.da,3)}</td><td class="n">${fmt(r.a,3)}</td><td class="n">${fmt(r.X,3)}</td><td><div class="barc"><span class="b${r.spring?" sp":""}" style="width:${(r.da/maxDa*90).toFixed(1)}px"></span></div></td></tr>`).join("")}</tbody></table>
+   ${lim?`<div class="note warn" style="margin-top:8px">Обороты ограничены станком: ${fmt(nmax,0)} об/мин вместо ${fmt(1000*vc/(Math.PI*d),0)}. Скорость резания — ${fmt(Math.PI*d*rpm/1000,0)} м/мин.</div>`:""}`;
+  // G76
+  const zEnd=-L, xApp=isExt?d+2*P:xStart-2*P, zApp=Math.max(3*P,5);
+  const firstUm=Math.round(cum[0]*1000), minUm=Math.max(30,Math.round((cum[n-1]-cum[n-2])*1000*0.8)), hUm=Math.round(h*1000);
+  const ang=st.inf==="rad"?"00":"60";
+  const g76=[`(M${fn(d)}X${fn(P)} ${isExt?"NARUZHNAYA":"VNUTRENNYAYA"}, ${n}+${sp} PROHODOV)`,`G97 S${Math.round(rpm)} M03`,`G00 X${g3(xApp)} Z${g3(zApp)}`,`G76 P${String(sp||1).padStart(2,"0")}10${ang} Q${minUm} R0.02`,`G76 X${g3(xFinal)} Z${g3(zEnd)} P${hUm} Q${firstUm} F${g3(P)}`,`G00 X${g3(isExt?d+20:xApp)} Z${g3(zApp+20)}`];
+  const g92=[`(M${fn(d)}X${fn(P)} G92, ${rows.length} PROHODOV)`,`G97 S${Math.round(rpm)} M03`,`G00 X${g3(xApp)} Z${g3(zApp)}`,...rows.map((r,i)=>(i?"":"G92 ")+`X${g3(r.X)} Z${g3(zEnd)}`+(i?"":` F${g3(P)}`)),`G00 X${g3(isExt?d+20:xApp)} Z${g3(zApp+20)}`];
+  last={g76:g76.join("\n"),g92:g92.join("\n")};
+  $("g76").textContent=last.g76; $("g92").textContent=last.g92;
+  $("g76h").textContent=`P${String(sp||1).padStart(2,"0")}10${ang}: ${sp||1} чистовой проход, сбег 1·P, угол ${st.inf==="rad"?"0° — радиальное врезание":"60° — врезание по боковой стороне"}. Q${minUm} — минимальная глубина прохода, мкм. P${hUm} — высота профиля, Q${firstUm} — первый проход, мкм.`;
+  $("toG").href=window.siteLink?siteLink("gkody.html",{mode:"lathe",line:g76[4]}):"gkody.html";
+}
+function copy(t){ const done=()=>{ const el=document.querySelector(".sb-toast"); if(el){ el.textContent="Скопировано"; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),1500);} }; try{ navigator.clipboard.writeText(t).then(done,()=>{}); }catch(e){} }
+$("copy76").addEventListener("click",()=>copy(last.g76)); $("copy92").addEventListener("click",()=>copy(last.g92));
+calc();
+})();
+</script>

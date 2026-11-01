@@ -251,6 +251,18 @@ details.qhelp[open] summary{margin-bottom:8px}
     </section>
   </div>
 
+  <section class="sheet" aria-labelledby="h-tay">
+    <div class="sheet-head"><h2 id="h-tay">Стойкость инструмента</h2><span class="hint">формула Тейлора: Vc · T<sup>n</sup> = const</span></div>
+    <div class="grid3">
+      <div class="field"><label for="tT0"><span>Стойкость при скорости выше</span><i>мин</i></label><input type="text" id="tT0" inputmode="decimal" value="15"></div>
+      <div class="field"><label for="tT1"><span>Нужная стойкость</span><i>мин</i></label><input type="text" id="tT1" inputmode="decimal" value="30"></div>
+      <div class="field"><label for="tN">Инструмент</label><select id="tN"><option value="0.125">Р6М5 (n ≈ 0,125)</option><option value="0.25" selected>Твёрдый сплав (n ≈ 0,25)</option><option value="0.5">Керамика, CBN (n ≈ 0,5)</option></select></div>
+    </div>
+    <div class="kpis" id="tK"></div>
+    <div class="tbl" id="tTbl"></div>
+    <p class="hint" style="margin:0">Скорость в каталоге рассчитана на стойкость кромки около 15 минут. Если нужно, чтобы пластина отработала всю смену без смены, — снижайте скорость; если инструмент дешёвый, а станок дорогой — выгоднее работать быстрее и менять чаще. Показатель n зависит от материала и сплава — это ориентир.</p>
+  </section>
+
   <section class="sheet">
     <div class="sheet-head"><h2>Как это выглядит</h2><span class="hint">упрощённая 3D-модель по вашим параметрам, не в масштабе</span></div>
     <div id="anim"></div>
@@ -615,6 +627,25 @@ renderGeo(); syncVc(); renderMatTbl(); calc();
 })();
 </script>
 
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const num=s=>{ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); return /^\d*\.?\d+$/.test(t)?+t:NaN; };
+const f=(v,d)=>isFinite(v)?v.toFixed(d).replace(".",","):"—";
+function tay(){
+  const vc=num($("vc").value), T0=num($("tT0").value), T1=num($("tT1").value), n=+$("tN").value;
+  if(!(vc>0&&T0>0&&T1>0)){ $("tK").innerHTML=""; $("tTbl").innerHTML=""; return; }
+  const v1=vc*Math.pow(T0/T1,n);
+  $("tK").innerHTML=[["Скорость для стойкости "+f(T1,0)+" мин",f(v1,0),"м/мин"],["Изменение скорости",(v1>=vc?"+":"−")+f(Math.abs(v1/vc-1)*100,0),"%"],["При +20 % скорости стойкость",f(T0*Math.pow(1/1.2,1/n),1),"мин"],["При −20 % скорости стойкость",f(T0*Math.pow(1/0.8,1/n),1),"мин"]]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("tTbl").innerHTML=`<table><thead><tr><th>Стойкость, мин</th>${[5,10,15,20,30,45,60,90].map(t=>`<th class="n">${t}</th>`).join("")}</tr></thead><tbody><tr><td>Скорость, м/мин</td>${[5,10,15,20,30,45,60,90].map(t=>`<td class="n">${f(vc*Math.pow(T0/t,n),0)}</td>`).join("")}</tr></tbody></table>`;
+}
+document.addEventListener("input",tay); document.addEventListener("change",tay); document.addEventListener("click",()=>setTimeout(tay,0));
+const tool=$("tool"); if(tool) $("tN").value=tool.value==="hss"?"0.125":"0.25";
+tool&&tool.addEventListener("change",()=>{ $("tN").value=tool.value==="hss"?"0.125":"0.25"; tay(); });
+tay();
+})();
+</script>
 <!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
 </body>
 </html>

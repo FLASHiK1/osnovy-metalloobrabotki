@@ -173,6 +173,17 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     </section>
   </div>
 
+  <section class="sheet" aria-labelledby="h-mode">
+    <div class="sheet-head"><h2 id="h-mode">Режим сварки по толщине металла</h2><span class="hint">ориентировочно, нижнее положение</span></div>
+    <div class="grid3">
+      <div class="field"><label for="ts"><span>Толщина металла</span><i>мм</i></label><input type="text" id="ts" inputmode="decimal" value="6"></div>
+      <div class="field"><label for="pos">Положение шва</label><select id="pos"><option value="1">Нижнее</option><option value="0.9">Вертикальное</option><option value="0.85">Потолочное</option></select></div>
+      <div class="field"><label>&nbsp;</label><button type="button" class="btn" id="applyI">Подставить ток в расчёт</button></div>
+    </div>
+    <div class="kpis" id="modeK"></div>
+    <div class="hint" id="modeH"></div>
+  </section>
+
   <details class="theory">
     <summary>Как считается</summary>
     <div class="tbody">
@@ -187,7 +198,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     </div>
   </details>
 
-  <footer><span>Расчёт для планирования закупки. Фактический расход зависит от квалификации сварщика, положения шва и марки электрода.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a></nav></footer>
+  <footer><span>Расчёт для планирования закупки. Фактический расход зависит от квалификации сварщика, положения шва и марки электрода.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
 </div>
 
 <script>
@@ -282,7 +293,20 @@ function drawSect(D,eV){
   s+=`<text x="10" y="16" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">сечение шва, не в масштабе</text></svg>`;
   $("sect").innerHTML=s;
 }
-procDefaults(false); renderDims(); calc();
+function mode(){
+  const s=num($("ts").value), k=+$("pos").value;
+  if(!(s>0)){ $("modeK").innerHTML=""; $("modeH").textContent=""; return null; }
+  let r;
+  if(st.proc==="mma"){ const d=s<=1.5?2:s<=3?3:s<=5?(s<=4?3:4):s<=12?4:s<=20?5:6; const I=(20+6*d)*d*k; r={kp:[["Диаметр электрода",String(d).replace(".",","),"мм"],["Сварочный ток",`${Math.round(I*0.9)}–${Math.round(I*1.1)}`,"А"]],I:Math.round(I),h:`Ток по формуле I = (20 + 6·d)·d${k<1?", уменьшен для положения шва":""}. Металл толще 5–6 мм варят в несколько проходов; корень шва — электродом 3 мм.`}; }
+  else if(st.proc==="mag"){ const w=s<=3?0.8:s<=8?1.0:1.2; const rng={0.8:[60,160],1.0:[90,230],1.2:[120,300]}[w]; const I=rng[0]+(rng[1]-rng[0])*Math.min(1,s/(w===0.8?3:w===1?8:20))*k; r={kp:[["Диаметр проволоки",String(w).replace(".",","),"мм"],["Ток",`${Math.round(I*0.9)}–${Math.round(I*1.1)}`,"А"],["Напряжение дуги",`${Math.round(14+0.05*I)}–${Math.round(16+0.05*I)}`,"В"],["Газ",w<1?"10–12":"12–16","л/мин"]],I:Math.round(I),h:"Напряжение ≈ 14 + 0,05·I В для смеси Ar+CO₂; в чистом CO₂ на 1–2 В больше. Точнее — по таблице на аппарате."}; }
+  else { const d=s<=1?1:s<=3?1.6:s<=6?2.4:3.2; const I=Math.min(250,35*s+20)*k; r={kp:[["Вольфрам / пруток","Ø"+String(d).replace(".",","),"мм"],["Ток",`${Math.round(I*0.9)}–${Math.round(I*1.1)}`,"А"],["Аргон","6–10","л/мин"]],I:Math.round(I),h:"Для стали ток ≈ 30–40 А на 1 мм толщины; алюминий — переменным током, примерно на 20 % больше."}; }
+  $("modeK").innerHTML=r.kp.map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("modeH").textContent=r.h; return r;
+}
+["ts","pos"].forEach(id=>$(id).addEventListener(id==="ts"?"input":"change",mode));
+$("proc").addEventListener("change",mode);
+$("applyI").addEventListener("click",()=>{ const r=mode(); if(!r) return; $("I").value=r.I; st.I=String(r.I); calc(); });
+procDefaults(false); renderDims(); calc(); mode();
 })();
 </script>
 

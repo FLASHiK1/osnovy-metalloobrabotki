@@ -17,6 +17,7 @@ table.ref td{font-size:14px}
 table.ref td:first-child{font-family:var(--f-num);font-weight:700;white-space:nowrap}
 table.sz tbody tr{cursor:pointer}
 table.sz tbody tr:hover td{background:var(--accent-soft)}
+@media (max-width:640px){ #fitK{grid-template-columns:1fr 1fr!important} }
 .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media (max-width:860px){ .cols{grid-template-columns:1fr} .res{grid-template-columns:1fr} .res svg{max-width:180px} }
 </style>
@@ -35,6 +36,18 @@ table.sz tbody tr:hover td{background:var(--accent-soft)}
     <div class="field"><label for="code">Обозначение подшипника</label><input type="text" id="code" autocomplete="off" spellcheck="false"></div>
     <div class="chips" id="ex"></div>
     <div id="out" aria-live="polite" style="display:flex;flex-direction:column;gap:12px"></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-fit">
+    <div class="sheet-head"><h2 id="h-fit">Посадка подшипника на вал и в корпус</h2><span class="hint">типовые рекомендации для шариковых и роликовых радиальных</span></div>
+    <div class="grid3">
+      <div class="field"><label for="rot">Что вращается относительно нагрузки</label><select id="rot"><option value="shaft">Вал (внутреннее кольцо) — редукторы, шпиндели, электродвигатели</option><option value="house">Корпус (наружное кольцо) — ступицы колёс, ролики, натяжители</option></select></div>
+      <div class="field"><label for="load">Нагрузка</label><select id="load"><option value="light">Лёгкая</option><option value="norm" selected>Нормальная</option><option value="heavy">Тяжёлая, ударная</option></select></div>
+      <div class="field"><label for="fd"><span>Диаметр вала</span><i>мм</i></label><input type="text" id="fd" inputmode="decimal"></div>
+    </div>
+    <div class="kpis" id="fitK" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>
+    <div class="hint" id="fitH"></div>
+    <div class="chips" id="fitL"></div>
   </section>
 
   <section class="sheet">
@@ -197,6 +210,17 @@ function pick(e){ const tr=e.target.closest("tr[data-c]"); if(!tr) return; $("co
 $("szTbl").addEventListener("click",pick); $("szTbl").addEventListener("keydown",e=>{ if(e.key==="Enter") pick(e); });
 $("sfx").innerHTML=`<table class="ref"><thead><tr><th>Суффикс</th><th>Значение</th></tr></thead><tbody>${SFX.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}<tr><td>ГОСТ 80…, 180…</td><td>те же исполнения по ГОСТ: 6 — одна шайба, 8 — две шайбы, 16 — одно уплотнение, 18 — два уплотнения, 5 — канавка</td></tr></tbody></table>`;
 $("typ").innerHTML=`<table class="ref"><thead><tr><th>ISO</th><th>Тип</th><th>ГОСТ</th></tr></thead><tbody>${TYP.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="muted">${r[2]}</td></tr>`).join("")}</tbody></table>`;
+function fit(){
+  const rot=$("rot").value, load=$("load").value, d=+String($("fd").value).replace(",",".")||25;
+  let sh,ho,why;
+  if(rot==="shaft"){ sh={light:"js6",norm:"k6",heavy:"m6"}[load]; if(load==="heavy"&&d>100) sh="n6"; ho="H7"; why="Внутреннее кольцо вращается вместе с нагрузкой по окружности (циркуляционное нагружение) — его сажают с натягом, иначе оно проворачивается и изнашивает вал. Наружное кольцо нагружено в одном месте (местное нагружение) — свободная посадка H7 позволяет ему понемногу проворачиваться и компенсировать тепловое удлинение вала.";}
+  else { ho={light:"M7",norm:"N7",heavy:"P7"}[load]; sh="h6"; why="Вращается корпус: теперь наружное кольцо нагружено по окружности — его сажают в корпус с натягом, а внутреннее на неподвижную ось — с небольшим зазором (h6, g6)."; }
+  $("fitK").innerHTML=[["Вал",sh,"поле допуска"],["Корпус",ho,"поле допуска"]].map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("fitH").textContent=why+" Внутреннее кольцо подшипника само имеет поле допуска «в минус» (класс 0: L0), поэтому посадка k6 на подшипник получается плотнее, чем H7/k6 у обычных деталей. Шероховатость шейки вала — Ra 0,63–1,25, отверстия корпуса — Ra 1,25–2,5.";
+  $("fitL").innerHTML=window.siteLink?`<a class="btn sm" href="${siteLink("posadki.html",{std:"esdp",nom:String(d),hole:rot==="shaft"?"H7":ho,shaft:rot==="shaft"?sh:"h6"})}">Отклонения ${rot==="shaft"?sh:ho} для Ø${d} →</a>`:"";
+}
+["rot","load"].forEach(id=>$(id).addEventListener("change",fit)); $("fd").addEventListener("input",fit);
 $("code").value=st.code; run();
+{ const r=decode(st.code); const dd=r&&r.res&&r.res.dims?r.res.dims[0]:25; $("fd").value=dd; } fit();
 })();
 </script>

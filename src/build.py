@@ -8,7 +8,8 @@ PARTS = {"rezby": "rezby.html", "massa": "massa-metalla.html", "sherokh": "shero
          "raskroy": "raskroy-lista.html", "sebestoimost": "sebestoimost.html", "dyuymy": "dyuymy.html",
          "zatyazhka": "zatyazhka.html", "shesterni": "shesterni.html", "natyag": "natyag.html", "gkody": "gkody.html",
          "plastiny": "plastiny.html", "vybor": "vybor-instrumenta.html",
-         "marki": "marki-staley.html", "podshipniki": "podshipniki.html", "dopuski-formy": "dopuski-formy.html", "cveta": "cveta-pobezhalosti.html"}
+         "marki": "marki-staley.html", "podshipniki": "podshipniki.html", "dopuski-formy": "dopuski-formy.html", "cveta": "cveta-pobezhalosti.html",
+         "rezcom": "rezba-rezcom.html", "edinicy": "edinicy.html", "glossariy": "glossariy.html"}
 base = open("src/base.css", encoding="utf-8").read()
 HEAD = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
         '<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">')
@@ -18,7 +19,8 @@ PAGES = [("posadki.html", "Посадки и допуски"), ("razmernye-cepi.
          ("analogi-staley.html", "Аналоги сталей"), ("dyuymy.html", "Дюймы и UNC"), ("sebestoimost.html", "Себестоимость"),
          ("zatyazhka.html", "Момент затяжки"), ("shesterni.html", "Зубчатые колёса"), ("natyag.html", "Сборка с натягом"), ("gkody.html", "G-коды"),
          ("vybor-instrumenta.html", "Выбор инструмента"), ("plastiny.html", "Пластины и державки"),
-         ("marki-staley.html", "Марки сталей"), ("podshipniki.html", "Подшипники"), ("dopuski-formy.html", "Допуски формы"), ("cveta-pobezhalosti.html", "Цвета побежалости")]
+         ("marki-staley.html", "Марки сталей"), ("podshipniki.html", "Подшипники"), ("dopuski-formy.html", "Допуски формы"), ("cveta-pobezhalosti.html", "Цвета побежалости"),
+         ("rezba-rezcom.html", "Резьба резцом"), ("edinicy.html", "Конвертер единиц"), ("glossariy.html", "Глоссарий")]
 def menu(cur): return '<a href="index.html"><b>Все калькуляторы</b></a> ' + " ".join(f'<a href="{f}">{n}</a>' for f, n in PAGES if f != cur)
 jobs = [a.split(":") for a in sys.argv[1:]] or list(PARTS.items())
 for part, out in jobs:

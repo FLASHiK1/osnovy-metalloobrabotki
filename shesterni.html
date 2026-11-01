@@ -129,6 +129,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 .pcard.g1{border-top:3px solid var(--accent)} .pcard.g2{border-top:3px solid var(--hot)}
 .pcard h2{font-size:16px}
 .mesh svg{display:block;width:100%;height:auto}
+@media (max-width:640px){ #wk{grid-template-columns:repeat(2,minmax(0,1fr))!important} .grid3[style*="repeat(5"]{grid-template-columns:repeat(2,minmax(0,1fr))!important} }
 .k3{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:560px){ .k3{grid-template-columns:1fr} }
 @media (max-width:860px){ .main,.two{grid-template-columns:1fr} }
@@ -155,9 +156,11 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
         <div class="field"><label for="z2"><span>Зубьев колеса z₂</span><i>шт</i></label><input type="text" id="z2" inputmode="numeric"></div>
         <div class="field"><label for="b"><span>Ширина венца b</span><i>мм</i></label><input type="text" id="b" inputmode="decimal"></div>
         <div class="field"><label for="alpha"><span>Угол профиля α</span><i>°</i></label><input type="text" id="alpha" inputmode="decimal"></div>
+        <div class="field"><label for="x1"><span>Смещение шестерни x₁</span><i>доли m</i></label><input type="text" id="x1" inputmode="decimal"></div>
+        <div class="field"><label for="x2"><span>Смещение колеса x₂</span><i>доли m</i></label><input type="text" id="x2" inputmode="text"></div>
       </div>
       <datalist id="mods"></datalist>
-      <div class="hint">β = 0 — прямозубые колёса. Без смещения исходного контура (x = 0), стандартный контур: hₐ* = 1, c* = 0,25.</div>
+      <div class="hint">β = 0 — прямозубые колёса. Смещение исходного контура x: положительное — против подрезания и для упрочнения зуба шестерни; x₁ = −x₂ сохраняет межосевое расстояние. Исходный контур: hₐ* = 1, c* = 0,25.</div>
       <div id="err" class="note bad" hidden></div>
     </section>
     <section class="sheet" aria-live="polite">
@@ -176,6 +179,21 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <section class="sheet">
     <div class="sheet-head"><h2>3D-модель зацепления</h2><span class="hint">эвольвентный профиль по вашим m и z; косозубые показаны как прямозубые</span></div>
     <div id="anim"></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-worm">
+    <div class="sheet-head"><h2 id="h-worm">Червячная передача</h2><span class="hint">архимедов червяк, без смещения</span></div>
+    <div class="grid3" style="grid-template-columns:repeat(5,minmax(0,1fr))">
+      <div class="field"><label for="wm"><span>Модуль m</span><i>мм</i></label><input type="text" id="wm" inputmode="decimal"></div>
+      <div class="field"><label for="wq"><span>Коэфф. диаметра q</span><i></i></label><input type="text" id="wq" inputmode="decimal" list="qlist"></div>
+      <div class="field"><label for="wz1"><span>Заходов червяка z₁</span><i>шт</i></label><input type="text" id="wz1" inputmode="numeric"></div>
+      <div class="field"><label for="wz2"><span>Зубьев колеса z₂</span><i>шт</i></label><input type="text" id="wz2" inputmode="numeric"></div>
+      <div class="field"><label for="wf"><span>Коэфф. трения f</span><i></i></label><input type="text" id="wf" inputmode="decimal"></div>
+    </div>
+    <datalist id="qlist"><option value="8"><option value="10"><option value="12,5"><option value="16"><option value="20"></datalist>
+    <div class="kpis" id="wk" style="grid-template-columns:repeat(4,minmax(0,1fr))"></div>
+    <dl class="kv" id="wx"></dl>
+    <div class="hint">Коэффициент трения пары сталь — бронза со смазкой 0,03–0,06 при хорошей скорости скольжения, до 0,1 при малой. q по ГОСТ 2144: 8; 10; 12,5; 16; 20.</div>
   </section>
 
   <section class="sheet" aria-labelledby="h-find">
@@ -204,7 +222,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     </div>
   </details>
 
-  <footer><span>Геометрия без смещения исходного контура. Для колёс со смещением, внутреннего зацепления и прочностного расчёта нужен расчёт по ГОСТ 16532 и ГОСТ 21354.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a></nav></footer>
+  <footer><span>Геометрия без смещения исходного контура. Для колёс со смещением, внутреннего зацепления и прочностного расчёта нужен расчёт по ГОСТ 16532 и ГОСТ 21354.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
 </div>
 
 <script src="assets/anim3d.js"></script>
@@ -219,42 +237,53 @@ function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/
 function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
 const rad=x=>x*Math.PI/180, inv=a=>Math.tan(a)-a;
 const KEY="shesterni-v1";
-let st={m:"2",beta:"0",z1:"20",z2:"45",b:"20",alpha:"20",fz:"24",fda:"52,1",fdp:""};
+let st={m:"2",beta:"0",z1:"20",z2:"45",b:"20",alpha:"20",x1:"0",x2:"0",fz:"24",fda:"52,1",fdp:"",wm:"4",wq:"10",wz1:"1",wz2:"40",wf:"0,05"};
 try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
-["m","beta","z1","z2","b","alpha","fz","fda","fdp"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }); });
+["m","beta","z1","z2","b","alpha","x1","x2","fz","fda","fdp","wm","wq","wz1","wz2","wf"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }); });
 
-function gear(m,z,beta,alpha,b){
+function ainv(t){ let a=Math.max(0.05,Math.cbrt(3*t)); for(let i=0;i<30;i++){ const f=Math.tan(a)-a-t, d=Math.tan(a)**2; a-=f/d; } return a; }
+function gear(m,z,beta,alpha,b,x,dy){
+  x=x||0; dy=dy||0;
   const mt=m/Math.cos(rad(beta)), at=Math.atan(Math.tan(rad(alpha))/Math.cos(rad(beta)));
-  const d=mt*z, da=d+2*m, df=d-2.5*m, db=d*Math.cos(at);
-  const r={z,d,da,df,db,mt,at};
-  if(beta===0){ const a=rad(alpha); let zw=Math.round(z*alpha/180+0.5); zw=Math.max(2,zw); r.zw=zw; r.W=m*Math.cos(a)*(Math.PI*(zw-0.5)+z*inv(a)); }
+  const d=mt*z, da=d+2*m*(1+x-dy), df=d-2*m*(1.25-x), db=d*Math.cos(at);
+  const r={z,d,da,df,db,mt,at,x};
+  if(beta===0){ const a=rad(alpha); const ax=Math.acos(z*Math.cos(a)/(z+2*x)); let zw=Math.round(z/Math.PI*(Math.tan(ax)-2*x*Math.tan(a)/z-inv(a))+0.5); zw=Math.max(2,zw); r.zw=zw; r.W=m*Math.cos(a)*(Math.PI*(zw-0.5)+2*x*Math.tan(a)+z*inv(a)); }
   return r;
 }
 function calc(){
   save();
   const m=num(st.m), beta=num(st.beta)||0, z1=num(st.z1), z2=num(st.z2), b=num(st.b), alpha=num(st.alpha);
-  const ok=m>0&&z1>=5&&z2>=5&&Number.isInteger(z1)&&Number.isInteger(z2)&&beta>=0&&beta<45&&alpha>=14&&alpha<=30&&b>0;
+  const sx=v=>{ const t=String(v==null?"":v).trim().replace(",",".").replace("−","-"); return t===""?0:(/^-?\d*\.?\d+$/.test(t)?+t:NaN); };
+  const x1=sx(st.x1), x2=sx(st.x2);
+  $("x1").classList.toggle("bad",isNaN(x1)||Math.abs(x1)>1.5); $("x2").classList.toggle("bad",isNaN(x2)||Math.abs(x2)>1.5);
+  worm();
+  const ok=m>0&&z1>=5&&z2>=5&&Number.isInteger(z1)&&Number.isInteger(z2)&&beta>=0&&beta<45&&alpha>=14&&alpha<=30&&b>0&&!isNaN(x1)&&!isNaN(x2)&&Math.abs(x1)<=1.5&&Math.abs(x2)<=1.5;
   [["m",m>0],["z1",z1>=5&&Number.isInteger(z1)],["z2",z2>=5&&Number.isInteger(z2)],["beta",beta>=0&&beta<45],["alpha",alpha>=14&&alpha<=30],["b",b>0]].forEach(([id,v])=>$(id).classList.toggle("bad",!v));
   $("err").hidden=ok; $("err").textContent="Числа зубьев — целые от 5, угол наклона — от 0 до 45°, угол профиля — от 14 до 30°.";
   find();
   if(!ok){ $("aw").textContent="—"; ["kpis","mesh","notes","g1","g2"].forEach(id=>$(id).innerHTML=""); return; }
-  const g1=gear(m,z1,beta,alpha,b), g2=gear(m,z2,beta,alpha,b);
-  const a=(g1.d+g2.d)/2, u=z2/z1;
+  const g0=gear(m,z1,beta,alpha,b,0,0), at=g0.at;
+  const a0=g0.mt*(z1+z2)/2;
+  const atw=ainv(inv(at)+2*(x1+x2)*Math.tan(rad(alpha))/(z1+z2));
+  const aw=a0*Math.cos(at)/Math.cos(atw), yv=(aw-a0)/m, dyv=(x1+x2)-yv;
+  const g1=gear(m,z1,beta,alpha,b,x1,dyv), g2=gear(m,z2,beta,alpha,b,x2,dyv);
+  const a=aw, u=z2/z1;
   const pbt=Math.PI*g1.mt*Math.cos(g1.at);
-  const ea=(Math.sqrt((g1.da/2)**2-(g1.db/2)**2)+Math.sqrt((g2.da/2)**2-(g2.db/2)**2)-a*Math.sin(g1.at))/pbt;
+  const ea=(Math.sqrt((g1.da/2)**2-(g1.db/2)**2)+Math.sqrt((g2.da/2)**2-(g2.db/2)**2)-a*Math.sin(atw))/pbt;
   const eb=beta>0?b*Math.sin(rad(beta))/(Math.PI*m):0;
   $("aw").innerHTML=`${fmt(a,3)}<small>мм</small>`;
-  $("kpis").innerHTML=[["Передаточное число u",fmt(u,3),""],["Перекрытие εα",fmt(ea,3),""],["Шаг p",fmt(Math.PI*m,3),"мм"],["Высота зуба h",fmt(2.25*m,3),"мм"]]
+  $("kpis").innerHTML=[["Передаточное число u",fmt(u,3),""],["Перекрытие εα",fmt(ea,3),""],[x1||x2?"Делительное межосевое a":"Шаг p",x1||x2?fmt(a0,3):fmt(Math.PI*m,3),"мм"],[x1||x2?"Угол зацепления αw":"Высота зуба h",x1||x2?fmt(atw*180/Math.PI,3):fmt(2.25*m,3),x1||x2?"°":"мм"]]
     .map(([l,v,un])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${un}</small></span></div>`).join("");
   const card=(g,name)=>`<h2>${name}, z = ${g.z}</h2><dl class="kv">
     <dt>Делительный диаметр d</dt><dd>${fmt(g.d,3)}</dd><dt>Диаметр вершин da</dt><dd>${fmt(g.da,3)}</dd><dt>Диаметр впадин df</dt><dd>${fmt(g.df,3)}</dd><dt>Основной диаметр db</dt><dd>${fmt(g.db,3)}</dd>
-    ${beta>0?`<dt>Торцовый модуль mt</dt><dd>${fmt(g.mt,4)}</dd>`:""}
+    ${beta>0?`<dt>Торцовый модуль mt</dt><dd>${fmt(g.mt,4)}</dd>`:""}${g.x?`<dt>Смещение x·m</dt><dd>${fmt(g.x*m,3)} мм</dd>`:""}
     ${g.W?`<div class="sep"></div><dt>Длина общей нормали W</dt><dd>${fmt(g.W,3)}</dd><dt>Через зубьев zw</dt><dd>${g.zw}</dd>`:""}</dl>`;
   $("g1").innerHTML=card(g1,"Шестерня"); $("g2").innerHTML=card(g2,"Колесо");
   const notes=[];
   const zmin=Math.ceil(2*Math.cos(rad(beta))**3/Math.sin(rad(alpha))**2);
-  [[z1,"шестерни"],[z2,"колеса"]].forEach(([z,n])=>{ if(z<zmin) notes.push(["warn",`У ${n} ${z} зубьев — меньше ${zmin}: без смещения исходного контура будет подрезание ножки зуба. Нужно положительное смещение или больше зубьев.`]); });
+  [[z1,x1,"шестерни"],[z2,x2,"колеса"]].forEach(([z,x,n])=>{ const xmin=(zmin-z)/zmin; if(x<xmin-1e-9) notes.push(["warn",`У ${n} ${z} зубьев при x = ${String(x).replace(".",",")} будет подрезание ножки зуба: нужно смещение не меньше ${fmt(xmin,3)}.`]); const sa=g1&&n==="шестерни"?g1:g2; });
+  if(x1||x2) notes.push(["note",`Со смещением: межосевое ${fmt(aw,3)} мм вместо ${fmt(a0,3)} мм, коэффициент уравнительного смещения Δy = ${fmt(dyv,3)}. 3D-модель показывает колёса без смещения.`]);
   if(ea<1.2) notes.push(["warn",`Коэффициент перекрытия ${fmt(ea,2)} меньше 1,2 — передача будет работать с ударами.`]);
   if(!M1.includes(m)&&!M2.includes(m)) notes.push(["note",`Модуль ${String(m).replace(".",",")} не из стандартного ряда ГОСТ 9563. Ближайшие: ${M1.concat(M2).sort((x,y)=>Math.abs(x-m)-Math.abs(y-m)).slice(0,2).map(v=>String(v).replace(".",",")).join(" и ")}.`]);
   if(beta>0) notes.push(["note",`Косозубая передача: осевое перекрытие εβ = ${fmt(eb,2)}${eb<1?" — меньше 1, увеличьте ширину венца или угол наклона":""}. Длина общей нормали для косозубых колёс считается иначе — здесь не показана.`]);
@@ -274,6 +303,16 @@ function drawMesh(g1,g2,a){
   s+=`<text x="${(x1+x2)/2}" y="${cy+16}" text-anchor="middle" font-family="var(--f-num)" font-size="12" fill="var(--ink)">a = ${fmt(a,2)}</text>`;
   s+=`<text x="4" y="12" text-anchor="start" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">сплошная — вершины, штрихпунктир — делительная, пунктир — впадины</text></svg>`;
   $("mesh").innerHTML=s;
+}
+function worm(){
+  const m=num(st.wm), q=num(st.wq), z1=num(st.wz1), z2=num(st.wz2), f=num(st.wf);
+  const ok=m>0&&q>=6&&z1>=1&&z2>=20&&f>0;
+  if(!ok){ $("wk").innerHTML=`<div class="kpi" style="grid-column:1/-1"><span class="l">Нет результата</span><span>Нужны: модуль, q от 6, z₁ от 1, z₂ от 20, трение больше 0.</span></div>`; $("wx").innerHTML=""; return; }
+  const d1=q*m, d2=z2*m, aw=(d1+d2)/2, u=z2/z1, g=Math.atan(z1/q), rho=Math.atan(f);
+  const eta=Math.tan(g)/Math.tan(g+rho)*0.96;
+  $("wk").innerHTML=[["Межосевое aw",fmt(aw,2),"мм"],["Передаточное u",fmt(u,2),""],["Угол подъёма γ",fmt(g*180/Math.PI,2),"°"],["КПД ≈",fmt(eta*100,0),"%"]].map(([l,v,un])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${un}</small></span></div>`).join("");
+  $("wx").innerHTML=[["Червяк: делительный d₁",fmt(d1,2)+" мм"],["Червяк: вершин da₁",fmt(d1+2*m,2)+" мм"],["Червяк: впадин df₁",fmt(d1-2.4*m,2)+" мм"],["Шаг червяка p = π·m",fmt(Math.PI*m,3)+" мм"],["Ход витка z₁·p",fmt(z1*Math.PI*m,3)+" мм"],["Колесо: делительный d₂",fmt(d2,2)+" мм"],["Колесо: вершин da₂",fmt(d2+2*m,2)+" мм"],["Колесо: впадин df₂",fmt(d2-2.4*m,2)+" мм"],["Колесо: наибольший ⌀ daм₂",fmt(d2+2*m+6*m/(z1+2),2)+" мм"],["Самоторможение",g<rho?"да — колесо не провернёт червяк (но не надейтесь на это при вибрациях)":"нет"]]
+    .map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
 }
 function find(){
   const z=num(st.fz), da=num(st.fda), dp=num(st.fdp);

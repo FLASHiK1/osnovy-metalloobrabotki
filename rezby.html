@@ -129,6 +129,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 .pcard.b{border-top:3px solid var(--hot)} .pcard.n{border-top:3px solid var(--accent)}
 .pcard h2{font-size:16px}
 .mini th,.mini td{font-size:13px}
+@media (max-width:640px){ #trk{grid-template-columns:repeat(2,minmax(0,1fr))!important} }
 table.tt th,table.tt td{font-size:13px;white-space:nowrap}
 table.tt td.n{line-height:1.35}
 table.tt th.grp{text-align:center;border-bottom:2px solid var(--line-strong)}
@@ -241,6 +242,18 @@ table.tt tbody tr:hover td{background:var(--accent-soft)}
     <p class="hint" style="margin:0">Отверстия под крепёж — ГОСТ 11284-75 (ISO 273): ряд 1 — точный, 2 — средний, 3 — грубый. Размер под ключ — ISO 4032; в скобках старый размер по ГОСТ 5915-70, который ещё встречается.</p>
   </section>
 
+  <section class="sheet" aria-labelledby="h-tr">
+    <div class="sheet-head"><h2 id="h-tr">Трапецеидальная резьба Tr</h2><span class="hint">ГОСТ 24737, ГОСТ 24738 (ISO 2904) · ходовые винты</span></div>
+    <div class="grid3">
+      <div class="field"><label for="trs">Типоразмер</label><select id="trs"></select></div>
+      <div class="field"><label for="trd"><span>Диаметр d</span><i>мм</i></label><input type="text" id="trd" inputmode="decimal"></div>
+      <div class="field"><label for="trp"><span>Шаг P</span><i>мм</i></label><input type="text" id="trp" inputmode="decimal"></div>
+    </div>
+    <div class="kpis" id="trk" style="grid-template-columns:repeat(4,minmax(0,1fr))"></div>
+    <dl class="kv" id="trx"></dl>
+    <p class="hint" style="margin:0">Профиль 30°. Обозначение: <code>Tr20×4-7e</code> — винт, <code>Tr20×4-7H</code> — гайка; многозаходная: <code>Tr20×8(P4)</code> — ход 8, шаг 4; левая — LH. Допуски среднего диаметра — по ГОСТ 9562.</p>
+  </section>
+
   <section class="sheet">
     <div class="sheet-head"><h2>Трубная цилиндрическая резьба G</h2><span class="hint">ГОСТ 6357-81, ISO 228-1</span></div>
     <div class="tbl" id="pipeTbl"></div>
@@ -261,7 +274,7 @@ H  = 0,8660·P          высота исходного треугольника
     </div>
   </details>
 
-  <footer><span>Значения рассчитаны по ГОСТ 24705, 8724, 16093. Для приёмки ответственных деталей сверяйте со стандартом.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a></nav></footer>
+  <footer><span>Значения рассчитаны по ГОСТ 24705, 8724, 16093. Для приёмки ответственных деталей сверяйте со стандартом.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -338,6 +351,7 @@ function calc(){
     const RZ=[3,4,5,6,8,10,12,16,20,24,30,36,42,48];
     const thrSize=(coarse&&RZ.includes(d))?`${d}|${P}`:"custom";
     $("rel").innerHTML=`<a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"drill",vcManual:null,vals:{drill:{D:fn(drill),L:fn(Math.round(d*2))}}})}">Режимы сверления Ø${fn(drill)} →</a>`+
+      `<a class="btn sm" href="${siteLink("rezba-rezcom.html",{size:"custom",d:fn(d),P:fn(P)})}">Нарезать резцом (G76) →</a>`+
       (d>=3&&d<=48?`<a class="btn sm" href="${siteLink("zatyazhka.html",{size:`${d}|${P}`})}">Момент затяжки ${nm} →</a>`:"")+
       `<a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"thread",vcManual:null,vals:{thread:{type:"int",size:thrSize,D:fn(d),P:fn(P)}}})}">Резьбофрезерование ${nm} →</a>`;
   }
@@ -423,6 +437,20 @@ $("pipeTbl").innerHTML=`<table><thead><tr><th>Обозначение</th><th cla
  ${PIPE.map(([n,t,dd])=>{const p=25.4/t,h=.640327*p;return `<tr><td><b>${n}</b></td><td class="n">${t}</td><td class="n">${f3(p)}</td><td class="n">${f3(dd)}</td><td class="n">${f3(dd-h)}</td><td class="n">${f3(dd-2*h)}</td></tr>`;}).join("")}</tbody></table>`;
 function hi(){ const d=num($("d").value); document.querySelectorAll("#fastTbl tr[data-d]").forEach(r=>r.classList.toggle("cur",+r.dataset.d===d)); }
 const _calc=calc; calc=function(){ _calc(); hi(); renderTT(); };
+// трапецеидальная
+const fmt=(v,d)=>isFinite(v)?v.toFixed(d).replace(".",","):"—";
+const TR=[[10,2],[12,3],[14,3],[16,4],[18,4],[20,4],[22,5],[24,5],[26,5],[28,5],[30,6],[32,6],[36,6],[40,7],[44,7],[48,8],[50,8],[52,8],[60,9],[70,10],[80,10],[100,12]];
+$("trs").innerHTML=TR.map(([d,p])=>`<option value="${d}|${p}">Tr${d}×${p}</option>`).join("")+`<option value="custom">Свой</option>`;
+function trCalc(){
+  const d=num($("trd").value), P=num($("trp").value);
+  if(!(d>0&&P>0&&P<d/2)){ $("trk").innerHTML=""; $("trx").innerHTML=""; return; }
+  const ac=P<=1.5?0.15:P<=5?0.25:P<=12?0.5:1, H1=0.5*P, h3=H1+ac, d2=d-0.5*P, d3=d-2*h3, D1=d-P, D4=d+2*ac;
+  $("trk").innerHTML=[["Средний d₂ = D₂",fmt(d2,3),"мм"],["Внутренний винта d₃",fmt(d3,3),"мм"],["Внутренний гайки D₁",fmt(D1,3),"мм"],["Наружный гайки D₄",fmt(D4,3),"мм"]].map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("trx").innerHTML=[["Рабочая высота H₁ = 0,5·P",fmt(H1,3)+" мм"],["Высота профиля h₃ = H₁ + ac",fmt(h3,3)+" мм"],["Зазор по вершине ac",fmt(ac,2)+" мм"],["Ширина площадки ≈ 0,366·P",fmt(0.366*P,3)+" мм"],["Сверлить/расточить под гайку",fmt(D1,2)+" мм"]].map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+}
+$("trs").addEventListener("change",()=>{ const v=$("trs").value; if(v!=="custom"){ const [d,p]=v.split("|"); $("trd").value=d; $("trp").value=p; } trCalc(); });
+["trd","trp"].forEach(id=>$(id).addEventListener("input",()=>{ $("trs").value="custom"; trCalc(); }));
+$("trs").value="20|4"; $("trd").value="20"; $("trp").value="4"; trCalc();
 calc();
 })();
 </script>

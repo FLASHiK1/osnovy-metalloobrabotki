@@ -19,7 +19,7 @@ async function text(p, sel) { return norm(await p.textContent(sel)); }
 
 const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
   "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
-  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html", "marki-staley.html", "podshipniki.html", "dopuski-formy.html", "cveta-pobezhalosti.html",
+  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html", "marki-staley.html", "podshipniki.html", "dopuski-formy.html", "cveta-pobezhalosti.html", "rezba-rezcom.html", "edinicy.html", "glossariy.html", "stati-kvalitet.html", "stati-posadka-podshipnika.html", "stati-termoobrabotka.html", "stati-rezba-rezcom.html", "stati-lomayutsya-metchiki.html", "stati-chertezh-oboznacheniya.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
 
 (async () => {
@@ -258,6 +258,70 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
       check("«резьба» находит калькулятор резьб", (await text(p, "#hres")).includes("Метрическая резьба") || (await text(p, "#hres")).includes("резьб"));
       await p.click(".sb-menu summary"); await p.fill(".sb-q", "40Х"); await p.waitForTimeout(400);
       check("поиск в меню: «40Х» находит марки и аналоги", (await text(p, ".sb-res")).includes("марки стали") && (await text(p, ".sb-res")).includes("Аналоги"), await text(p, ".sb-res"));
+      await done(p); }
+
+    console.log("Резьба резцом");
+    { const p = await page("rezba-rezcom.html");
+      const k = await text(p, "#kpis"), g = await p.textContent("#g76");
+      check("M24×3 наружная: h 1,840, X 20,32, 10+1 проходов", k.includes("1,840") && k.includes("20,320") && k.includes("11"), k);
+      check("G76: P1840 Q336 X20.32", g.includes("P1840") && g.includes("Q336") && g.includes("X20.32"), g);
+      await p.selectOption("#type", "int"); await settle(p);
+      check("внутренняя M24×3: последний X = 24,433", (await text(p, "#kpis")).includes("24,433"), await text(p, "#kpis"));
+      await done(p); }
+
+    console.log("Конвертер единиц");
+    { const p = await page("edinicy.html");
+      check("600 МПа = 61,18 кгс/мм²", (await text(p, "#units")).includes("61,18"), await text(p, "#units"));
+      await p.click('[data-q="torque"]'); await p.fill("#val", "100"); await settle(p);
+      check("100 Н·м = 73,756 lbf·ft", (await text(p, "#units")).includes("73,756"), await text(p, "#units"));
+      await p.click('[data-q="temp"]'); await p.fill("#val", "850"); await settle(p);
+      check("850 °C = 1 562 °F", (await text(p, "#units")).includes("1 562"), await text(p, "#units"));
+      await done(p); }
+
+    console.log("Глоссарий");
+    { const p = await page("glossariy.html");
+      const n = await p.$$eval(".gi", x => x.length); check("терминов не меньше 50", n >= 50, n);
+      await p.fill("#q", "натяг"); await settle(p);
+      const vis = await p.$$eval(".gi", x => x.filter(e => !e.hidden).length); check("фильтр «натяг» оставляет несколько терминов", vis >= 1 && vis < 10, vis);
+      await done(p); }
+
+    console.log("Углублённые калькуляторы");
+    { const p = await page("marki-staley.html");
+      const ce = async (m, w) => { await p.fill("#mark", m); await settle(p); const o = await text(p, "#out"); check(m + ": свариваемость " + w, o.includes("Свариваемость: " + w) || (w === "аустенит" && o.includes("Аустенитная нержавейка варится")), o.slice(0, 120)); };
+      await ce("Ст3сп", "хорошая"); await ce("09Г2С", "удовлетворительная"); await ce("45", "ограниченная"); await ce("40Х", "плохая"); await ce("12Х18Н10Т", "аустенит");
+      await done(p); }
+    { const p = await page("rashod-elektrodov.html");
+      await p.fill("#ts", "6"); await settle(p); const k = await text(p, "#modeK");
+      check("РД, 6 мм → электрод 4 мм, ток 158–194 А", k.includes("4") && k.includes("158–194"), k);
+      await done(p); }
+    { const p = await page("podshipniki.html");
+      check("посадка подшипника: вращается вал → k6 / H7", (await text(p, "#fitK")).includes("k6") && (await text(p, "#fitK")).includes("H7"));
+      await p.selectOption("#rot", "house"); await settle(p);
+      check("вращается корпус → h6 / N7", (await text(p, "#fitK")).includes("h6") && (await text(p, "#fitK")).includes("N7"));
+      await done(p); }
+    { const p = await page("shesterni.html");
+      await p.fill("#x1", "0,5"); await settle(p);
+      check("смещение x₁ = 0,5 увеличивает межосевое: aw > 65", parseFloat((await text(p, "#aw")).replace(",", ".")) > 65.5, await text(p, "#aw"));
+      await p.fill("#x1", "0"); await p.fill("#z1", "12"); await settle(p);
+      check("z₁ = 12 без смещения → предупреждение о подрезании", (await text(p, "#notes")).includes("подрезание"));
+      const w = await text(p, "#wk"); check("червяк m4 q10 z₁1 z₂40: aw 100, u 40, γ 5,71°", w.includes("100,00") && w.includes("40,00") && w.includes("5,71"), w);
+      await done(p); }
+    { const p = await page("massa-metalla.html");
+      await p.click("[data-s=sphere]"); await settle(p);
+      check("шар Ø50 сталь → 0,514 кг", (await text(p, "#m1")).includes("0,514"), await text(p, "#m1"));
+      await p.click("[data-s=sheet]"); await p.fill("#dm-b", "100"); await p.fill("#dm-t", "10"); await p.fill("#L", "100"); await settle(p);
+      const m0 = await text(p, "#m1");
+      await p.fill("#hn", "4"); await p.fill("#hd", "10"); await p.fill("#hh", "10"); await settle(p);
+      check("пластина 100×100×10 минус 4 отв. Ø10: 0,785 → 0,760 кг", m0.includes("0,785") && (await text(p, "#m1")).includes("0,760"), m0 + " → " + await text(p, "#m1"));
+      await done(p); }
+    { const p = await page("rezby.html");
+      const k = await text(p, "#trk"); check("Tr20×4: d₂ 18, d₃ 15,5, D₁ 16, D₄ 20,5", ["18,000", "15,500", "16,000", "20,500"].every(x => k.includes(x)), k);
+      await done(p); }
+    { const p = await page("rezhimy-rezaniya.html");
+      check("стойкость: 220 м/мин при 15 мин → ~185 м/мин при 30 мин", (await text(p, "#tK")).includes("185"), await text(p, "#tK"));
+      await done(p); }
+    { const p = await page("vybor-instrumenta.html");
+      check("стальная оправка Ø20 с вылетом 90 → вибрации", (await text(p, "#bOut")).includes("Будут вибрации"));
       await done(p); }
 
     console.log("«Поделиться расчётом» и переходы");
