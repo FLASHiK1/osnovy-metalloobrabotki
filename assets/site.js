@@ -35,7 +35,7 @@
     '<div class="sb-in">' +
       '<a class="sb-brand" href="./"><img src="assets/favicon.svg" alt="" width="22" height="22"><span>Основы металлообработки</span></a>' +
       '<div class="sb-act">' +
-        '<details class="sb-menu"><summary>' + ICON.menu + '<span class="sb-lbl">Калькуляторы</span></summary><div class="sb-drop">' + menuHTML + '<a class="sb-all" href="./">Все калькуляторы на главной →</a></div></details>' +
+        '<details class="sb-menu"><summary>' + ICON.menu + '<span class="sb-lbl">Калькуляторы</span></summary><div class="sb-drop">' + menuHTML + '<a class="sb-all" href="./#stati">Статьи и объяснения →</a><a class="sb-all" href="./">Все калькуляторы на главной →</a></div></details>' +
         (stateKey ? '<button type="button" class="sb-btn" id="sbShare" title="Скопировать ссылку на этот расчёт">' + ICON.share + '<span class="sb-lbl">Поделиться</span></button>' : "") +
         (!isHub ? '<button type="button" class="sb-btn" id="sbPrint" title="Распечатать или сохранить в PDF">' + ICON.print + '<span class="sb-lbl">Печать</span></button>' : "") +
       "</div>" +

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/stati-sherokhovatost-ra-rz.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Шероховатость Ra и Rz: разница и перевод старых классов ▽ — Основы металлообработки">
+<meta property="og:description" content="Чем Ra отличается от Rz, как перевести старые классы шероховатости ▽1–▽14 по ГОСТ 2789-59 в Ra на современном чертеже и какую шероховатость какой обработкой получить.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/stati-sherokhovatost-ra-rz.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Шероховатость Ra и Rz: разница и перевод старых классов ▽</title>
+<meta name="description" content="Чем Ra отличается от Rz, как перевести старые классы шероховатости ▽1–▽14 по ГОСТ 2789-59 в Ra на современном чертеже и какую шероховатость какой обработкой получить.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+
+/* Layout: статья в одну колонку ~70 знаков, примеры и таблицы в рамках, в конце — переход в калькулятор */
+.wrap{max-width:780px}
+article{display:flex;flex-direction:column;gap:14px;font-size:16px;line-height:1.65}
+article h2{font-size:21px;margin-top:14px}
+article p{margin:0;max-width:68ch}
+article ul,article ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px;max-width:68ch}
+article code{font-family:var(--f-num);font-size:.95em;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:0 4px}
+.lead{font-size:18px;color:var(--muted)}
+.ex{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:4px;padding:12px 14px;font-size:15px}
+.ex .formula{margin-top:6px;background:var(--bg)}
+.cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--accent-soft);border-radius:6px;padding:16px 18px}
+.cta b{font-size:16px}
+.cta a.go{background:var(--accent);color:var(--paper);text-decoration:none;font-weight:600;border-radius:5px;padding:10px 16px;white-space:nowrap}
+.cta a.go:hover{filter:brightness(1.08)}
+.meta{font-size:13px;color:var(--muted)}
+.more{display:flex;flex-direction:column;gap:6px}
+
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Шероховатость Ra и Rz: разница и перевод старых классов ▽", "description": "Чем Ra отличается от Rz, как перевести старые классы шероховатости ▽1–▽14 по ГОСТ 2789-59 в Ra на современном чертеже и какую шероховатость какой обработкой получить.", "inLanguage": "ru", "publisher": {"@type": "Organization", "name": "Основы металлообработки"}}</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · статья</div>
+      <h1>Шероховатость Ra и Rz: разница и перевод старых классов ▽</h1>
+    </div>
+  </header>
+  <article>
+
+<p class="lead">На старых чертежах стоят треугольники с цифрой — <code>▽6</code>, <code>▽7</code>. На новых — <code>Ra 1,6</code> или <code>Rz 20</code>. Это разные способы задать одно и то же: насколько гладкой должна быть поверхность.</p>
+<h2>Ra и Rz — в чём разница</h2>
+<p><b>Ra</b> — среднее арифметическое отклонение профиля: насколько в среднем поверхность отклоняется от средней линии. Это основной параметр, он устойчив к случайным царапинам.</p>
+<p><b>Rz</b> — высота неровностей: средняя разница между самыми высокими выступами и самыми глубокими впадинами. Он больше Ra и чувствительнее к отдельным рискам. Для поверхностей после резания приблизительно <b>Rz ≈ 4·Ra</b>, но точной формулы нет: соотношение зависит от формы неровностей.</p>
+<h2>Старые классы ▽ по ГОСТ 2789-59</h2>
+<p>До 1973 года шероховатость задавали классом от ▽1 (самая грубая) до ▽14 (самая гладкая). Классы 6–12 нормировались по Ra, остальные — по Rz. На современном чертеже вместо класса пишут значение из предпочтительного ряда, попадающее в диапазон класса:</p>
+<div class="tbl"><table><thead><tr><th>Класс</th><th class="n">Диапазон</th><th class="n">Писать сейчас</th><th>Типичная обработка</th></tr></thead><tbody>
+<tr><td>▽3</td><td class="n">Rz 80…40</td><td class="n">Ra 12,5</td><td>черновое точение и фрезерование</td></tr>
+<tr><td>▽4</td><td class="n">Rz 40…20</td><td class="n">Ra 6,3</td><td>получистовое точение, сверление</td></tr>
+<tr><td>▽5</td><td class="n">Rz 20…10</td><td class="n">Ra 3,2</td><td>получистовое точение, зенкерование</td></tr>
+<tr><td>▽6</td><td class="n">Ra 2,5…1,25</td><td class="n">Ra 1,6</td><td>чистовое точение и фрезерование</td></tr>
+<tr><td>▽7</td><td class="n">Ra 1,25…0,63</td><td class="n">Ra 0,8</td><td>чистовое точение, развёртывание</td></tr>
+<tr><td>▽8</td><td class="n">Ra 0,63…0,32</td><td class="n">Ra 0,4</td><td>тонкое точение, шлифование</td></tr>
+<tr><td>▽9</td><td class="n">Ra 0,32…0,16</td><td class="n">Ra 0,2</td><td>чистовое шлифование, хонингование</td></tr>
+<tr><td>▽10</td><td class="n">Ra 0,16…0,08</td><td class="n">Ra 0,1</td><td>тонкое шлифование, полирование</td></tr>
+</tbody></table></div>
+<div class="ex">Пример: на старом чертеже вала шейка под подшипник обозначена <code>▽7</code>. Диапазон Ra 1,25…0,63 — на новом чертеже пишем <code>Ra 0,8</code> (по изменению 3 к ГОСТ 2.309-73 — обязательно с обозначением параметра, а не просто «0,8»).</div>
+<h2>Как назначить шероховатость</h2>
+<ul>
+<li>Свободные необрабатываемые поверхности — Ra 6,3…12,5.</li>
+<li>Посадочные поверхности под колёса и шкивы — Ra 1,6…3,2.</li>
+<li>Шейки валов под подшипники качения — Ra 0,63…1,25.</li>
+<li>Поверхности под манжетные уплотнения — Ra 0,2…0,4.</li>
+</ul>
+<p>Полезное правило для точных размеров: <b>Ra не больше 0,05 допуска размера</b>. Для отверстия H7 Ø25 (допуск 21 мкм) это Ra ≈ 1, то есть Ra 0,8.</p>
+
+    <div class="cta"><b>Перевести любое значение: Ra, Rz, ▽, ISO N, микродюймы</b><a class="go" href="sherokhovatost.html?m=eyJ1bml0IjogImNscyIsICJjbHMiOiAiNyJ9">Открыть калькулятор →</a></div>
+    <h2>Ещё по теме</h2>
+    <div class="more"><a href="stati-posadka-h7-g6.html">Как читать обозначение посадки H7/g6</a><a href="stati-rezba-6g-6h.html">Что значат 6g и 6H в обозначении резьбы</a><a href="stati-razvertka-gibka-k-faktor.html">Как рассчитать развёртку при гибке листа: K-фактор простыми словами</a><a href="stati-rezhimy-rezaniya-raschet.html">Как рассчитать режимы резания: скорость, обороты, подача</a><a href="stati-sverlo-pod-rezbu.html">Сверло под резьбу: таблица для метрических метчиков</a></div>
+  </article>
+  <footer><span>Основы металлообработки — бесплатные калькуляторы и объяснения для технологов, конструкторов и станочников.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="sherokhovatost.html">Калькулятор по теме</a></nav></footer>
+</div>
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

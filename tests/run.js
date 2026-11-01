@@ -19,7 +19,8 @@ async function text(p, sel) { return norm(await p.textContent(sel)); }
 
 const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
   "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
-  "dyuymy.html", "sebestoimost.html"];
+  "dyuymy.html", "sebestoimost.html",
+  "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
 
 (async () => {
   const srv = spawn("python3", ["-m", "http.server", String(PORT)], { cwd: ROOT, stdio: "ignore" });
@@ -165,6 +166,10 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
       const r = await page(href);
       const d = await r.inputValue("#g-D").catch(() => "");
       check("резьба M10 → режимы сверления с Ø8,5", d === "8,5" && (await r.getAttribute('button[data-op=drill]', "aria-pressed")) === "true", d);
+      await done(r); await done(p); }
+    { const p = await page("stati-posadka-h7-g6.html");
+      const r = await page(await p.getAttribute(".cta a.go", "href"));
+      check("статья H7/g6 → калькулятор посадок с Ø25 H7/g6", (await r.inputValue("#hole")) === "H7" && (await r.inputValue("#shaft")) === "g6");
       await done(r); await done(p); }
     { const p = await page("gibka-lista.html");
       const href = await p.getAttribute('#rel a:first-child', "href");

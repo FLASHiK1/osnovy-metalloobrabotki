@@ -25,6 +25,7 @@
 .sb-drop a:hover{background:var(--accent-soft,#e2ecf1);color:var(--accent,#1d5a7a)}
 .sb-drop a[aria-current="page"]{font-weight:700;color:var(--accent,#1d5a7a)}
 .sb-drop .sb-all{grid-column:1/-1;border-top:1px solid var(--line,#d6dad6);padding-top:10px;margin-top:2px;font-size:14px;color:var(--accent,#1d5a7a)}
+.sb-drop .sb-all+.sb-all{border-top:0;padding-top:0;margin-top:-8px}
 .sb-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;
   background:var(--ink,#1b2125);color:var(--paper,#fff);padding:9px 14px;border-radius:5px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100vw - 32px)}
 .sb-toast.show{opacity:1}
