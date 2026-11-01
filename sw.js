@@ -1,11 +1,11 @@
 /* Офлайн-режим: страницы и ресурсы сайта кладутся в кэш при первом визите.
    Страницы — «сначала сеть, потом кэш» (свежая версия, если есть интернет),
    остальное — «сначала кэш». При изменении файлов сайта увеличьте VERSION. */
-const VERSION = "v5";
+const VERSION = "v6";
 const CACHE = "osnovy-" + VERSION;
 const PAGES = ["./", "index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html",
   "rezby.html", "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
-  "dyuymy.html", "sebestoimost.html",
+  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
 const ASSETS = ["assets/site.css", "assets/site.js", "assets/early.js", "assets/favicon.svg", "assets/icon-192.png", "manifest.webmanifest"];
 

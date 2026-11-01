@@ -8,7 +8,8 @@
     "posadki.html": "posadki-v1", "razmernye-cepi.html": "razm-cepi-v1", "rezhimy-rezaniya.html": "rezhimy-v1",
     "rezby.html": "rezby-v1", "massa-metalla.html": "massa-v1", "sherokhovatost.html": "sherokh-v1",
     "gibka-lista.html": "gibka-v1", "rashod-elektrodov.html": "svarka-v1", "konusy.html": "konusy-v1",
-    "raskroy-lista.html": "raskroy-v1", "sebestoimost.html": "sebest-v1", "dyuymy.html": "dyuymy-v1"
+    "raskroy-lista.html": "raskroy-v1", "sebestoimost.html": "sebest-v1", "dyuymy.html": "dyuymy-v1",
+    "zatyazhka.html": "zatyazhka-v1", "shesterni.html": "shesterni-v1", "natyag.html": "natyag-v1", "gkody.html": "gkody-v1"
   };
   function enc(obj) {
     var bytes = new TextEncoder().encode(JSON.stringify(obj)), bin = "";

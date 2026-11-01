@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/gkody.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="G-коды и M-коды ЧПУ — Основы металлообработки">
+<meta property="og:description" content="Справочник G-кодов и M-кодов ЧПУ Fanuc для токарных и фрезерных станков с аналогами Siemens Sinumerik и заметками для GSK и KND. Разбор кадра программы по словам, примеры программ.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/gkody.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="gkody-v1">
+<script src="assets/early.js"></script>
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>G-коды и M-коды ЧПУ</title>
+<meta name="description" content="Справочник G-кодов и M-кодов ЧПУ Fanuc для токарных и фрезерных станков с аналогами Siemens Sinumerik и заметками для GSK и KND. Разбор кадра программы по словам, примеры программ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: сверху разбор кадра (самое частое действие), затем справочник с поиском и фильтрами, затем примеры программ */
+.parse input{font-size:18px;padding:10px 12px}
+.words{display:flex;flex-direction:column;gap:6px}
+.word{display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;align-items:baseline;border-bottom:1px solid var(--line);padding:6px 0}
+.word code{font-family:var(--f-num);font-weight:700;font-size:16px;color:var(--accent)}
+.word.unk code{color:var(--bad)}
+.word span{font-size:14px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters input{max-width:320px}
+table.gc td{vertical-align:top}
+table.gc td.c{font-family:var(--f-num);font-weight:700;white-space:nowrap}
+table.gc td.syn{font-family:var(--f-num);font-size:12px;color:var(--muted)}
+table.gc td.sie{font-family:var(--f-num);font-size:12px;white-space:nowrap}
+.tag{display:inline-block;font-size:10px;font-weight:600;border-radius:3px;padding:0 5px;margin-left:4px;vertical-align:1px;background:var(--bg);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+pre.prog{font-family:var(--f-num);font-size:13px;line-height:1.55;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:12px 14px;overflow-x:auto;margin:0}
+pre.prog .cm{color:var(--muted)}
+pre.prog .g{color:var(--accent);font-weight:600}
+pre.prog .m{color:var(--hot);font-weight:600}
+.progs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:900px){ .progs{grid-template-columns:1fr} }
+@media (max-width:640px){ table.gc .sie,table.gc .syn{display:none} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>G-коды и M-коды</h1>
+      <p>Справочник кодов ЧПУ Fanuc для токарных и фрезерных станков, с аналогами Siemens и заметками для китайских стоек GSK и KND. Вставьте кадр из программы, и калькулятор объяснит каждое слово.</p>
+    </div>
+    <div class="std">Fanuc 0i (токарные — система A)<br>Siemens Sinumerik 808/828/840D</div>
+  </header>
+
+  <section class="sheet parse" aria-labelledby="h-parse">
+    <div class="sheet-head"><h2 id="h-parse">Разобрать кадр программы</h2>
+      <div class="chips"><button type="button" class="pbtn on" data-mode="lathe">Токарный</button><button type="button" class="pbtn" data-mode="mill">Фрезерный</button></div></div>
+    <div class="field"><label for="line">Кадр (строка программы)</label><input type="text" id="line" autocomplete="off" spellcheck="false"></div>
+    <div class="chips" id="exLines"></div>
+    <div class="words" id="words" aria-live="polite"></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-ref">
+    <div class="sheet-head"><h2 id="h-ref">Справочник кодов</h2><span class="hint" id="cnt"></span></div>
+    <div class="filters">
+      <input type="text" id="q" placeholder="Поиск: G71, резьба, коррекция…" autocomplete="off">
+      <button type="button" class="pbtn on" data-f="all">Все</button><button type="button" class="pbtn" data-f="lathe">Токарные</button><button type="button" class="pbtn" data-f="mill">Фрезерные</button><button type="button" class="pbtn" data-f="M">M-коды</button>
+    </div>
+    <div class="tbl"><table class="gc"><thead><tr><th>Код</th><th>Назначение</th><th>Формат</th><th>Siemens</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <p class="hint" style="margin:0">Значения M-кодов кроме основных (M00–M09, M30, M98, M99) задаёт производитель станка — смотрите руководство станка.</p>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Китайские стойки GSK и KND</h2></div>
+    <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px;max-width:80ch">
+      <li>Токарные стойки GSK 980TDi/TDc и KND K1000T в основном используют коды Fanuc по системе A: G90/G92/G94 — циклы, абсолютные и относительные перемещения задаются адресами X/Z и U/W.</li>
+      <li>Циклы G71, G72, G73 и G76 записываются в два кадра, как у Fanuc 0i. Значения по умолчанию для отдельных адресов (например, отвод R в G71) у разных версий берутся из параметров стойки.</li>
+      <li>Ограничение оборотов при постоянной скорости резания, жёсткое резьбонарезание, номера параметров и коды аварий у китайских стоек свои. Сверяйтесь с руководством именно вашей версии стойки.</li>
+      <li>Фрезерные GSK 980MDi/218MC и KND K1000M — коды Fanuc M-серии; циклы сверления G73–G89 совместимы по формату.</li>
+    </ul>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Примеры программ</h2><span class="hint">Fanuc 0i · нажмите строку, чтобы разобрать её вверху</span></div>
+    <div class="progs">
+      <div><h3 style="margin-bottom:6px">Токарная: вал с резьбой M24×2</h3><pre class="prog" id="pL"></pre></div>
+      <div><h3 style="margin-bottom:6px">Фрезерная: сверление и резьба M8</h3><pre class="prog" id="pM"></pre></div>
+    </div>
+  </section>
+
+  <footer><span>Справочник по стандартным кодам Fanuc. Перед запуском программы проверяйте её на симуляторе или в режиме пробного прохода.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// [код, область: lathe|mill|both|M, назначение, формат, Siemens]
+const C=[
+["G00","both","Быстрое перемещение (холостой ход) — без резания","G00 X_ Z_","G0"],
+["G01","both","Линейная интерполяция — перемещение с рабочей подачей F","G01 X_ Z_ F_","G1"],
+["G02","both","Круговая интерполяция по часовой стрелке","G02 X_ Z_ R_ (или I_ K_) F_","G2 … CR=_"],
+["G03","both","Круговая интерполяция против часовой стрелки","G03 X_ Z_ R_ (или I_ K_) F_","G3 … CR=_"],
+["G04","both","Пауза (выдержка) — например, на дне канавки","G04 X1.5 (с) / P1500 (мс)","G4 F_ (с)"],
+["G10","both","Ввод данных из программы: смещения, коррекции","G10 L2 P1 X_ Y_ Z_",""],
+["G15","mill","Отмена полярных координат","G15","G110…G112"],
+["G16","mill","Полярные координаты: X — радиус, Y — угол","G16 X_ Y_","AP=_ RP=_"],
+["G17","mill","Плоскость обработки XY","G17","G17"],
+["G18","both","Плоскость XZ (основная для токарных)","G18","G18"],
+["G19","mill","Плоскость YZ","G19","G19"],
+["G20","both","Ввод в дюймах","G20","G70 (!)"],
+["G21","both","Ввод в миллиметрах","G21","G71 (!)"],
+["G28","both","Возврат в референтную точку через промежуточную","G28 U0 W0 / G91 G28 Z0","G74"],
+["G32","lathe","Нарезание резьбы за один проход (без цикла)","G32 Z_ F_ (F — шаг)","G33 Z_ K_"],
+["G40","both","Отмена коррекции на радиус инструмента","G40","G40"],
+["G41","both","Коррекция на радиус — инструмент слева от контура","G41 D_ (фрез.)","G41"],
+["G42","both","Коррекция на радиус — инструмент справа от контура","G42 D_ (фрез.)","G42"],
+["G43","mill","Коррекция на длину инструмента (+)","G43 H_ Z_","автоматически по T/D"],
+["G44","mill","Коррекция на длину инструмента (−)","G44 H_ Z_",""],
+["G49","mill","Отмена коррекции на длину","G49",""],
+["G50","lathe","Ограничение оборотов шпинделя при G96 (с S) или установка системы координат","G50 S2500 / G50 X_ Z_","LIMS=2500"],
+["G52","mill","Локальная система координат (сдвиг)","G52 X_ Y_","TRANS / ATRANS"],
+["G53","both","Перемещение в системе координат станка","G53 Z0","SUPA / G53"],
+["G54","both","Рабочая система координат 1 (до G59)","G54","G54 (до G57, G505…)"],
+["G68","mill","Поворот системы координат","G68 X_ Y_ R_ (угол)","ROT / AROT"],
+["G69","mill","Отмена поворота","G69","ROT"],
+["G70","lathe","Чистовой цикл по контуру из G71/G72/G73","G70 P_ Q_","CYCLE95 (чистовой)"],
+["G71","lathe","Черновой цикл продольного точения по контуру","G71 U(глубина) R(отвод)\nG71 P_ Q_ U(припуск X) W(припуск Z) F_","CYCLE95"],
+["G72","lathe","Черновой цикл подрезки торца по контуру","G72 W(глубина) R(отвод)\nG72 P_ Q_ U_ W_ F_","CYCLE95"],
+["G73","lathe","Цикл обработки по контуру для заготовок-отливок и поковок","G73 U_ W_ R(число проходов)\nG73 P_ Q_ U_ W_ F_","CYCLE95"],
+["G74","lathe","Торцевое сверление глубоких отверстий с выводом / торцевые канавки","G74 R_\nG74 Z_ Q_ F_","CYCLE83 / CYCLE93"],
+["G75","lathe","Прорезка канавок по X с отводом","G75 R_\nG75 X_ Z_ P_ Q_ F_","CYCLE93"],
+["G76","lathe","Многопроходный цикл нарезания резьбы","G76 P(m r a) Q(мин. глубина) R(припуск)\nG76 X(внутр. ⌀) Z_ P(высота профиля) Q(1-й проход) F(шаг)","CYCLE97 / CYCLE99"],
+["G90","lathe","Цикл продольного точения (одна ступень)","G90 X_ Z_ F_","CYCLE95"],
+["G92","lathe","Цикл нарезания резьбы (один проход на кадр)","G92 X_ Z_ F(шаг)","CYCLE97"],
+["G94","lathe","Цикл подрезки торца","G94 X_ Z_ F_","CYCLE95"],
+["G96","lathe","Постоянная скорость резания, S — в м/мин","G96 S220","G96 S220 + LIMS"],
+["G97","lathe","Постоянные обороты, S — в об/мин","G97 S800","G97"],
+["G98","lathe","Подача в мм/мин","G98 F_","G94"],
+["G99","lathe","Подача в мм/об","G99 F_","G95"],
+["G73","mill","Высокоскоростное прерывистое сверление (частичный отвод)","G73 X_ Y_ Z_ R_ Q(шаг) F_","CYCLE83"],
+["G74","mill","Нарезание левой резьбы метчиком","G74 X_ Y_ Z_ R_ F_","CYCLE84"],
+["G76","mill","Чистовое растачивание с ориентированным отводом","G76 X_ Y_ Z_ R_ Q(отвод) F_","CYCLE86"],
+["G80","mill","Отмена цикла сверления","G80","MCALL"],
+["G81","mill","Цикл сверления (центровка, сквозное)","G81 X_ Y_ Z_ R_ F_","CYCLE81"],
+["G82","mill","Сверление с выдержкой на дне","G82 X_ Y_ Z_ R_ P(мс) F_","CYCLE82"],
+["G83","mill","Глубокое сверление с полным выводом","G83 X_ Y_ Z_ R_ Q(шаг) F_","CYCLE83"],
+["G84","mill","Нарезание правой резьбы метчиком (F = S × шаг)","M29 S_\nG84 X_ Y_ Z_ R_ F_","CYCLE84"],
+["G85","mill","Растачивание / развёртывание с выводом на подаче","G85 X_ Y_ Z_ R_ F_","CYCLE85"],
+["G86","mill","Растачивание с остановом шпинделя внизу","G86 X_ Y_ Z_ R_ F_","CYCLE86"],
+["G90","mill","Абсолютные координаты","G90","G90"],
+["G91","mill","Относительные координаты (в приращениях)","G91","G91"],
+["G92","mill","Установка системы координат / ограничение оборотов","G92 X_ Y_ Z_",""],
+["G94","mill","Подача в мм/мин","G94","G94"],
+["G95","mill","Подача в мм/об","G95","G95"],
+["G98","mill","Возврат в исходную плоскость после цикла сверления","G98 G81 …",""],
+["G99","mill","Возврат в плоскость R после цикла сверления","G99 G81 …",""],
+["M00","M","Программный останов (продолжение кнопкой «Пуск»)","M00","M0"],
+["M01","M","Останов по выбору — если включён на пульте","M01","M1"],
+["M02","M","Конец программы","M02","M2"],
+["M03","M","Шпиндель по часовой стрелке","M03 S_","M3"],
+["M04","M","Шпиндель против часовой стрелки","M04 S_","M4"],
+["M05","M","Остановка шпинделя","M05","M5"],
+["M06","M","Смена инструмента (фрезерные с магазином)","T_ M06","M6"],
+["M08","M","Включить СОЖ","M08","M8"],
+["M09","M","Выключить СОЖ","M09","M9"],
+["M19","M","Ориентация шпинделя","M19","SPOS="],
+["M29","M","Жёсткое (синхронное) резьбонарезание","M29 S_","—"],
+["M30","M","Конец программы с возвратом в начало","M30","M30"],
+["M98","M","Вызов подпрограммы","M98 P_ (номер)","имя или L_"],
+["M99","M","Конец подпрограммы, возврат","M99","M17 / RET"]
+];
+const ADDR={N:"Номер кадра",O:"Номер программы",F:"Подача",S:"Обороты шпинделя или скорость резания",T:"Номер инструмента",D:"Номер коррекции на радиус",H:"Номер коррекции на длину",R:"Радиус дуги или плоскость отвода в цикле",P:"Параметр цикла: номер кадра, время паузы или код",Q:"Параметр цикла: шаг сверления, номер кадра или глубина",I:"Смещение центра дуги по X от начальной точки",J:"Смещение центра дуги по Y от начальной точки",K:"Смещение центра дуги по Z от начальной точки",L:"Число повторений",X:"Координата X",Y:"Координата Y",Z:"Координата Z",U:"Приращение по X",W:"Приращение по Z",A:"Поворотная ось A",B:"Поворотная ось B",C:"Поворотная ось C"};
+let mode="lathe", flt="all";
+const KEY="gkody-v1";
+let st={mode:"lathe",line:"G01 X24. Z-2. F0.15"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+mode=st.mode;
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function norm(c){ const m=c.match(/^([GM])0*(\d+)(\.\d)?$/i); if(!m) return c.toUpperCase(); return m[1].toUpperCase()+String(+m[2]).padStart(2,"0")+(m[3]||""); }
+function lookup(code){ const n=norm(code); const all=C.filter(r=>r[0]===n); if(!all.length) return null;
+  return all.find(r=>r[1]===mode)||all.find(r=>r[1]==="both"||r[1]==="M")||all[0]; }
+function explainAddr(L,v){
+  const n=parseFloat(v);
+  if(L==="X"&&/G04/.test(curLine)) return `Пауза ${v} с`;
+  if(L==="X") return mode==="lathe"?`Координата X — на токарном станке это диаметр: ⌀${v}`:`Координата X = ${v}`;
+  if(L==="F"){ const per=/G9[59]/.test(curLine)?(/G95|G99/.test(curLine)?"мм/об":"мм/мин"):(mode==="lathe"&&n<5?"мм/об (по умолчанию токарные работают в G99)":"мм/мин"); return `Подача ${v} ${per}`; }
+  if(L==="S") return /G96/.test(curLine)?`Скорость резания ${v} м/мин (режим G96)`:/G50|G92/.test(curLine)&&mode==="lathe"?`Ограничение оборотов шпинделя: не больше ${v} об/мин`:`Обороты шпинделя ${v} об/мин`;
+  if(L==="T"&&mode==="lathe"&&/^\d{4}$/.test(v)) return `Инструмент ${v.slice(0,2)}, коррекция ${v.slice(2)} (T0101 = резец 1 с коррекцией 1; 00 — отмена коррекции)`;
+  if(L==="P"&&/G04/.test(curLine)) return `Пауза ${v} мс`;
+  if(L==="X"&&/G04/.test(curLine)) return `Пауза ${v} с`;
+  if(L==="Q"&&/G8[13]|G73/.test(curLine)) return `Глубина за один ход сверления ${v} мм`;
+  if(L==="R"&&/G8\d|G73|G74|G76/.test(curLine)&&mode==="mill") return `Плоскость R: с неё начинается рабочая подача, ${v} мм`;
+  if(L==="R"&&/G0[23]/.test(curLine)) return `Радиус дуги ${v} мм`;
+  if(L==="U"&&/G71/.test(curLine)&&!/P/.test(curLine)) return `Глубина резания за проход ${v} мм (на радиус)`;
+  if(L==="R"&&/G71|G72/.test(curLine)&&!/P/.test(curLine)) return `Отвод после прохода ${v} мм`;
+  if(L==="U"&&/G7[0-3]/.test(curLine)&&/P/.test(curLine)) return `Припуск на чистовую по X ${v} мм (на диаметр)`;
+  if(L==="W"&&/G7[0-3]/.test(curLine)&&/P/.test(curLine)) return `Припуск на чистовую по Z ${v} мм`;
+  if((L==="P"||L==="Q")&&/G7[0-3]/.test(curLine)&&mode==="lathe") return `${L==="P"?"Первый":"Последний"} кадр контура: N${v}`;
+  if(L==="P"&&/G76/.test(curLine)&&v.length===6) return `G76: ${+v.slice(0,2)} чистовых прохода, сбег ${+v.slice(2,4)/10}·шага, угол профиля ${+v.slice(4)}°`;
+  if(L==="P"&&/G76/.test(curLine)) return `Высота профиля резьбы ${(+v/1000).toString().replace(".",",")} мм (в микронах)`;
+  if(L==="Q"&&/G76/.test(curLine)) return `Глубина первого прохода (или минимальная) ${(+v/1000).toString().replace(".",",")} мм (в микронах)`;
+  if(L==="F"&&/G76|G92|G32/.test(curLine)) return `Шаг резьбы ${v} мм`;
+  return ADDR[L]?`${ADDR[L]}: ${v}`:null;
+}
+let curLine="";
+function parse(){
+  save();
+  const raw=$("line").value; curLine=raw.toUpperCase();
+  const comment=(raw.match(/\(([^)]*)\)/)||[])[1];
+  const s=raw.replace(/\([^)]*\)/g," ").replace(/;.*$/,"").toUpperCase();
+  const re=/([A-Z])\s*([+-]?\d*\.?\d*)/g; let m, out=[];
+  while((m=re.exec(s))){ const L=m[1], v=m[2]; if(v===""&&!/[GM]/.test(L)){ out.push([L,"","Неизвестное слово",true]); continue; }
+    if(L==="G"||L==="M"){ const r=lookup(L+v); out.push([norm(L+v), "", r?r[2]:(L==="M"?"Код производителя станка — смотрите руководство":"Нет в справочнике"), !r]); }
+    else { const e=explainAddr(L,v); out.push([L+v,"",e||"Нет в справочнике",!e]); } }
+  if(comment) out.push(["( )","",`Комментарий: ${comment}`,false]);
+  $("words").innerHTML=out.length?out.map(([c,_,t,u])=>`<div class="word${u?" unk":""}"><code>${esc(c)}</code><span>${esc(t)}</span></div>`).join(""):`<p class="hint" style="margin:0">Вставьте кадр, например: G01 X24. Z-2. F0.15</p>`;
+}
+const EX={lathe:["G96 S220 M03","G71 U2. R0.5","G71 P10 Q20 U0.4 W0.1 F0.25","G76 X21.835 Z-26. P1083 Q300 F2.","T0303 (РЕЗЬБОВОЙ)"],mill:["G43 H1 Z50. M08","G98 G83 Z-20. R2. Q4. F140","G02 X40. Y20. R20. F300","M29 S300","G54 G00 X20. Y20. S1400 M03"]};
+function setMode(m){ mode=m; st.mode=m; document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("on",b.dataset.mode===m)); $("exLines").innerHTML=EX[m].map(l=>`<button type="button" class="pbtn" data-l="${esc(l)}">${esc(l)}</button>`).join(""); parse(); }
+document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+$("exLines").addEventListener("click",e=>{ const b=e.target.closest("[data-l]"); if(!b) return; $("line").value=b.dataset.l; st.line=b.dataset.l; parse(); });
+$("line").addEventListener("input",()=>{ st.line=$("line").value; parse(); });
+
+function renderRows(){
+  const q=$("q").value.trim().toLowerCase();
+  const rows=C.filter(r=>(flt==="all"||(flt==="M"?r[1]==="M":(r[1]===flt||r[1]==="both")))&&(!q||(r[0]+" "+r[2]+" "+r[3]+" "+r[4]).toLowerCase().includes(q)));
+  $("cnt").textContent=`кодов: ${rows.length}`;
+  $("rows").innerHTML=rows.map(r=>`<tr><td class="c">${r[0]}${r[1]==="lathe"?'<span class="tag">ток</span>':r[1]==="mill"?'<span class="tag">фрез</span>':""}</td><td>${esc(r[2])}</td><td class="syn">${esc(r[3]).replace(/\n/g,"<br>")}</td><td class="sie">${esc(r[4]||"—")}</td></tr>`).join("");
+}
+$("q").addEventListener("input",renderRows);
+document.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{ flt=b.dataset.f; document.querySelectorAll("[data-f]").forEach(x=>x.classList.toggle("on",x===b)); renderRows(); }));
+
+const PL=`O0001 (VAL S REZBOY M24X2)
+G21 G99 G40
+T0101 (PROHODNOY)
+G50 S2500
+G96 S220 M03
+G00 X52. Z2. M08
+G71 U2. R0.5
+G71 P10 Q20 U0.4 W0.1 F0.25
+N10 G00 X20.
+G01 Z0 F0.15
+X24. Z-2.
+Z-30.
+X40.
+Z-60.
+N20 X52.
+G70 P10 Q20
+G00 X100. Z100. M09
+T0303 (REZBOVOY)
+G97 S800 M03
+G00 X26. Z5.
+G76 P020060 Q100 R0.05
+G76 X21.835 Z-26. P1083 Q300 F2.
+G00 X100. Z100.
+M30`;
+const PM=`O0002 (PLITA: SVERLENIE I REZBA M8)
+G21 G17 G40 G49 G80 G90
+T1 M06 (SVERLO 6.8)
+G54 G00 X20. Y20. S1400 M03
+G43 H1 Z50. M08
+G98 G83 Z-20. R2. Q4. F140
+X60.
+X100.
+G80 G00 Z100. M09
+T2 M06 (METCHIK M8)
+G54 G00 X20. Y20. S300 M03
+G43 H2 Z50. M08
+M29 S300
+G98 G84 Z-16. R5. F375
+X60.
+X100.
+G80 G00 Z100. M09
+M30`;
+function hl(t){ return t.split("\n").map(l=>`<span class="ln" data-l="${esc(l)}">${esc(l).replace(/\(([^)]*)\)/g,'<span class="cm">($1)</span>').replace(/\b(G\d+)/g,'<span class="g">$1</span>').replace(/\b(M\d+)/g,'<span class="m">$1</span>')}</span>`).join("\n"); }
+$("pL").innerHTML=hl(PL); $("pM").innerHTML=hl(PM);
+[["pL","lathe"],["pM","mill"]].forEach(([id,md])=>$(id).addEventListener("click",e=>{ const ln=e.target.closest(".ln"); if(!ln) return; setMode(md); $("line").value=ln.dataset.l; st.line=ln.dataset.l; parse(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); }));
+document.querySelectorAll("pre.prog .ln").forEach(l=>l.style.cursor="pointer");
+$("line").value=st.line; setMode(mode); renderRows();
+})();
+</script>
+
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

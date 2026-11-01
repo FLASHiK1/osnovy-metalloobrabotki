@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/zatyazhka.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Момент затяжки болтов — Основы металлообработки">
+<meta property="og:description" content="Момент затяжки и усилие предварительной затяжки болтов M3–M48 классов прочности 4.6–12.9 и нержавеющих A2, A4 с учётом трения в резьбе и под головкой, по методике VDI 2230.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/zatyazhka.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="zatyazhka-v1">
+<script src="assets/early.js"></script>
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Момент затяжки болтов</title>
+<meta name="description" content="Момент затяжки и усилие предварительной затяжки болтов M3–M48 классов прочности 4.6–12.9 и нержавеющих A2, A4 с учётом трения в резьбе и под головкой, по методике VDI 2230.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: слева болт, класс прочности и трение; справа момент крупно и усилие; ниже таблица моментов для всех размеров */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+table.mt tbody tr{cursor:pointer}
+table.mt tbody tr:hover td{background:var(--accent-soft)}
+@media (max-width:860px){ .main{grid-template-columns:1fr} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Момент затяжки болтов</h1>
+      <p>Выберите резьбу, класс прочности и состояние поверхности. Калькулятор посчитает усилие затяжки и момент для динамометрического ключа с учётом трения в резьбе и под головкой.</p>
+    </div>
+    <div class="std">VDI 2230, ISO 898-1<br>ISO 3506 (нержавеющие)</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="size">Резьба</label><select id="size"></select></div>
+        <div class="field"><label for="cls">Класс прочности</label><select id="cls"></select></div>
+        <div class="field"><label for="head">Головка</label><select id="head"><option value="hex">Шестигранная (болт, гайка)</option><option value="cap">Цилиндрическая с внутр. шестигранником</option></select></div>
+        <div class="field"><label for="mu">Состояние поверхности</label><select id="mu">
+          <option value="0.10">Смазка MoS₂, паста — μ 0,10</option>
+          <option value="0.12" selected>Чёрное оксидирование + масло, цинк + масло — μ 0,12</option>
+          <option value="0.14">Оцинкованный, без смазки — μ 0,14</option>
+          <option value="0.16">Без покрытия, слегка смазанный — μ 0,16</option>
+          <option value="0.20">Сухой, без покрытия — μ 0,20</option>
+          <option value="0.30">Нержавейка по нержавейке всухую — μ 0,30</option>
+          <option value="custom">Ввести вручную</option></select></div>
+        <div class="field"><label for="muv"><span>Коэффициент трения μ (резьба и опора)</span></label><input type="text" id="muv" inputmode="decimal"></div>
+        <div class="field"><label for="nu"><span>Использование предела текучести</span><i>%</i></label><input type="text" id="nu" inputmode="decimal" value="90"></div>
+      </div>
+      <div class="hint">90 % — стандартное значение VDI 2230 для затяжки до допустимого эквивалентного напряжения. Для соединений, которые часто разбирают, или при неточном ключе берите 70–80 %.</div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Момент затяжки</div><div class="big" id="M">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="extra"></dl>
+      <div class="note warn">Момент очень чувствителен к трению: при μ 0,10 вместо 0,14 тот же момент даёт почти на 30 % большее усилие и может сорвать резьбу. Берите μ по фактическому состоянию болта, а не «как обычно».</div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Моменты для всех размеров</h2><span class="hint" id="tblHint"></span></div>
+    <div class="tbl" id="tbl"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p>Допустимое усилие затяжки — такое, при котором эквивалентное напряжение в стержне (растяжение плюс кручение от трения в резьбе) равно заданной доле ν предела текучести Rp0,2:</p>
+      <div class="formula">Fм = ν · Rp0,2 · As / √(1 + 3·[1,5 · (d₂/d₀) · (P/(π·d₂) + 1,155·μ)]²)
+As = π/4 · d₀²,  d₀ = (d₂ + d₃)/2        — площадь сечения по резьбе
+Mз = Fм · (0,16·P + 0,58·μ·d₂ + μ·Dкм/2)
+Dкм = (Dголовки + Dотверстия)/2           — средний диаметр опоры</div>
+      <p>Первое слагаемое момента — работа на шаг резьбы, второе — трение в резьбе, третье — трение под головкой. Обычно на трение уходит 85–90 % момента, и лишь 10–15 % создаёт усилие.</p>
+      <p>Пределы текучести по ISO 898-1: 4.6 — 240 МПа, 5.6 — 300, 5.8 — 400, 6.8 — 480, 8.8 — 640 (до M16) и 660 (свыше), 10.9 — 940, 12.9 — 1100; по ISO 3506: A2-70 — 450, A4-80 — 600 МПа. Отверстие под болт — средний ряд по ГОСТ 11284.</p>
+      <p>Динамометрический ключ имеет разброс: стрелочный и щелчковый ±20–25 %. Поэтому в ответственных соединениях затягивают по углу поворота или контролируют удлинение болта.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчётный момент для стальных деталей. Для алюминиевых корпусов, мягких прокладок и коротких резьб в отверстиях проверьте смятие и срез витков отдельно.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const COARSE={3:.5,4:.7,5:.8,6:1,8:1.25,10:1.5,12:1.75,14:2,16:2,18:2.5,20:2.5,22:2.5,24:3,27:3,30:3.5,33:3.5,36:4,42:4.5,48:5};
+const FINE=[[8,1],[10,1.25],[10,1],[12,1.5],[12,1.25],[14,1.5],[16,1.5],[18,1.5],[20,1.5],[22,1.5],[24,2],[27,2],[30,2],[36,3],[42,3],[48,3]];
+const HEX={3:5.5,4:7,5:8,6:10,8:13,10:16,12:18,14:21,16:24,18:27,20:30,22:34,24:36,27:41,30:46,33:50,36:55,42:65,48:75};
+const CAP={3:5.5,4:7,5:8.5,6:10,8:13,10:16,12:18,14:21,16:24,20:30,24:36,30:45,36:54};
+const HOLE={3:3.4,4:4.5,5:5.5,6:6.6,8:9,10:11,12:13.5,14:15.5,16:17.5,18:20,20:22,22:24,24:26,27:30,30:33,33:36,36:39,42:45,48:52};
+const CLS=[["4.6",240],["5.6",300],["5.8",400],["6.8",480],["8.8",640],["10.9",940],["12.9",1100],["A2-70",450],["A4-80",600]];
+function rp(c,d){ if(c==="8.8") return d>16?660:640; return CLS.find(x=>x[0]===c)[1]; }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+function fn(v){ return String(+v.toFixed(3)).replace(".",","); }
+const opts=Object.keys(COARSE).map(d=>[`${d}|${COARSE[d]}`,`M${d}`]).concat(FINE.map(([d,p])=>[`${d}|${p}`,`M${d}×${fn(p)}`]));
+$("size").innerHTML=opts.map(([v,t])=>`<option value="${v}">${t}</option>`).join("");
+$("cls").innerHTML=CLS.map(([c])=>`<option value="${c}">${c}</option>`).join("");
+const KEY="zatyazhka-v1";
+let st={size:"10|1.5",cls:"8.8",head:"hex",mu:"0.12",muv:"0,12",nu:"90"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+["size","cls","head","mu"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("change",()=>{ st[id]=$(id).value; if(id==="mu"&&st.mu!=="custom"){ st.muv=st.mu.replace(".",","); } syncMu(); calc(); }); });
+["muv","nu"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; if(id==="muv"){ const m=num(st.muv); const o=[...$("mu").options].find(o=>+o.value===m); st.mu=o?o.value:"custom"; $("mu").value=st.mu; } calc(); }); });
+function syncMu(){ $("muv").value=st.muv; }
+
+function bolt(d,P,c,head,mu,nu){
+  const d2=d-.649519*P, d3=d-1.226869*P, d0=(d2+d3)/2, As=Math.PI/4*d0*d0;
+  const R=rp(c,d);
+  const k=1.5*(d2/d0)*(P/(Math.PI*d2)+1.155*mu);
+  const F=nu*R*As/Math.sqrt(1+3*k*k);
+  const Dh=(head==="cap"?CAP[d]:HEX[d]), dh=HOLE[d];
+  if(!Dh||!dh) return {As,F,M:NaN,d2,R};
+  const Dkm=(Dh+dh)/2;
+  const Mth=F*(0.16*P+0.58*mu*d2)/1000, Mh=F*mu*Dkm/2/1000;
+  return {As,F,M:Mth+Mh,Mth,Mh,d2,R,Dkm,Mp:F*0.16*P/1000};
+}
+function calc(){
+  save();
+  const [d,P]=st.size.split("|").map(Number), mu=num(st.muv), nu=num(st.nu)/100;
+  const ok=mu>0&&mu<0.6&&nu>0&&nu<=1;
+  $("muv").classList.toggle("bad",!(mu>0&&mu<0.6)); $("nu").classList.toggle("bad",!(nu>0&&nu<=1));
+  $("err").hidden=ok; $("err").textContent="Коэффициент трения — от 0,05 до 0,5; использование предела текучести — от 1 до 100 %.";
+  if(!ok){ $("M").textContent="—"; $("kpis").innerHTML=""; $("extra").innerHTML=""; $("tbl").innerHTML=""; return; }
+  const b=bolt(d,P,st.cls,st.head,mu,nu);
+  if(!isFinite(b.M)){ $("M").textContent="—"; $("kpis").innerHTML=`<div class="kpi" style="grid-column:1/-1"><span class="l">Нет данных</span><span>Для M${d} с этой головкой нет размера опоры в таблице.</span></div>`; $("extra").innerHTML=""; renderTbl(mu,nu); return; }
+  $("M").innerHTML=`${fmt(b.M,b.M<10?2:1)}<small>Н·м</small>`;
+  $("kpis").innerHTML=[["Усилие затяжки",fmt(b.F/1000,1),"кН"],["То же",fmt(b.F/9806.65,2),"тс"],["Момент",fmt(b.M/9.80665,b.M<10?3:2),"кгс·м"],["Площадь As",fmt(b.As,1),"мм²"]]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("extra").innerHTML=[["Предел текучести Rp0,2",fmt(b.R,0)+" МПа"],["Напряжение растяжения в стержне",fmt(b.F/b.As,0)+" МПа"],["Момент на трение в резьбе",fmt(b.Mth-b.Mp,1)+" Н·м ("+fmt((b.Mth-b.Mp)/b.M*100,0)+" %)"],["Момент на трение под головкой",fmt(b.Mh,1)+" Н·м ("+fmt(b.Mh/b.M*100,0)+" %)"],["Момент на полезную затяжку",fmt(b.Mp,1)+" Н·м ("+fmt(b.Mp/b.M*100,0)+" %)"],["Средний диаметр опоры Dкм",fmt(b.Dkm,2)+" мм"],["Если ключ ±20 %",fmt(b.M*0.8,1)+" … "+fmt(b.M*1.2,1)+" Н·м"]]
+    .map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  renderTbl(mu,nu);
+}
+function renderTbl(mu,nu){
+  const cls=["5.6","8.8","10.9","12.9","A2-70"];
+  $("tblHint").textContent=`μ = ${String(mu).replace(".",",")}, ν = ${fmt(nu*100,0)} %, ${st.head==="cap"?"цилиндрическая головка":"шестигранная головка"} · момент, Н·м / усилие, кН · нажмите строку`;
+  const rows=Object.keys(COARSE).map(Number).filter(d=>(st.head==="cap"?CAP[d]:HEX[d])).map(d=>{ const P=COARSE[d];
+    return `<tr data-v="${d}|${P}" tabindex="0" class="${st.size===d+"|"+P?"cur":""}"><td><b>M${d}</b></td>${cls.map(c=>{ const b=bolt(d,P,c,st.head,mu,nu); return `<td class="n">${fmt(b.M,b.M<10?2:b.M<100?1:0)}<br><span class="muted">${fmt(b.F/1000,1)}</span></td>`; }).join("")}</tr>`; }).join("");
+  $("tbl").innerHTML=`<table class="mt"><thead><tr><th>Резьба</th>${cls.map(c=>`<th class="n">${c}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+function pick(e){ const tr=e.target.closest("tr[data-v]"); if(!tr) return; st.size=tr.dataset.v; $("size").value=st.size; calc(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); }
+$("tbl").addEventListener("click",pick); $("tbl").addEventListener("keydown",e=>{ if(e.key==="Enter") pick(e); });
+syncMu(); calc();
+})();
+</script>
+
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

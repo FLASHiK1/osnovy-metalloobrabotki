@@ -20,6 +20,10 @@
 | rashod-elektrodov.html | Расход электродов и проволоки |
 | dyuymy.html | Дюймы и дюймовые резьбы |
 | sebestoimost.html | Себестоимость детали |
+| zatyazhka.html | Момент затяжки болтов |
+| shesterni.html | Зубчатые колёса |
+| natyag.html | Сборка с натягом |
+| gkody.html | G-коды и M-коды |
 | massa-metalla.html | Масса металла |
 | analogi-staley.html | Аналоги сталей и сплавов |
 

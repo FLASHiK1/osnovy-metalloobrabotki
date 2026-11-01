@@ -505,7 +505,9 @@ function calc(){
   const PREF=[.025,.05,.1,.2,.4,.8,1.6,3.2,6.3,12.5,25,50], raOf=T=>{ let r=PREF[0]; for(const p of PREF) if(p<=0.05*T+1e-9) r=p; return r; };
   const raH=raOf(TD), raS=raOf(Td), raT=v=>String(v).replace(".",",");
   const relRa=window.siteLink?`<div style="display:flex;flex-wrap:wrap;gap:6px"><a class="btn sm" href="${siteLink("sherokhovatost.html",{unit:"ra",val:raT(raH)})}">Ra ${raT(raH)} — отверстие →</a><a class="btn sm" href="${siteLink("sherokhovatost.html",{unit:"ra",val:raT(raS)})}">Ra ${raT(raS)} — вал →</a></div>`:"";
-  $("cFit").innerHTML=`<h3>Посадка ${fitName}</h3><dl class="kv">${rows}<div class="sep"></div><dt>Допуск посадки TD+Td</dt><dd>${mm(TD+Td)}</dd><div class="sep"></div><dt>Шероховатость отверстия</dt><dd>Ra ≤ ${raT(raH)}</dd><dt>Шероховатость вала</dt><dd>Ra ≤ ${raT(raS)}</dd></dl><div class="hint">По правилу Ra ≤ 0,05·IT — для нормальной точности формы.</div>${relRa}`;
+  const NF=["H7/p6","H7/r6","H7/s6","H8/s7","H7/n6"];
+  const relN=(type==="int"&&window.siteLink)?`<a class="btn sm" href="${siteLink("natyag.html",NF.includes(fitName)?{d:size(nom),fit:fitName}:{d:size(nom),fit:"custom",N:mm(-Smin)})}">Сборка с натягом: нагрев, момент →</a>`:"";
+  $("cFit").innerHTML=`<h3>Посадка ${fitName}</h3><dl class="kv">${rows}<div class="sep"></div><dt>Допуск посадки TD+Td</dt><dd>${mm(TD+Td)}</dd><div class="sep"></div><dt>Шероховатость отверстия</dt><dd>Ra ≤ ${raT(raH)}</dd><dt>Шероховатость вала</dt><dd>Ra ≤ ${raT(raS)}</dd></dl><div class="hint">По правилу Ra ≤ 0,05·IT — для нормальной точности формы.</div>${relRa}${relN?`<div style="display:flex;flex-wrap:wrap;gap:6px">${relN}</div>`:""}`;
 
   const n=size(nom);
   const txt=[

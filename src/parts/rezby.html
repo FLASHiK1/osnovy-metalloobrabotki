@@ -220,6 +220,7 @@ function calc(){
     const RZ=[3,4,5,6,8,10,12,16,20,24,30,36,42,48];
     const thrSize=(coarse&&RZ.includes(d))?`${d}|${P}`:"custom";
     $("rel").innerHTML=`<a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"drill",vcManual:null,vals:{drill:{D:fn(drill),L:fn(Math.round(d*2))}}})}">Режимы сверления Ø${fn(drill)} →</a>`+
+      (d>=3&&d<=48?`<a class="btn sm" href="${siteLink("zatyazhka.html",{size:`${d}|${P}`})}">Момент затяжки ${nm} →</a>`:"")+
       `<a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"thread",vcManual:null,vals:{thread:{type:"int",size:thrSize,D:fn(d),P:fn(P)}}})}">Резьбофрезерование ${nm} →</a>`;
   }
   const T=tolerances(d,P);

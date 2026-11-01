@@ -3,7 +3,8 @@
   "use strict";
   var PAGES = [
     ["Точность", [["posadki.html", "Посадки и допуски"], ["razmernye-cepi.html", "Размерные цепи"], ["sherokhovatost.html", "Шероховатость"]]],
-    ["Обработка", [["rezhimy-rezaniya.html", "Режимы резания"], ["rezby.html", "Резьбы"], ["konusy.html", "Конусы"]]],
+    ["Обработка", [["rezhimy-rezaniya.html", "Режимы резания"], ["rezby.html", "Резьбы"], ["konusy.html", "Конусы"], ["gkody.html", "G-коды и M-коды"]]],
+    ["Конструирование", [["zatyazhka.html", "Момент затяжки болтов"], ["shesterni.html", "Зубчатые колёса"], ["natyag.html", "Сборка с натягом"]]],
     ["Лист и сварка", [["gibka-lista.html", "Гибка листа"], ["raskroy-lista.html", "Раскрой листа"], ["rashod-elektrodov.html", "Расход на сварку"]]],
     ["Материалы", [["massa-metalla.html", "Масса металла"], ["analogi-staley.html", "Аналоги сталей"]]],
     ["Пересчёт и экономика", [["dyuymy.html", "Дюймы и UNC"], ["sebestoimost.html", "Себестоимость детали"]]]

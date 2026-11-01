@@ -19,7 +19,7 @@ async function text(p, sel) { return norm(await p.textContent(sel)); }
 
 const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
   "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
-  "dyuymy.html", "sebestoimost.html",
+  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
 
 (async () => {
@@ -153,6 +153,35 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
       const t = await text(p, "#price1"); check("пример: цена 1 575 ₽ за штуку", t.includes("1 575"), t);
       await done(p); }
 
+    console.log("Момент затяжки");
+    { const p = await page("zatyazhka.html");
+      const m = await text(p, "#M"), k = await text(p, "#kpis");
+      check("M10 8.8, μ 0,12: момент ≈ 50 Н·м, усилие ≈ 29,6 кН", /^(49|50),/.test(m) && k.includes("29,6"), m + " | " + k);
+      await done(p); }
+
+    console.log("Зубчатые колёса");
+    { const p = await page("shesterni.html");
+      check("m2, z 20/45: межосевое 65,000", (await text(p, "#aw")).includes("65,000"));
+      const g = await text(p, "#g1"); check("шестерня z20: da 44, df 35, W через 3 зуба 15,32", g.includes("44,000") && g.includes("35,000") && g.includes("15,32") , g);
+      check("модуль по da 52,1 и z 24 → 2", (await text(p, "#findOut")).includes("2,004"));
+      await done(p); }
+
+    console.log("Сборка с натягом");
+    { const p = await page("natyag.html");
+      check("Ø50 H7/s6: натяг 0,018…0,059", (await text(p, "#fitHint")).includes("0,018") && (await text(p, "#fitHint")).includes("0,059"));
+      check("нагрев ступицы ≈ 202 °C → «205»", (await text(p, "#T")).startsWith("205"), await text(p, "#T"));
+      await done(p); }
+
+    console.log("G-коды");
+    { const p = await page("gkody.html");
+      await p.fill("#line", "G96 S220 M03"); await settle(p);
+      const w = await text(p, "#words"); check("G96 S220 M03 разобран", w.includes("Постоянная скорость резания") && w.includes("220 м/мин") && w.includes("по часовой"), w);
+      await p.click("[data-mode=mill]"); await p.fill("#line", "G98 G83 Z-20. R2. Q4. F140"); await settle(p);
+      const w2 = await text(p, "#words"); check("G83 с Q и R разобран для фрезерного", w2.includes("Глубокое сверление") && w2.includes("Глубина за один ход") && w2.includes("Плоскость R"), w2);
+      await p.fill("#q", "резьб"); await settle(p);
+      check("поиск «резьб» находит G76 и G84", (await text(p, "#rows")).includes("G76") && (await text(p, "#rows")).includes("G84"));
+      await done(p); }
+
     console.log("«Поделиться расчётом» и переходы");
     { const p = await page("rezby.html");
       await p.selectOption("#size", "24|3"); await p.selectOption("#tb", "4h"); await settle(p);
@@ -170,6 +199,12 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
     { const p = await page("stati-posadka-h7-g6.html");
       const r = await page(await p.getAttribute(".cta a.go", "href"));
       check("статья H7/g6 → калькулятор посадок с Ø25 H7/g6", (await r.inputValue("#hole")) === "H7" && (await r.inputValue("#shaft")) === "g6");
+      await done(r); await done(p); }
+    { const p = await page("posadki.html");
+      await p.fill("#nom", "50"); await p.fill("#hole", "H7"); await p.fill("#shaft", "s6"); await settle(p);
+      const href = await p.getAttribute('a[href^="natyag.html"]', "href");
+      const r = await page(href);
+      check("посадки H7/s6 → сборка с натягом Ø50", (await r.inputValue("#d")) === "50" && (await r.inputValue("#fit")) === "H7/s6");
       await done(r); await done(p); }
     { const p = await page("gibka-lista.html");
       const href = await p.getAttribute('#rel a:first-child', "href");

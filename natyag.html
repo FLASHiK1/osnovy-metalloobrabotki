@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/natyag.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Сборка с натягом — Основы металлообработки">
+<meta property="og:description" content="Расчёт соединения с натягом: до какой температуры нагреть ступицу или охладить вал для сборки, контактное давление, передаваемый момент и усилие запрессовки по формулам Ляме.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/natyag.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="natyag-v1">
+<script src="assets/early.js"></script>
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Сборка с натягом</title>
+<meta name="description" content="Расчёт соединения с натягом: до какой температуры нагреть ступицу или охладить вал для сборки, контактное давление, передаваемый момент и усилие запрессовки по формулам Ляме.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: слева посадка и детали, справа температура нагрева крупно и способы сборки; ниже прочность соединения */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+.method{border-top:1px solid var(--line);padding-top:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline}
+.method b{font-size:14px}
+.method .v{font-family:var(--f-num);font-size:18px;font-weight:600;text-align:right}
+.method .hint{grid-column:1/-1}
+.ok{color:var(--ok)} .no{color:var(--bad)}
+.k4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:700px){ .k4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:860px){ .main{grid-template-columns:1fr} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Сборка с натягом</h1>
+      <p>Выберите посадку и материалы. Калькулятор скажет, до какой температуры нагреть ступицу или охладить вал, чтобы детали собрались свободно, и посчитает, какой момент выдержит соединение.</p>
+    </div>
+    <div class="std">формулы Ляме<br>ГОСТ 25347 (посадки)</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid3">
+        <div class="field"><label for="d"><span>Диаметр соединения d</span><i>мм</i></label><input type="text" id="d" inputmode="decimal"></div>
+        <div class="field"><label for="fit">Посадка</label><select id="fit">
+          <option>H7/p6</option><option>H7/r6</option><option selected>H7/s6</option><option>H8/s7</option><option>H7/n6</option><option value="custom">Свой натяг</option></select></div>
+        <div class="field"><label for="N"><span>Наибольший натяг</span><i>мм</i></label><input type="text" id="N" inputmode="decimal"></div>
+      </div>
+      <div class="hint" id="fitHint"></div>
+      <div class="grid2">
+        <div class="field"><label for="hubM">Материал ступицы (охватывающая)</label><select id="hubM"></select></div>
+        <div class="field"><label for="shM">Материал вала (охватываемая)</label><select id="shM"></select></div>
+        <div class="field"><label for="D2"><span>Наружный диаметр ступицы</span><i>мм</i></label><input type="text" id="D2" inputmode="decimal"></div>
+        <div class="field"><label for="d1"><span>Отверстие в валу (0 — сплошной)</span><i>мм</i></label><input type="text" id="d1" inputmode="decimal"></div>
+        <div class="field"><label for="L"><span>Длина соединения</span><i>мм</i></label><input type="text" id="L" inputmode="decimal"></div>
+        <div class="field"><label for="gap"><span>Зазор для свободной сборки</span><i>мм</i></label><input type="text" id="gap" inputmode="decimal" placeholder="авто: 0,001·d"></div>
+        <div class="field"><label for="f"><span>Коэфф. трения в соединении</span><i>f</i></label><input type="text" id="f" inputmode="decimal"></div>
+        <div class="field"><label for="u"><span>Смятие неровностей</span><i>мкм</i></label><input type="text" id="u" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Смятие неровностей ≈ 1,2·(Rz вала + Rz отверстия): при Ra 0,8 и 1,6 — около 11 мкм. Трение: 0,08–0,10 при запрессовке со смазкой, 0,12–0,18 при тепловой сборке.</div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Нагреть ступицу до</div><div class="big" id="T">—</div></div>
+      <div id="methods" style="display:flex;flex-direction:column;gap:10px"></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Прочность соединения</h2><span class="hint">при наименьшем натяге — гарантированно, при наибольшем — по прочности деталей</span></div>
+    <div class="kpis k4" id="kpis"></div>
+    <dl class="kv" id="extra"></dl>
+    <div style="display:flex;flex-direction:column;gap:8px" id="notes"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p><b>Температура нагрева</b> — чтобы отверстие увеличилось на наибольший натяг плюс зазор для свободной сборки:</p>
+      <div class="formula">ΔT = (Nmax + Sсб) / (α · d),   T = 20 °C + ΔT</div>
+      <p><b>Давление на поверхности контакта</b> по формулам Ляме для толстостенных цилиндров:</p>
+      <div class="formula">p = (N − u) / (d · (C₁/E₁ + C₂/E₂))
+C₁ = (1 + (d₁/d)²) / (1 − (d₁/d)²) − ν₁     вал
+C₂ = (1 + (d/D₂)²) / (1 − (d/D₂)²) + ν₂     ступица
+момент   T = p · π · d² · L · f / 2
+усилие   F = p · π · d · L · f</div>
+      <p>u — поправка на смятие микронеровностей, она уменьшает действующий натяг. Эквивалентное напряжение на внутренней поверхности ступицы: σ = 2·p / (1 − (d/D₂)²) — его сравнивают с пределом текучести.</p>
+      <p>Коэффициенты линейного расширения при охлаждении меньше, чем при нагреве, поэтому для азота и сухого льда взяты средние значения на этом интервале температур.</p>
+    </div>
+  </details>
+
+  <footer><span>Инженерная оценка. Для ответственных соединений учитывайте центробежные силы, рабочую температуру и разброс натяга по ГОСТ 25347.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="gkody.html">G-коды</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// [название, E МПа, ν, α ·10⁻⁶ 1/К (20…200 °C), α при охлаждении до −78 и −196 °C, предел текучести МПа]
+const MAT=[["Сталь углеродистая (45, 40Х)",210000,.3,12,10.5,8.5,355],["Сталь закалённая (ШХ15, 40Х HRC 45+)",210000,.3,12,10.5,8.5,1200],["Нержавеющая 12Х18Н10Т",200000,.3,16.6,15,13,240],["Чугун серый СЧ20",110000,.25,10.5,9,7.5,200],["Чугун ВЧ50",160000,.28,11,9.5,8,320],["Бронза БрАЖ9-4",110000,.35,17,15,13,200],["Алюминий Д16Т",72000,.33,23,20.5,17,280]];
+// посадки: допуск отверстия и вала — по таблицам ГОСТ 25346/25347 для d ≤ 500
+const R_UP=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const F_UP=[3,6,10,18,30,40,50,65,80,100,120,140,160,180,200,225,250,280,315,355,400,450,500];
+const IT={6:[6,8,9,11,13,16,19,22,25,29,32,36,40],7:[10,12,15,18,21,25,30,35,40,46,52,57,63],8:[14,18,22,27,33,39,46,54,63,72,81,89,97]};
+const EI_={n:[4,8,10,12,15,17,20,23,27,31,34,37,40],p:[6,12,15,18,22,26,32,37,43,50,56,62,68]};
+const FEI={r:[10,15,19,23,28,34,34,41,43,51,54,63,65,68,77,80,84,94,98,108,114,126,132],s:[14,19,23,28,35,43,43,53,59,71,79,92,100,108,122,130,140,158,170,190,208,232,252]};
+function idx(d,UP){ for(let i=0;i<UP.length;i++) if(d<=UP[i]) return i; return -1; }
+function fitN(fit,d){ // [Nmax, Nmin] мкм
+  const i=idx(d,R_UP), fi=idx(d,F_UP); if(i<0||d<=0) return null;
+  const m=fit.match(/^H(\d)\/([a-z])(\d)$/); if(!m) return null;
+  const gh=+m[1], l=m[2], gs=+m[3];
+  const ES=IT[gh][i], ei=EI_[l]?EI_[l][i]:FEI[l][fi], es=ei+IT[gs][i];
+  return [es-0, ei-ES];
+}
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+const t3=v=>String(+v.toFixed(3)).replace(".",",");
+$("hubM").innerHTML=MAT.map((m,i)=>`<option value="${i}">${m[0]}</option>`).join("");
+$("shM").innerHTML=$("hubM").innerHTML;
+const KEY="natyag-v1";
+let st={d:"50",fit:"H7/s6",N:"",D2:"100",d1:"0",L:"60",gap:"",f:"0,14",u:"11",hubM:"0",shM:"0"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+["d","N","D2","d1","L","gap","f","u"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; if(id==="N"){ st.fit="custom"; $("fit").value="custom"; } calc(); }); });
+["fit","hubM","shM"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("change",()=>{ st[id]=$(id).value; calc(); }); });
+
+function calc(){
+  save();
+  const d=num(st.d), D2=num(st.D2), d1=num(st.d1)||0, L=num(st.L), f=num(st.f), u=(num(st.u)||0)/1000;
+  const H=MAT[+st.hubM], S=MAT[+st.shM];
+  let Nmax=NaN, Nmin=NaN;
+  if(st.fit!=="custom"){ const r=fitN(st.fit,d); if(r){ Nmax=r[0]/1000; Nmin=r[1]/1000; $("N").value=t3(Nmax); st.N=$("N").value; $("fitHint").textContent=`${st.fit} для Ø${t3(d)}: натяг от ${t3(Nmin)} до ${t3(Nmax)} мм (ГОСТ 25347).`; } else $("fitHint").textContent="Для посадки нужен диаметр до 500 мм."; }
+  else { Nmax=num(st.N); Nmin=Nmax*0.5; $("fitHint").textContent="Свой натяг: наименьший натяг для оценки прочности принят равным половине наибольшего."; }
+  const gap=num(st.gap)>0?num(st.gap):0.001*d;
+  const ok=d>0&&D2>d&&d1>=0&&d1<d&&L>0&&f>0&&Nmax>0;
+  [["d",d>0],["D2",D2>d],["d1",d1>=0&&d1<d],["L",L>0],["f",f>0]].forEach(([id,v])=>$(id).classList.toggle("bad",!v));
+  $("err").hidden=ok; $("err").textContent="Проверьте: наружный диаметр ступицы больше диаметра соединения, отверстие в валу меньше его, натяг и трение больше 0.";
+  if(!ok){ $("T").textContent="—"; ["methods","kpis","extra","notes"].forEach(id=>$(id).innerHTML=""); return; }
+  const need=Nmax+gap;
+  const dT=need/(H[3]*1e-6*d), T=20+dT;
+  $("T").innerHTML=`${fmt(Math.ceil(T/5)*5,0)}<small>°C</small>`;
+  const shrinkN2=S[5]*1e-6*d*216, shrinkCO2=S[4]*1e-6*d*98;
+  const meth=[];
+  const lim=+st.hubM===1?180:+st.hubM===6?150:350;
+  meth.push(`<div class="method"><b>Нагрев ступицы</b><span class="v ${T<=lim?"ok":"no"}">${fmt(T,0)} °C</span><span class="hint">ΔT = ${fmt(dT,0)} К при α = ${String(H[3]).replace(".",",")}·10⁻⁶. ${T<=120?"Можно в масляной ванне или индукционным нагревателем; подходит и для подшипников (не выше 120 °C).":T<=200?"Масляная ванна (до 200 °C), индукционный нагреватель или печь. Подшипники так нагревать нельзя — для них предел 120 °C.":T<=lim?"Печь или индукционный нагреватель. Следите за цветами побежалости.":`Выше допустимого для материала (${lim} °C): отпустится закалка или изменятся свойства. Комбинируйте с охлаждением вала.`}</span></div>`);
+  meth.push(`<div class="method"><b>Охлаждение вала в жидком азоте (−196 °C)</b><span class="v ${shrinkN2>=need?"ok":"no"}">−${t3(shrinkN2)} мм</span><span class="hint">${shrinkN2>=need?"Вал сожмётся больше, чем нужно: сборка без нагрева ступицы.":`Не хватит: нужно ${t3(need)} мм. Охлаждение вала + нагрев ступицы до ${fmt(20+(need-shrinkN2)/(H[3]*1e-6*d),0)} °C.`}</span></div>`);
+  meth.push(`<div class="method"><b>Охлаждение вала сухим льдом (−78 °C)</b><span class="v ${shrinkCO2>=need?"ok":"no"}">−${t3(shrinkCO2)} мм</span><span class="hint">${shrinkCO2>=need?"Достаточно для сборки.":`Не хватит: нужно ${t3(need)} мм. Вместе с нагревом ступицы до ${fmt(20+(need-shrinkCO2)/(H[3]*1e-6*d),0)} °C.`}</span></div>`);
+  meth.push(`<div class="method"><b>Нужно получить зазор</b><span class="v">${t3(need)} мм</span><span class="hint">Наибольший натяг ${t3(Nmax)} + зазор для сборки ${t3(gap)} мм.</span></div>`);
+  $("methods").innerHTML=meth.join("");
+  // Ляме
+  const C1=(1+(d1/d)**2)/(1-(d1/d)**2)-S[2], C2=(1+(d/D2)**2)/(1-(d/D2)**2)+H[2];
+  const k=d*(C1/S[1]+C2/H[1]);
+  const pmin=Math.max(0,(Nmin-u)/k), pmax=Math.max(0,(Nmax-u)/k);
+  const Tq=p=>p*Math.PI*d*d*L*f/2/1000, Fa=p=>p*Math.PI*d*L*f;
+  const sHub=2*pmax/(1-(d/D2)**2);
+  $("kpis").innerHTML=[["Давление, мин. натяг",fmt(pmin,0),"МПа"],["Момент (гарантир.)",fmt(Tq(pmin),0),"Н·м"],["Осевая сила (гарантир.)",fmt(Fa(pmin)/1000,1),"кН"],["Запрессовка, макс.",fmt(pmax*Math.PI*d*L*0.1/1000,1),"кН"]]
+   .map(([l,v,un])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${un}</small></span></div>`).join("");
+  $("extra").innerHTML=[["Натяг: наименьший / наибольший",t3(Nmin)+" / "+t3(Nmax)+" мм"],["Давление при наибольшем натяге",fmt(pmax,0)+" МПа"],["Эквивалентное напряжение в ступице",fmt(sHub,0)+" МПа (предел текучести ≈ "+H[6]+")"],["Момент при наибольшем натяге",fmt(Tq(pmax),0)+" Н·м"]]
+    .map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  const notes=[];
+  if(sHub>H[6]) notes.push(["bad",`Напряжение в ступице (${fmt(sHub,0)} МПа) выше предела текучести материала — ступица пластически деформируется или треснет. Увеличьте наружный диаметр ступицы или возьмите посадку с меньшим натягом.`]);
+  else if(sHub>0.8*H[6]) notes.push(["warn","Напряжение в ступице близко к пределу текучести — запаса почти нет."]);
+  if(pmin===0) notes.push(["warn","При наименьшем натяге смятие неровностей съедает весь натяг — гарантированного соединения нет. Возьмите посадку с бо́льшим натягом или уменьшите шероховатость."]);
+  notes.push(["note","Запрессовка: усилие посчитано для холодной сборки со смазкой (f ≈ 0,1) при наибольшем натяге — по нему выбирают пресс с запасом 20–30 %."]);
+  $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
+}
+calc();
+})();
+</script>
+
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

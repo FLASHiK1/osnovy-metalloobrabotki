@@ -1,0 +1,158 @@
+<title>Сборка с натягом</title>
+<meta name="description" content="Расчёт соединения с натягом: до какой температуры нагреть ступицу или охладить вал для сборки, контактное давление, передаваемый момент и усилие запрессовки по формулам Ляме.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: слева посадка и детали, справа температура нагрева крупно и способы сборки; ниже прочность соединения */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+.method{border-top:1px solid var(--line);padding-top:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline}
+.method b{font-size:14px}
+.method .v{font-family:var(--f-num);font-size:18px;font-weight:600;text-align:right}
+.method .hint{grid-column:1/-1}
+.ok{color:var(--ok)} .no{color:var(--bad)}
+.k4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:700px){ .k4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:860px){ .main{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Сборка с натягом</h1>
+      <p>Выберите посадку и материалы. Калькулятор скажет, до какой температуры нагреть ступицу или охладить вал, чтобы детали собрались свободно, и посчитает, какой момент выдержит соединение.</p>
+    </div>
+    <div class="std">формулы Ляме<br>ГОСТ 25347 (посадки)</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid3">
+        <div class="field"><label for="d"><span>Диаметр соединения d</span><i>мм</i></label><input type="text" id="d" inputmode="decimal"></div>
+        <div class="field"><label for="fit">Посадка</label><select id="fit">
+          <option>H7/p6</option><option>H7/r6</option><option selected>H7/s6</option><option>H8/s7</option><option>H7/n6</option><option value="custom">Свой натяг</option></select></div>
+        <div class="field"><label for="N"><span>Наибольший натяг</span><i>мм</i></label><input type="text" id="N" inputmode="decimal"></div>
+      </div>
+      <div class="hint" id="fitHint"></div>
+      <div class="grid2">
+        <div class="field"><label for="hubM">Материал ступицы (охватывающая)</label><select id="hubM"></select></div>
+        <div class="field"><label for="shM">Материал вала (охватываемая)</label><select id="shM"></select></div>
+        <div class="field"><label for="D2"><span>Наружный диаметр ступицы</span><i>мм</i></label><input type="text" id="D2" inputmode="decimal"></div>
+        <div class="field"><label for="d1"><span>Отверстие в валу (0 — сплошной)</span><i>мм</i></label><input type="text" id="d1" inputmode="decimal"></div>
+        <div class="field"><label for="L"><span>Длина соединения</span><i>мм</i></label><input type="text" id="L" inputmode="decimal"></div>
+        <div class="field"><label for="gap"><span>Зазор для свободной сборки</span><i>мм</i></label><input type="text" id="gap" inputmode="decimal" placeholder="авто: 0,001·d"></div>
+        <div class="field"><label for="f"><span>Коэфф. трения в соединении</span><i>f</i></label><input type="text" id="f" inputmode="decimal"></div>
+        <div class="field"><label for="u"><span>Смятие неровностей</span><i>мкм</i></label><input type="text" id="u" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Смятие неровностей ≈ 1,2·(Rz вала + Rz отверстия): при Ra 0,8 и 1,6 — около 11 мкм. Трение: 0,08–0,10 при запрессовке со смазкой, 0,12–0,18 при тепловой сборке.</div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Нагреть ступицу до</div><div class="big" id="T">—</div></div>
+      <div id="methods" style="display:flex;flex-direction:column;gap:10px"></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Прочность соединения</h2><span class="hint">при наименьшем натяге — гарантированно, при наибольшем — по прочности деталей</span></div>
+    <div class="kpis k4" id="kpis"></div>
+    <dl class="kv" id="extra"></dl>
+    <div style="display:flex;flex-direction:column;gap:8px" id="notes"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p><b>Температура нагрева</b> — чтобы отверстие увеличилось на наибольший натяг плюс зазор для свободной сборки:</p>
+      <div class="formula">ΔT = (Nmax + Sсб) / (α · d),   T = 20 °C + ΔT</div>
+      <p><b>Давление на поверхности контакта</b> по формулам Ляме для толстостенных цилиндров:</p>
+      <div class="formula">p = (N − u) / (d · (C₁/E₁ + C₂/E₂))
+C₁ = (1 + (d₁/d)²) / (1 − (d₁/d)²) − ν₁     вал
+C₂ = (1 + (d/D₂)²) / (1 − (d/D₂)²) + ν₂     ступица
+момент   T = p · π · d² · L · f / 2
+усилие   F = p · π · d · L · f</div>
+      <p>u — поправка на смятие микронеровностей, она уменьшает действующий натяг. Эквивалентное напряжение на внутренней поверхности ступицы: σ = 2·p / (1 − (d/D₂)²) — его сравнивают с пределом текучести.</p>
+      <p>Коэффициенты линейного расширения при охлаждении меньше, чем при нагреве, поэтому для азота и сухого льда взяты средние значения на этом интервале температур.</p>
+    </div>
+  </details>
+
+  <footer><span>Инженерная оценка. Для ответственных соединений учитывайте центробежные силы, рабочую температуру и разброс натяга по ГОСТ 25347.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// [название, E МПа, ν, α ·10⁻⁶ 1/К (20…200 °C), α при охлаждении до −78 и −196 °C, предел текучести МПа]
+const MAT=[["Сталь углеродистая (45, 40Х)",210000,.3,12,10.5,8.5,355],["Сталь закалённая (ШХ15, 40Х HRC 45+)",210000,.3,12,10.5,8.5,1200],["Нержавеющая 12Х18Н10Т",200000,.3,16.6,15,13,240],["Чугун серый СЧ20",110000,.25,10.5,9,7.5,200],["Чугун ВЧ50",160000,.28,11,9.5,8,320],["Бронза БрАЖ9-4",110000,.35,17,15,13,200],["Алюминий Д16Т",72000,.33,23,20.5,17,280]];
+// посадки: допуск отверстия и вала — по таблицам ГОСТ 25346/25347 для d ≤ 500
+const R_UP=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const F_UP=[3,6,10,18,30,40,50,65,80,100,120,140,160,180,200,225,250,280,315,355,400,450,500];
+const IT={6:[6,8,9,11,13,16,19,22,25,29,32,36,40],7:[10,12,15,18,21,25,30,35,40,46,52,57,63],8:[14,18,22,27,33,39,46,54,63,72,81,89,97]};
+const EI_={n:[4,8,10,12,15,17,20,23,27,31,34,37,40],p:[6,12,15,18,22,26,32,37,43,50,56,62,68]};
+const FEI={r:[10,15,19,23,28,34,34,41,43,51,54,63,65,68,77,80,84,94,98,108,114,126,132],s:[14,19,23,28,35,43,43,53,59,71,79,92,100,108,122,130,140,158,170,190,208,232,252]};
+function idx(d,UP){ for(let i=0;i<UP.length;i++) if(d<=UP[i]) return i; return -1; }
+function fitN(fit,d){ // [Nmax, Nmin] мкм
+  const i=idx(d,R_UP), fi=idx(d,F_UP); if(i<0||d<=0) return null;
+  const m=fit.match(/^H(\d)\/([a-z])(\d)$/); if(!m) return null;
+  const gh=+m[1], l=m[2], gs=+m[3];
+  const ES=IT[gh][i], ei=EI_[l]?EI_[l][i]:FEI[l][fi], es=ei+IT[gs][i];
+  return [es-0, ei-ES];
+}
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+const t3=v=>String(+v.toFixed(3)).replace(".",",");
+$("hubM").innerHTML=MAT.map((m,i)=>`<option value="${i}">${m[0]}</option>`).join("");
+$("shM").innerHTML=$("hubM").innerHTML;
+const KEY="natyag-v1";
+let st={d:"50",fit:"H7/s6",N:"",D2:"100",d1:"0",L:"60",gap:"",f:"0,14",u:"11",hubM:"0",shM:"0"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+["d","N","D2","d1","L","gap","f","u"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; if(id==="N"){ st.fit="custom"; $("fit").value="custom"; } calc(); }); });
+["fit","hubM","shM"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("change",()=>{ st[id]=$(id).value; calc(); }); });
+
+function calc(){
+  save();
+  const d=num(st.d), D2=num(st.D2), d1=num(st.d1)||0, L=num(st.L), f=num(st.f), u=(num(st.u)||0)/1000;
+  const H=MAT[+st.hubM], S=MAT[+st.shM];
+  let Nmax=NaN, Nmin=NaN;
+  if(st.fit!=="custom"){ const r=fitN(st.fit,d); if(r){ Nmax=r[0]/1000; Nmin=r[1]/1000; $("N").value=t3(Nmax); st.N=$("N").value; $("fitHint").textContent=`${st.fit} для Ø${t3(d)}: натяг от ${t3(Nmin)} до ${t3(Nmax)} мм (ГОСТ 25347).`; } else $("fitHint").textContent="Для посадки нужен диаметр до 500 мм."; }
+  else { Nmax=num(st.N); Nmin=Nmax*0.5; $("fitHint").textContent="Свой натяг: наименьший натяг для оценки прочности принят равным половине наибольшего."; }
+  const gap=num(st.gap)>0?num(st.gap):0.001*d;
+  const ok=d>0&&D2>d&&d1>=0&&d1<d&&L>0&&f>0&&Nmax>0;
+  [["d",d>0],["D2",D2>d],["d1",d1>=0&&d1<d],["L",L>0],["f",f>0]].forEach(([id,v])=>$(id).classList.toggle("bad",!v));
+  $("err").hidden=ok; $("err").textContent="Проверьте: наружный диаметр ступицы больше диаметра соединения, отверстие в валу меньше его, натяг и трение больше 0.";
+  if(!ok){ $("T").textContent="—"; ["methods","kpis","extra","notes"].forEach(id=>$(id).innerHTML=""); return; }
+  const need=Nmax+gap;
+  const dT=need/(H[3]*1e-6*d), T=20+dT;
+  $("T").innerHTML=`${fmt(Math.ceil(T/5)*5,0)}<small>°C</small>`;
+  const shrinkN2=S[5]*1e-6*d*216, shrinkCO2=S[4]*1e-6*d*98;
+  const meth=[];
+  const lim=+st.hubM===1?180:+st.hubM===6?150:350;
+  meth.push(`<div class="method"><b>Нагрев ступицы</b><span class="v ${T<=lim?"ok":"no"}">${fmt(T,0)} °C</span><span class="hint">ΔT = ${fmt(dT,0)} К при α = ${String(H[3]).replace(".",",")}·10⁻⁶. ${T<=120?"Можно в масляной ванне или индукционным нагревателем; подходит и для подшипников (не выше 120 °C).":T<=200?"Масляная ванна (до 200 °C), индукционный нагреватель или печь. Подшипники так нагревать нельзя — для них предел 120 °C.":T<=lim?"Печь или индукционный нагреватель. Следите за цветами побежалости.":`Выше допустимого для материала (${lim} °C): отпустится закалка или изменятся свойства. Комбинируйте с охлаждением вала.`}</span></div>`);
+  meth.push(`<div class="method"><b>Охлаждение вала в жидком азоте (−196 °C)</b><span class="v ${shrinkN2>=need?"ok":"no"}">−${t3(shrinkN2)} мм</span><span class="hint">${shrinkN2>=need?"Вал сожмётся больше, чем нужно: сборка без нагрева ступицы.":`Не хватит: нужно ${t3(need)} мм. Охлаждение вала + нагрев ступицы до ${fmt(20+(need-shrinkN2)/(H[3]*1e-6*d),0)} °C.`}</span></div>`);
+  meth.push(`<div class="method"><b>Охлаждение вала сухим льдом (−78 °C)</b><span class="v ${shrinkCO2>=need?"ok":"no"}">−${t3(shrinkCO2)} мм</span><span class="hint">${shrinkCO2>=need?"Достаточно для сборки.":`Не хватит: нужно ${t3(need)} мм. Вместе с нагревом ступицы до ${fmt(20+(need-shrinkCO2)/(H[3]*1e-6*d),0)} °C.`}</span></div>`);
+  meth.push(`<div class="method"><b>Нужно получить зазор</b><span class="v">${t3(need)} мм</span><span class="hint">Наибольший натяг ${t3(Nmax)} + зазор для сборки ${t3(gap)} мм.</span></div>`);
+  $("methods").innerHTML=meth.join("");
+  // Ляме
+  const C1=(1+(d1/d)**2)/(1-(d1/d)**2)-S[2], C2=(1+(d/D2)**2)/(1-(d/D2)**2)+H[2];
+  const k=d*(C1/S[1]+C2/H[1]);
+  const pmin=Math.max(0,(Nmin-u)/k), pmax=Math.max(0,(Nmax-u)/k);
+  const Tq=p=>p*Math.PI*d*d*L*f/2/1000, Fa=p=>p*Math.PI*d*L*f;
+  const sHub=2*pmax/(1-(d/D2)**2);
+  $("kpis").innerHTML=[["Давление, мин. натяг",fmt(pmin,0),"МПа"],["Момент (гарантир.)",fmt(Tq(pmin),0),"Н·м"],["Осевая сила (гарантир.)",fmt(Fa(pmin)/1000,1),"кН"],["Запрессовка, макс.",fmt(pmax*Math.PI*d*L*0.1/1000,1),"кН"]]
+   .map(([l,v,un])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${un}</small></span></div>`).join("");
+  $("extra").innerHTML=[["Натяг: наименьший / наибольший",t3(Nmin)+" / "+t3(Nmax)+" мм"],["Давление при наибольшем натяге",fmt(pmax,0)+" МПа"],["Эквивалентное напряжение в ступице",fmt(sHub,0)+" МПа (предел текучести ≈ "+H[6]+")"],["Момент при наибольшем натяге",fmt(Tq(pmax),0)+" Н·м"]]
+    .map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  const notes=[];
+  if(sHub>H[6]) notes.push(["bad",`Напряжение в ступице (${fmt(sHub,0)} МПа) выше предела текучести материала — ступица пластически деформируется или треснет. Увеличьте наружный диаметр ступицы или возьмите посадку с меньшим натягом.`]);
+  else if(sHub>0.8*H[6]) notes.push(["warn","Напряжение в ступице близко к пределу текучести — запаса почти нет."]);
+  if(pmin===0) notes.push(["warn","При наименьшем натяге смятие неровностей съедает весь натяг — гарантированного соединения нет. Возьмите посадку с бо́льшим натягом или уменьшите шероховатость."]);
+  notes.push(["note","Запрессовка: усилие посчитано для холодной сборки со смазкой (f ≈ 0,1) при наибольшем натяге — по нему выбирают пресс с запасом 20–30 %."]);
+  $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
+}
+calc();
+})();
+</script>

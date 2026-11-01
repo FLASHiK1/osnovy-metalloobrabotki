@@ -1,0 +1,164 @@
+<title>Калькулятор зубчатых колёс</title>
+<meta name="description" content="Геометрия цилиндрической зубчатой передачи: делительные диаметры, диаметры вершин и впадин, межосевое расстояние, коэффициент перекрытия, длина общей нормали. Определение модуля по шестерне.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: слева параметры пары, справа межосевое и схема зацепления; ниже размеры каждого колеса и «узнать модуль» */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pcard.g1{border-top:3px solid var(--accent)} .pcard.g2{border-top:3px solid var(--hot)}
+.pcard h2{font-size:16px}
+.mesh svg{display:block;width:100%;height:auto}
+.k3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:560px){ .k3{grid-template-columns:1fr} }
+@media (max-width:860px){ .main,.two{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Зубчатые колёса</h1>
+      <p>Введите модуль и числа зубьев — калькулятор посчитает размеры обоих колёс, межосевое расстояние и длину общей нормали для контроля. Ниже — как узнать модуль у готовой шестерни.</p>
+    </div>
+    <div class="std">ГОСТ 16532-70, ГОСТ 9563-60<br>исходный контур ГОСТ 13755-2015</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="m"><span>Модуль m</span><i>мм</i></label><input type="text" id="m" inputmode="decimal" list="mods"></div>
+        <div class="field"><label for="beta"><span>Угол наклона зуба β</span><i>°</i></label><input type="text" id="beta" inputmode="decimal"></div>
+        <div class="field"><label for="z1"><span>Зубьев шестерни z₁</span><i>шт</i></label><input type="text" id="z1" inputmode="numeric"></div>
+        <div class="field"><label for="z2"><span>Зубьев колеса z₂</span><i>шт</i></label><input type="text" id="z2" inputmode="numeric"></div>
+        <div class="field"><label for="b"><span>Ширина венца b</span><i>мм</i></label><input type="text" id="b" inputmode="decimal"></div>
+        <div class="field"><label for="alpha"><span>Угол профиля α</span><i>°</i></label><input type="text" id="alpha" inputmode="decimal"></div>
+      </div>
+      <datalist id="mods"></datalist>
+      <div class="hint">β = 0 — прямозубые колёса. Без смещения исходного контура (x = 0), стандартный контур: hₐ* = 1, c* = 0,25.</div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Межосевое расстояние</div><div class="big" id="aw">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="mesh" id="mesh"></div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="notes"></div>
+    </section>
+  </div>
+
+  <section class="two">
+    <article class="pcard g1" id="g1"></article>
+    <article class="pcard g2" id="g2"></article>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-find">
+    <div class="sheet-head"><h2 id="h-find">Узнать модуль у готовой шестерни</h2><span class="hint">прямозубая, без смещения</span></div>
+    <div class="grid3">
+      <div class="field"><label for="fz"><span>Число зубьев</span><i>шт</i></label><input type="text" id="fz" inputmode="numeric" value="24"></div>
+      <div class="field"><label for="fda"><span>Наружный диаметр (по вершинам)</span><i>мм</i></label><input type="text" id="fda" inputmode="decimal" value="52,1"></div>
+      <div class="field"><label for="fdp"><span>или Diametral Pitch</span><i>DP</i></label><input type="text" id="fdp" inputmode="decimal" placeholder="для дюймовых"></div>
+    </div>
+    <div id="findOut"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">торцовый модуль    mt = m / cos β
+делительный        d  = mt · z
+вершин             da = d + 2·m
+впадин             df = d − 2,5·m
+основной           db = d · cos αt,   tg αt = tg α / cos β
+межосевое          a  = (d₁ + d₂) / 2
+шаг                p  = π · m,  высота зуба h = 2,25·m</div>
+      <p><b>Длина общей нормали</b> (для прямозубых) — размер, который меряют микрометром с тарельчатыми губками через несколько зубьев: W = m · cos α · [π·(zw − 0,5) + z · inv α], где zw — число охватываемых зубьев, inv α = tg α − α.</p>
+      <p><b>Коэффициент торцового перекрытия</b> εα показывает, сколько пар зубьев в среднем одновременно в зацеплении; для плавной работы нужно не меньше 1,2. Меньше 17 зубьев у прямозубого колеса без смещения — подрезание ножки зуба.</p>
+      <p><b>Модуль по шестерне</b>: m = da / (z + 2). Для дюймовых колёс задают Diametral Pitch: m = 25,4 / DP.</p>
+    </div>
+  </details>
+
+  <footer><span>Геометрия без смещения исходного контура. Для колёс со смещением, внутреннего зацепления и прочностного расчёта нужен расчёт по ГОСТ 16532 и ГОСТ 21354.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const M1=[1,1.25,1.5,2,2.5,3,4,5,6,8,10,12,16,20,25], M2=[1.125,1.375,1.75,2.25,2.75,3.5,4.5,5.5,7,9,11,14,18,22];
+$("mods").innerHTML=M1.map(v=>`<option value="${String(v).replace(".",",")}">`).join("");
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+const rad=x=>x*Math.PI/180, inv=a=>Math.tan(a)-a;
+const KEY="shesterni-v1";
+let st={m:"2",beta:"0",z1:"20",z2:"45",b:"20",alpha:"20",fz:"24",fda:"52,1",fdp:""};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+["m","beta","z1","z2","b","alpha","fz","fda","fdp"].forEach(id=>{ $(id).value=st[id]; $(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }); });
+
+function gear(m,z,beta,alpha,b){
+  const mt=m/Math.cos(rad(beta)), at=Math.atan(Math.tan(rad(alpha))/Math.cos(rad(beta)));
+  const d=mt*z, da=d+2*m, df=d-2.5*m, db=d*Math.cos(at);
+  const r={z,d,da,df,db,mt,at};
+  if(beta===0){ const a=rad(alpha); let zw=Math.round(z*alpha/180+0.5); zw=Math.max(2,zw); r.zw=zw; r.W=m*Math.cos(a)*(Math.PI*(zw-0.5)+z*inv(a)); }
+  return r;
+}
+function calc(){
+  save();
+  const m=num(st.m), beta=num(st.beta)||0, z1=num(st.z1), z2=num(st.z2), b=num(st.b), alpha=num(st.alpha);
+  const ok=m>0&&z1>=5&&z2>=5&&Number.isInteger(z1)&&Number.isInteger(z2)&&beta>=0&&beta<45&&alpha>=14&&alpha<=30&&b>0;
+  [["m",m>0],["z1",z1>=5&&Number.isInteger(z1)],["z2",z2>=5&&Number.isInteger(z2)],["beta",beta>=0&&beta<45],["alpha",alpha>=14&&alpha<=30],["b",b>0]].forEach(([id,v])=>$(id).classList.toggle("bad",!v));
+  $("err").hidden=ok; $("err").textContent="Числа зубьев — целые от 5, угол наклона — от 0 до 45°, угол профиля — от 14 до 30°.";
+  find();
+  if(!ok){ $("aw").textContent="—"; ["kpis","mesh","notes","g1","g2"].forEach(id=>$(id).innerHTML=""); return; }
+  const g1=gear(m,z1,beta,alpha,b), g2=gear(m,z2,beta,alpha,b);
+  const a=(g1.d+g2.d)/2, u=z2/z1;
+  const pbt=Math.PI*g1.mt*Math.cos(g1.at);
+  const ea=(Math.sqrt((g1.da/2)**2-(g1.db/2)**2)+Math.sqrt((g2.da/2)**2-(g2.db/2)**2)-a*Math.sin(g1.at))/pbt;
+  const eb=beta>0?b*Math.sin(rad(beta))/(Math.PI*m):0;
+  $("aw").innerHTML=`${fmt(a,3)}<small>мм</small>`;
+  $("kpis").innerHTML=[["Передаточное число u",fmt(u,3),""],["Перекрытие εα",fmt(ea,3),""],["Шаг p",fmt(Math.PI*m,3),"мм"],["Высота зуба h",fmt(2.25*m,3),"мм"]]
+    .map(([l,v,un])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${un}</small></span></div>`).join("");
+  const card=(g,name)=>`<h2>${name}, z = ${g.z}</h2><dl class="kv">
+    <dt>Делительный диаметр d</dt><dd>${fmt(g.d,3)}</dd><dt>Диаметр вершин da</dt><dd>${fmt(g.da,3)}</dd><dt>Диаметр впадин df</dt><dd>${fmt(g.df,3)}</dd><dt>Основной диаметр db</dt><dd>${fmt(g.db,3)}</dd>
+    ${beta>0?`<dt>Торцовый модуль mt</dt><dd>${fmt(g.mt,4)}</dd>`:""}
+    ${g.W?`<div class="sep"></div><dt>Длина общей нормали W</dt><dd>${fmt(g.W,3)}</dd><dt>Через зубьев zw</dt><dd>${g.zw}</dd>`:""}</dl>`;
+  $("g1").innerHTML=card(g1,"Шестерня"); $("g2").innerHTML=card(g2,"Колесо");
+  const notes=[];
+  const zmin=Math.ceil(2*Math.cos(rad(beta))**3/Math.sin(rad(alpha))**2);
+  [[z1,"шестерни"],[z2,"колеса"]].forEach(([z,n])=>{ if(z<zmin) notes.push(["warn",`У ${n} ${z} зубьев — меньше ${zmin}: без смещения исходного контура будет подрезание ножки зуба. Нужно положительное смещение или больше зубьев.`]); });
+  if(ea<1.2) notes.push(["warn",`Коэффициент перекрытия ${fmt(ea,2)} меньше 1,2 — передача будет работать с ударами.`]);
+  if(!M1.includes(m)&&!M2.includes(m)) notes.push(["note",`Модуль ${String(m).replace(".",",")} не из стандартного ряда ГОСТ 9563. Ближайшие: ${M1.concat(M2).sort((x,y)=>Math.abs(x-m)-Math.abs(y-m)).slice(0,2).map(v=>String(v).replace(".",",")).join(" и ")}.`]);
+  if(beta>0) notes.push(["note",`Косозубая передача: осевое перекрытие εβ = ${fmt(eb,2)}${eb<1?" — меньше 1, увеличьте ширину венца или угол наклона":""}. Длина общей нормали для косозубых колёс считается иначе — здесь не показана.`]);
+  $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
+  drawMesh(g1,g2,a);
+}
+function drawMesh(g1,g2,a){
+  const W=460,H=230, sc=Math.min((W-40)/(g1.da/2+a+g2.da/2), (H-44)/Math.max(g1.da,g2.da));
+  const cy=H/2+10, x1=20+g1.da/2*sc, x2=x1+a*sc;
+  const circ=(x,r,c,dash,w)=>`<circle cx="${x.toFixed(1)}" cy="${cy}" r="${(r*sc).toFixed(1)}" fill="none" stroke="${c}" stroke-width="${w||1}"${dash?` stroke-dasharray="${dash}"`:""}/>`;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема зацепления: окружности вершин, делительные и впадин">`;
+  s+=`<circle cx="${x1}" cy="${cy}" r="${(g1.da/2*sc).toFixed(1)}" fill="var(--accent-soft)"/><circle cx="${x2}" cy="${cy}" r="${(g2.da/2*sc).toFixed(1)}" fill="var(--hot-soft)" fill-opacity=".8"/>`;
+  s+=circ(x1,g1.da/2,"var(--accent)",null,1.5)+circ(x1,g1.d/2,"var(--accent)","6 3 2 3")+circ(x1,g1.df/2,"var(--accent)","2 3");
+  s+=circ(x2,g2.da/2,"var(--hot)",null,1.5)+circ(x2,g2.d/2,"var(--hot)","6 3 2 3")+circ(x2,g2.df/2,"var(--hot)","2 3");
+  s+=`<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="var(--ink)" stroke-width="1"/><circle cx="${x1}" cy="${cy}" r="2.5" fill="var(--ink)"/><circle cx="${x2}" cy="${cy}" r="2.5" fill="var(--ink)"/>`;
+  s+=`<text x="${(x1+x2)/2}" y="${cy+16}" text-anchor="middle" font-family="var(--f-num)" font-size="12" fill="var(--ink)">a = ${fmt(a,2)}</text>`;
+  s+=`<text x="4" y="12" text-anchor="start" font-family="var(--f-ui)" font-size="11" fill="var(--muted)">сплошная — вершины, штрихпунктир — делительная, пунктир — впадины</text></svg>`;
+  $("mesh").innerHTML=s;
+}
+function find(){
+  const z=num(st.fz), da=num(st.fda), dp=num(st.fdp);
+  const out=$("findOut");
+  let m=NaN, how="";
+  if(dp>0){ m=25.4/dp; how=`m = 25,4 / ${String(dp).replace(".",",")} DP`; }
+  else if(z>=5&&da>0){ m=da/(z+2); how=`m = ${String(da).replace(".",",")} / (${z} + 2)`; }
+  if(!isFinite(m)){ out.innerHTML=`<p class="hint" style="margin:0">Введите число зубьев и наружный диаметр (по вершинам) — или Diametral Pitch для дюймовой шестерни.</p>`; return; }
+  const all=M1.concat(M2), near=all.slice().sort((x,y)=>Math.abs(x-m)-Math.abs(y-m))[0], dev=Math.abs(near-m)/near;
+  out.innerHTML=`<div class="kpis k3"><div class="kpi"><span class="l">Расчётный модуль</span><span class="v">${fmt(m,3)}<small>мм</small></span></div><div class="kpi"><span class="l">Ближайший стандартный</span><span class="v">${String(near).replace(".",",")}<small>${M1.includes(near)?"ряд 1":"ряд 2"}</small></span></div><div class="kpi"><span class="l">Расхождение</span><span class="v">${fmt(dev*100,1)}<small>%</small></span></div></div>
+   <p class="hint" style="margin:0">${how}. ${dev<0.02?"Совпадает со стандартным модулем — скорее всего это он.":dev<0.06?"Небольшое расхождение: шестерня изношена или нарезана со смещением. Проверьте по шагу или длине общей нормали.":"Большое расхождение: возможно, дюймовая шестерня (DP), колесо со смещением или нестандартный модуль. Попробуйте ввести DP."}${!(dp>0)?` Если шестерня дюймовая: DP ≈ ${fmt(25.4/m,2)}.`:""}</p>`;
+}
+calc();
+})();
+</script>
