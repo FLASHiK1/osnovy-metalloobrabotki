@@ -6,7 +6,8 @@ KEYS = {"posadki.html": "posadki-v1", "razmernye-cepi.html": "razm-cepi-v1", "re
         "rezby.html": "rezby-v1", "massa-metalla.html": "massa-v1", "sherokhovatost.html": "sherokh-v1",
         "gibka-lista.html": "gibka-v1", "rashod-elektrodov.html": "svarka-v1", "konusy.html": "konusy-v1",
         "raskroy-lista.html": "raskroy-v1", "sebestoimost.html": "sebest-v1", "dyuymy.html": "dyuymy-v1",
-        "zatyazhka.html": "zatyazhka-v1", "shesterni.html": "shesterni-v1", "natyag.html": "natyag-v1", "gkody.html": "gkody-v1"}
+        "zatyazhka.html": "zatyazhka-v1", "shesterni.html": "shesterni-v1", "natyag.html": "natyag-v1", "gkody.html": "gkody-v1",
+        "plastiny.html": "plastiny-v1", "vybor-instrumenta.html": "vybor-v1"}
 for f in sorted(glob.glob("*.html")):
     s = open(f, encoding="utf-8").read()
     s = re.sub(r"\n?<!--site:head-->.*?<!--/site:head-->", "", s, flags=re.S)

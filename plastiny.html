@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/plastiny.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Обозначение пластин и державок — Основы металлообработки">
+<meta property="og:description" content="Расшифровка обозначения сменных твердосплавных пластин по ISO 1832 (CNMG 120408, DNMG 150608, VBMT 160404) и токарных державок по ISO 5608 (PCLNR 2525M12): форма, задний угол, точность, размер, радиус.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/plastiny.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="plastiny-v1">
+<script src="assets/early.js"></script>
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Обозначение пластин и державок</title>
+<meta name="description" content="Расшифровка обозначения сменных твердосплавных пластин по ISO 1832 (CNMG 120408, DNMG 150608, VBMT 160404) и токарных державок по ISO 5608 (PCLNR 2525M12): форма, задний угол, точность, размер, радиус.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: поле обозначения и разбор по позициям карточками с рисунком формы; ниже — сборка обозначения и таблицы позиций */
+.dec input{font-size:22px;padding:10px 12px;font-family:var(--f-num);letter-spacing:.04em;text-transform:uppercase}
+.pos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.pc{border:1px solid var(--line);border-radius:5px;padding:10px;background:var(--paper);display:flex;flex-direction:column;gap:4px;min-width:0}
+.pc.bad{border-color:var(--bad);background:var(--bad-soft)}
+.pc .k{font-family:var(--f-num);font-size:22px;font-weight:700;color:var(--accent)}
+.pc .n{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.pc .t{font-size:13px;line-height:1.4}
+.vis{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:center}
+.vis svg{width:100%;height:auto;max-width:200px}
+.sum{font-size:15px;line-height:1.55}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.build{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+table.ref td:first-child{font-family:var(--f-num);font-weight:700;white-space:nowrap}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:860px){ .cols{grid-template-columns:1fr} .build{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:520px){ .vis{grid-template-columns:1fr} .vis svg{max-width:160px} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Обозначение пластин и державок</h1>
+      <p>Введите обозначение сменной пластины или токарной державки — калькулятор расшифрует каждую позицию: форму, задний угол, точность, размер, радиус при вершине, угол в плане.</p>
+    </div>
+    <div class="std">ISO 1832 (ГОСТ 19042)<br>ISO 5608 (державки)</div>
+  </header>
+
+  <section class="sheet dec">
+    <div class="tabs"><button type="button" class="pbtn on" data-k="ins">Пластина</button><button type="button" class="pbtn" data-k="hol">Державка</button></div>
+    <div class="field"><label for="code" id="codeLbl">Обозначение пластины</label><input type="text" id="code" autocomplete="off" spellcheck="false"></div>
+    <div class="chips" id="ex"></div>
+    <div class="vis"><div id="pic"></div><div class="sum" id="sum"></div></div>
+    <div class="pos" id="pos"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Собрать обозначение пластины</h2><span class="hint">выберите параметры — обозначение появится в поле вверху</span></div>
+    <div class="build" id="build"></div>
+  </section>
+
+  <div class="cols">
+    <section class="sheet"><h2>Форма пластины</h2><div class="tbl" id="tShape"></div><p class="hint" style="margin:0">Чем больше угол при вершине, тем прочнее кромка и тем больше допустимая подача, но тем хуже доступ к профилю. Круглая пластина — самая прочная, ромб 35° — для копирования сложного контура.</p></section>
+    <section class="sheet"><h2>Тип пластины (4-я буква)</h2><div class="tbl" id="tType"></div></section>
+    <section class="sheet"><h2>Задний угол (2-я буква)</h2><div class="tbl" id="tClr"></div><p class="hint" style="margin:0">Негативные пластины (N, 0°) — двусторонние, прочные, для черновой и средней обработки. Позитивные (B, C, P) — острая кромка, меньше сила резания: чистовая, нежёсткие детали, малые диаметры и расточка.</p></section>
+    <section class="sheet"><h2>Угол в плане державки (3-я буква)</h2><div class="tbl" id="tStyle"></div></section>
+  </div>
+
+  <details class="theory">
+    <summary>Как устроены обозначения</summary>
+    <div class="tbody">
+      <p><b>Пластина, ISO 1832</b>: <code>C N M G 12 04 08 - PM</code> — форма, задний угол, класс точности, тип (крепление и стружколом), длина режущей кромки в мм, толщина, радиус при вершине в десятых долях мм. После дефиса — стружколом производителя: он не стандартизован, но у многих фирм первая буква — группа материала (P, M, K, N, S), вторая — режим (F — чистовой, M — средний, R — черновой).</p>
+      <p><b>Державка, ISO 5608</b>: <code>P C L N R 25 25 M 12</code> — система крепления, форма пластины, угол в плане (тип державки), задний угол пластины, исполнение (R — правая, L — левая, N — нейтральная), высота и ширина хвостовика, длина державки, длина кромки пластины.</p>
+      <p>Длина режущей кромки в обозначении — целая часть в миллиметрах. Например, у ромба 80° со вписанной окружностью 12,7 мм сторона 12,9 мм — пишут «12»; у треугольника со вписанной окружностью 9,525 мм сторона 16,5 мм — «16».</p>
+    </div>
+  </details>
+
+  <footer><span>Расшифровка по ISO 1832 и ISO 5608. Стружколомы, марки сплавов и покрытия — в каталоге производителя.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// форма: [буква, название, угол при вершине, тип для расчёта стороны]
+const SHAPE={C:["Ромб 80°",80,"rh"],D:["Ромб 55°",55,"rh"],E:["Ромб 75°",75,"rh"],M:["Ромб 86°",86,"rh"],V:["Ромб 35°",35,"rh"],S:["Квадрат 90°",90,"sq"],T:["Треугольник 60°",60,"tr"],W:["Тригон 80° (ломаный треугольник)",80,"tg"],R:["Круглая",360,"rd"],K:["Параллелограмм 55°",55,"pg"],A:["Параллелограмм 85°",85,"pg"],B:["Параллелограмм 82°",82,"pg"],H:["Шестигранник 120°",120,"hx"],O:["Восьмигранник 135°",135,"oc"],P:["Пятигранник 108°",108,"pn"],L:["Прямоугольник 90°",90,"sq"]};
+const SHAPE_USE={C:"черновое и получистовое точение, подрезка — универсальная",D:"контурное точение, копирование, получистовая и чистовая обработка",V:"копирование сложного профиля, чистовая",S:"черновое точение и подрезка, фаски 45°, 4 кромки на стороне",T:"универсальная, 3 кромки; слабее C и S",W:"черновое и получистовое точение, 3 кромки по 80°",R:"черновая обработка, тяжёлые условия, профили с радиусами",K:"канавки, подрезка, специальные державки",E:"копирование",M:"копирование"};
+const CLR={A:3,B:5,C:7,D:15,E:20,F:25,G:30,N:0,P:11,O:"другой"};
+const TOL={A:"высокая точность, шлифованная",F:"высокая точность, шлифованная",C:"высокая точность, шлифованная",H:"очень высокая точность, шлифованная",E:"высокая точность, шлифованная",G:"шлифованная, вписанная окружность ±0,025 мм",J:"прессованная, допуск по вершине повышенный",K:"прессованная, допуск по вершине повышенный",L:"прессованная, допуск по вершине повышенный",M:"спечённая (прессованная), вписанная окружность ±0,05…0,15 мм — самая распространённая",N:"спечённая, допуск как у M, толщина точнее",U:"спечённая, грубая: вписанная окружность ±0,08…0,25 мм"};
+const TYP={N:"без отверстия, без стружколома",R:"без отверстия, стружколом с одной стороны",F:"без отверстия, стружколом с двух сторон",A:"с цилиндрическим отверстием, без стружколома",M:"с цилиндрическим отверстием, стружколом с одной стороны",G:"с цилиндрическим отверстием, стружколом с двух сторон — двусторонняя",W:"отверстие с зенковкой 40–60° под винт, без стружколома",T:"отверстие с зенковкой 40–60° под винт, стружколом с одной стороны",Q:"отверстие с двусторонней зенковкой 40–60°, без стружколома",U:"отверстие с двусторонней зенковкой 40–60°, стружколом с двух сторон",B:"отверстие с зенковкой 70–90°, без стружколома",H:"отверстие с зенковкой 70–90°, стружколом с одной стороны",X:"специальная конструкция — по каталогу"};
+const THK={"01":1.59,"T1":1.98,"02":2.38,"T2":2.78,"03":3.18,"T3":3.97,"04":4.76,"05":5.56,"06":6.35,"07":7.94,"09":9.52};
+const IC=[3.97,4.76,5.56,6.35,7.94,9.525,12.7,15.875,19.05,25.4,31.75];
+const CLAMP={C:"прихват сверху (клин-прихват) — для пластин без отверстия",M:"прихват сверху и штифт в отверстии",P:"рычаг через отверстие — для негативных пластин с отверстием",S:"винт через зенкованное отверстие — для позитивных пластин",D:"жёсткий клиновой прихват с двух сторон (система D)"};
+// угол в плане державки
+const STYLE={A:["90°","прямая, продольное точение"],B:["75°","прямая"],C:["90°","прямая, подрезка торца"],D:["45°","прямая, точение и фаски"],E:["60°","прямая"],F:["90°","отогнутая, подрезка торца"],G:["90°","отогнутая, продольное точение"],H:["107,5°","копирование"],J:["93°","контурное точение, копирование"],K:["75°","отогнутая, подрезка торца"],L:["95°","точение и подрезка — самая универсальная"],N:["63°","копирование"],P:["117,5°","копирование с подрезкой"],R:["75°","отогнутая, продольное точение"],S:["45°","отогнутая, точение, подрезка, фаски"],T:["60°","отогнутая"],U:["93°","копирование"],V:["72,5°","контурное точение, копирование"],Y:["85°","отогнутая"]};
+const LEN={A:32,B:40,C:50,D:60,E:70,F:80,G:90,H:100,J:110,K:125,L:140,M:150,N:160,P:170,Q:180,R:200,S:250,T:300,U:350,V:400,W:450,Y:500};
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+const f2=v=>String(+v.toFixed(3)).replace(".",",");
+function side(sh,ic){ const t=SHAPE[sh][2], a=SHAPE[sh][1]*Math.PI/180; if(t==="rh"||t==="pg") return ic/Math.sin(a); if(t==="sq") return ic; if(t==="tr") return ic*Math.sqrt(3); if(t==="tg") return ic*0.6848; return ic; }
+function icFrom(sh,code){ if(sh==="R") return +code; const n=+code; let best=null; for(const ic of IC){ if(Math.floor(side(sh,ic)+0.05)===n) best=ic; } return best; }
+
+let kind="ins";
+const KEY="plastiny-v1";
+let st={kind:"ins",ins:"CNMG 120408-PM",hol:"PCLNR 2525M12"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+const EXI=["CNMG 120408-PM","DNMG 150608","WNMG 080408","TNMG 160404","SNMG 120412","VBMT 160404","CCMT 09T304","DCGT 11T302","RCMT 1204M0"];
+const EXH=["PCLNR 2525M12","DDJNR 2525M15","PWLNR 2020K08","SVJBR 2020K16","SCLCR 1616H09","PSSNR 2525M12","MTJNL 2020K16"];
+function card(k,n,t,bad){ return `<div class="pc${bad?" bad":""}"><span class="n">${esc(n)}</span><span class="k">${esc(k)}</span><span class="t">${t}</span></div>`; }
+function drawShape(sh,clr,r){
+  const s=SHAPE[sh]; if(!s){ $("pic").innerHTML=""; return; }
+  const W=200,c=100,R0=70; let pts=[];
+  const t=s[2];
+  if(t==="rd"){ $("pic").innerHTML=`<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="Круглая пластина"><circle cx="${c}" cy="${c}" r="${R0}" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/><circle cx="${c}" cy="${c}" r="14" fill="var(--paper)" stroke="var(--accent)"/></svg>`; return; }
+  if(t==="rh"||t==="pg"){ const a=s[1]*Math.PI/180, L=R0*1.15, dx=L*Math.cos(a/2), dy=L*Math.sin(a/2); pts=[[c+dx,c],[c,c-dy],[c-dx,c],[c,c+dy]]; if(t==="pg"){ pts=[[c-L*0.75,c+dy*0.7],[c+L*0.25,c+dy*0.7],[c+L*0.75,c-dy*0.7],[c-L*0.25,c-dy*0.7]]; } }
+  else { const n={sq:4,tr:3,tg:3,hx:6,pn:5,oc:8}[t]||4, rot=t==="sq"?Math.PI/4:-Math.PI/2; for(let i=0;i<n;i++){ const a=rot+i*2*Math.PI/n; pts.push([c+R0*Math.cos(a),c+R0*Math.sin(a)]); }
+    if(t==="tg"){ const p2=[]; for(let i=0;i<3;i++){ const A=pts[i],B=pts[(i+1)%3]; const mx=(A[0]+B[0])/2, my=(A[1]+B[1])/2; p2.push(A,[c+(mx-c)*1.28,c+(my-c)*1.28]); } pts=p2; } }
+  const poly=pts.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ");
+  const tip=pts[0];
+  $("pic").innerHTML=`<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="${esc(s[0])}"><polygon points="${poly}" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>${/[AMGWTQUBH]/.test(st._typ||"")?`<circle cx="${c}" cy="${c}" r="12" fill="var(--paper)" stroke="var(--accent)"/>`:""}<circle cx="${tip[0].toFixed(1)}" cy="${tip[1].toFixed(1)}" r="4" fill="var(--hot)"/><text x="${c}" y="${W-6}" text-anchor="middle" font-family="var(--f-ui)" font-size="12" fill="var(--muted)">${esc(s[0])}</text></svg>`;
+}
+function decodeIns(raw){
+  const s=raw.toUpperCase().replace(/\s+/g,"");
+  const m=s.match(/^([A-Z])([A-Z])([A-Z])([A-Z])(\d{2})(T\d|\d{2})(\d{2}|M0)?(?:-?([A-Z0-9]+))?$/);
+  if(!m) return {err:"Не похоже на обозначение пластины ISO. Пример: CNMG 120408-PM"};
+  const [,sh,cl,to,ty,sz,th,rr,cb]=m; st._typ=ty;
+  const out=[], sum=[];
+  const S=SHAPE[sh]; out.push(card(sh,"1. Форма",S?`${S[0]}${SHAPE_USE[sh]?". "+SHAPE_USE[sh]:""}`:"неизвестная форма",!S));
+  const C=CLR[cl]; out.push(card(cl,"2. Задний угол",C!=null?(C===0?"0° — негативная, двусторонняя":C==="другой"?"особый угол — по каталогу":`${C}° — позитивная`):"неизвестно",C==null));
+  out.push(card(to,"3. Класс точности",TOL[to]||"неизвестно",!TOL[to]));
+  out.push(card(ty,"4. Тип",TYP[ty]||"неизвестно",!TYP[ty]));
+  let ic=null; if(S){ ic=icFrom(sh,sz); }
+  out.push(card(sz,"5. Длина кромки",S&&sh!=="R"?(ic?`${sz} мм (сторона ${f2(side(sh,ic))} мм), вписанная окружность ⌀${f2(ic)} мм`:`${sz} мм — нестандартный размер`):(sh==="R"?`диаметр ${sz} мм`:"—"),S&&!ic&&sh!=="R"));
+  const thv=THK[th.padStart(2,"0")]||THK[th]; out.push(card(th,"6. Толщина",thv?`${f2(thv)} мм`:"неизвестно",!thv));
+  if(rr){ const rv=rr==="00"?"острая вершина":rr==="M0"?"круглая пластина (метрическая)":`${f2(+rr/10)} мм`; out.push(card(rr,"7. Радиус при вершине",rv+(rr!=="00"&&rr!=="M0"?`. Наибольшая подача ≈ 0,6·r = ${f2(+rr/10*0.6)} мм/об`:""),false)); }
+  if(cb){ const g={P:"сталь",M:"нержавеющая сталь",K:"чугун",N:"алюминий и цветные",S:"жаропрочные и титан",H:"закалённая сталь"}[cb[0]], r={F:"чистовая",M:"средняя",R:"черновая"}[cb[1]]; out.push(card(cb,"Стружколом",g&&r?`по каталогу производителя; у многих фирм означает: ${g}, ${r} обработка`:"код производителя — смотрите каталог",false)); }
+  sum.push(`<b>${esc(raw.toUpperCase())}</b> — ${S?S[0].toLowerCase():"?"} пластина${C===0?", негативная":C>0?`, позитивная ${C}°`:""}, ${TYP[ty]?TYP[ty].split(",")[0]:""}${ic?`, вписанная окружность ⌀${f2(ic)} мм`:""}${thv?`, толщина ${f2(thv)} мм`:""}${rr&&rr!=="00"&&rr!=="M0"?`, радиус ${f2(+rr/10)} мм`:""}.`);
+  drawShape(sh,cl,rr);
+  return {out,sum};
+}
+function decodeHol(raw){
+  const s=raw.toUpperCase().replace(/\s+/g,"");
+  const m=s.match(/^([CMPSD])([A-Z])([A-Z])([A-Z])([RLN])(\d{2})(\d{2})([A-Z])(\d{2})$/);
+  if(!m) return {err:"Не похоже на обозначение державки ISO 5608. Пример: PCLNR 2525M12"};
+  const [,cp,sh,sy,cl,hd,h,b,ln,ed]=m; st._typ="";
+  const out=[];
+  out.push(card(cp,"1. Крепление",CLAMP[cp]||"неизвестно",!CLAMP[cp]));
+  out.push(card(sh,"2. Форма пластины",SHAPE[sh]?SHAPE[sh][0]:"неизвестно",!SHAPE[sh]));
+  const S=STYLE[sy]; out.push(card(sy,"3. Тип державки",S?`угол в плане κr = ${S[0]}, ${S[1]}`:"неизвестно",!S));
+  out.push(card(cl,"4. Задний угол пластины",CLR[cl]!=null?(CLR[cl]===0?"0° — под негативные пластины":`${CLR[cl]}° — под позитивные пластины`):"неизвестно",CLR[cl]==null));
+  out.push(card(hd,"5. Исполнение",{R:"правая — точение к патрону на станке с резцедержателем спереди",L:"левая",N:"нейтральная — точение в обе стороны"}[hd],false));
+  out.push(card(h+b,"6–7. Хвостовик",`высота ${+h} × ширина ${+b} мм`,false));
+  out.push(card(ln,"8. Длина",LEN[ln]?`${LEN[ln]} мм`:"неизвестно",!LEN[ln]));
+  out.push(card(ed,"9. Длина кромки пластины",`${ed} мм${SHAPE[sh]?` — подходит ${sh}…${ed}…, например ${sh}${cl}M${cp==="S"?"T":"G"} ${ed}${cp==="S"?"T3":"04"}08`:""}`,false));
+  drawShape(sh,cl,null);
+  return {out,sum:[`<b>${esc(raw.toUpperCase())}</b> — ${S?`державка с углом в плане ${S[0]}`:"державка"} под ${SHAPE[sh]?SHAPE[sh][0].toLowerCase():"?"} пластину${CLR[cl]===0?" (негативную)":" (позитивную)"}, хвостовик ${+h}×${+b} мм, длина ${LEN[ln]||"?"} мм, ${hd==="R"?"правая":hd==="L"?"левая":"нейтральная"}.`]};
+}
+function run(){
+  save();
+  const raw=$("code").value.trim();
+  const r=kind==="ins"?decodeIns(raw):decodeHol(raw);
+  $("code").classList.toggle("bad",!!r.err&&raw!=="");
+  if(r.err){ $("pos").innerHTML=""; $("sum").innerHTML=raw?`<div class="note bad">${r.err}</div>`:""; $("pic").innerHTML=""; return; }
+  $("pos").innerHTML=r.out.join(""); $("sum").innerHTML=r.sum.join("");
+}
+function setKind(k){ kind=k; st.kind=k; document.querySelectorAll("[data-k]").forEach(b=>b.classList.toggle("on",b.dataset.k===k));
+  $("codeLbl").textContent=k==="ins"?"Обозначение пластины":"Обозначение державки";
+  $("ex").innerHTML=(k==="ins"?EXI:EXH).map(e=>`<button type="button" class="pbtn" data-e="${e}">${e}</button>`).join("");
+  $("code").value=st[k]; run(); }
+document.querySelectorAll("[data-k]").forEach(b=>b.addEventListener("click",()=>setKind(b.dataset.k)));
+$("ex").addEventListener("click",e=>{ const b=e.target.closest("[data-e]"); if(!b) return; $("code").value=b.dataset.e; st[kind]=b.dataset.e; run(); });
+$("code").addEventListener("input",()=>{ st[kind]=$("code").value; run(); });
+// сборщик
+const B=[["sh","Форма",["C","D","S","T","V","W","R"].map(k=>[k,k+" — "+SHAPE[k][0]])],["cl","Задний угол",[["N","N — 0°, негативная"],["B","B — 5°"],["C","C — 7°"],["P","P — 11°"]]],["to","Точность",[["M","M — спечённая"],["G","G — шлифованная"],["U","U — грубая"],["E","E — точная"]]],["ty","Тип",["G","M","T","N","A","W"].map(k=>[k,k+" — "+TYP[k].split(",").slice(0,2).join(",")])],["ic","Вписанная окружность",[["6.35","6,35"],["9.525","9,525"],["12.7","12,7"],["15.875","15,875"],["19.05","19,05"]]],["th","Толщина",Object.keys(THK).map(k=>[k,k+" — "+f2(THK[k])+" мм"])],["rr","Радиус",[["02","0,2"],["04","0,4"],["08","0,8"],["12","1,2"],["16","1,6"]]],["cb","Стружколом",[["","нет"],["PF","PF — сталь, чистовая"],["PM","PM — сталь, средняя"],["PR","PR — сталь, черновая"],["MM","MM — нержавейка"],["KM","KM — чугун"]]]];
+const bv={sh:"C",cl:"N",to:"M",ty:"G",ic:"12.7",th:"04",rr:"08",cb:"PM"};
+$("build").innerHTML=B.map(([id,l,o])=>`<div class="field"><label for="b-${id}">${l}</label><select id="b-${id}">${o.map(([v,t])=>`<option value="${v}"${v===bv[id]?" selected":""}>${t}</option>`).join("")}</select></div>`).join("");
+$("build").addEventListener("change",e=>{ const id=e.target.id.slice(2); bv[id]=e.target.value;
+  let sz=bv.sh==="R"?String(Math.round(+bv.ic)).padStart(2,"0"):String(Math.floor(side(bv.sh,+bv.ic)+0.05)).padStart(2,"0");
+  const code=`${bv.sh}${bv.cl}${bv.to}${bv.ty} ${sz}${bv.th}${bv.sh==="R"?"M0":bv.rr}${bv.cb?"-"+bv.cb:""}`;
+  setKind("ins"); $("code").value=code; st.ins=code; run(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); });
+// справочные таблицы
+const tb=(head,rows)=>`<table class="ref"><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+$("tShape").innerHTML=tb(["Буква","Форма","Применение"],["C","D","S","T","V","W","R"].map(k=>[k,SHAPE[k][0],SHAPE_USE[k]]));
+$("tType").innerHTML=tb(["Буква","Крепление и стружколом"],["N","R","F","A","M","G","W","T"].map(k=>[k,TYP[k]]));
+$("tClr").innerHTML=tb(["Буква","Задний угол"],["N","A","B","C","P","D","E"].map(k=>[k,CLR[k]+"°"]));
+$("tStyle").innerHTML=tb(["Буква","κr","Назначение"],["A","B","D","F","J","K","L","N","R","S","V"].map(k=>[k,STYLE[k][0],STYLE[k][1]]));
+setKind(st.kind==="hol"?"hol":"ins");
+})();
+</script>
+
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

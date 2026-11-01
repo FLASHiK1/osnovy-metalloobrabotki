@@ -19,7 +19,7 @@ async function text(p, sel) { return norm(await p.textContent(sel)); }
 
 const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
   "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
-  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html",
+  "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
 
 (async () => {
@@ -180,6 +180,25 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
       const w2 = await text(p, "#words"); check("G83 с Q и R разобран для фрезерного", w2.includes("Глубокое сверление") && w2.includes("Глубина за один ход") && w2.includes("Плоскость R"), w2);
       await p.fill("#q", "резьб"); await settle(p);
       check("поиск «резьб» находит G76 и G84", (await text(p, "#rows")).includes("G76") && (await text(p, "#rows")).includes("G84"));
+      await done(p); }
+
+    console.log("Пластины и державки");
+    { const p = await page("plastiny.html");
+      await p.fill("#code", "CNMG 120408-PM"); await settle(p);
+      let t = await text(p, "#pos"); check("CNMG 120408: ромб 80°, ⌀12,7, толщина 4,76, радиус 0,8", ["Ромб 80°", "⌀12,7", "4,76 мм", "0,8 мм"].every(x => t.includes(x)), t);
+      await p.fill("#code", "TNMG 220408"); await settle(p);
+      t = await text(p, "#pos"); check("TNMG 22… → ⌀12,7 (сторона 22 мм)", t.includes("⌀12,7"), t);
+      await p.fill("#code", "CCMT 09T304"); await settle(p);
+      t = await text(p, "#pos"); check("CCMT 09T304: позитивная 7°, толщина 3,97, ⌀9,525", t.includes("7°") && t.includes("3,97") && t.includes("⌀9,525"), t);
+      await p.click("[data-k=hol]"); await p.fill("#code", "PCLNR 2525M12"); await settle(p);
+      t = await text(p, "#pos"); check("PCLNR 2525M12: κr 95°, 25×25, длина 150", t.includes("95°") && t.includes("высота 25 × ширина 25") && t.includes("150 мм"), t);
+      await done(p); }
+
+    console.log("Выбор инструмента");
+    { const p = await page("vybor-instrumenta.html");
+      check("сталь, получистовая, наружное, обычные → CNMG 120408-PM, P25", (await text(p, "#code")) === "CNMG 120408-PM" && (await text(p, "#rec")).includes("P25"), await text(p, "#code"));
+      await p.click('[data-q=prof][data-v=copy]'); await p.click('[data-q=op][data-v=f]'); await settle(p);
+      check("чистовое копирование → пластина V, позитивная", (await text(p, "#code")).startsWith("VC"), await text(p, "#code"));
       await done(p); }
 
     console.log("«Поделиться расчётом» и переходы");

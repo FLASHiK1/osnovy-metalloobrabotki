@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/vybor-instrumenta.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Выбор режущего инструмента — Основы металлообработки">
+<meta property="og:description" content="Как выбрать токарную пластину, фрезу, сверло и метчик: форма и радиус пластины, стружколом, марка твёрдого сплава по ISO и аналоги Т15К6, ВК8, покрытия, СОЖ. Мастер подбора и справочные таблицы.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/vybor-instrumenta.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="vybor-v1">
+<script src="assets/early.js"></script>
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<!-- Яндекс.Метрика: вставьте сюда код счётчика -->
+<title>Выбор режущего инструмента</title>
+<meta name="description" content="Как выбрать токарную пластину, фрезу, сверло и метчик: форма и радиус пластины, стружколом, марка твёрдого сплава по ISO и аналоги Т15К6, ВК8, покрытия, СОЖ. Мастер подбора и справочные таблицы.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* Layout: мастер подбора пластины (вопросы слева, рекомендация справа), под ним справочные разделы с оглавлением */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px;align-items:start}
+.q{display:flex;flex-direction:column;gap:6px}
+.q>span{font-size:12px;color:var(--muted);font-weight:600}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.rec{display:flex;flex-direction:column;gap:10px}
+.rrow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.rrow b{font-size:13px;color:var(--muted);font-weight:600}
+.rrow div{font-size:14px}
+.rrow .v{font-family:var(--f-num);font-size:17px;font-weight:700;color:var(--accent);margin-right:6px}
+.code{font-family:var(--f-num);font-size:clamp(22px,3vw,28px);font-weight:700}
+.toc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.iso{display:inline-block;width:22px;text-align:center;font-weight:700;font-size:12px;border-radius:3px;color:#fff}
+.iso.P{background:#2f6db3}.iso.M{background:#b8962e}.iso.K{background:#b5352c}.iso.N{background:#3c8a4a}.iso.S{background:#c46a1d}.iso.H{background:#6b6f73}
+table.ref td{font-size:14px}
+table.ref td:first-child{font-weight:600;white-space:nowrap}
+section.sheet p{margin:0;max-width:78ch;font-size:14px}
+@media (max-width:900px){ .main{grid-template-columns:1fr} }
+@media (max-width:520px){ .rrow{grid-template-columns:1fr;gap:2px} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Выбор режущего инструмента</h1>
+      <p>Ответьте на четыре вопроса — получите рекомендацию по токарной пластине: форма, радиус, стружколом, сплав и покрытие, с примером обозначения. Ниже — справочник по сплавам, покрытиям, фрезам, свёрлам, метчикам и СОЖ.</p>
+    </div>
+    <div class="std">ISO 513 (группы применения)<br>ISO 1832 (обозначения)</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Вопросы">
+      <div class="q"><span>1. Что обрабатываем</span><div class="opts" id="o-mat"></div></div>
+      <div class="q"><span>2. Операция</span><div class="opts" id="o-op"></div></div>
+      <div class="q"><span>3. Что точим</span><div class="opts" id="o-prof"></div></div>
+      <div class="q"><span>4. Условия</span><div class="opts" id="o-cond"></div></div>
+    </section>
+    <section class="sheet rec" aria-live="polite">
+      <div><div class="hint">Пример обозначения пластины</div><div class="code" id="code"></div></div>
+      <div id="rec" class="rec"></div>
+      <div class="chips" id="links"></div>
+    </section>
+  </div>
+
+  <nav class="toc" aria-label="Разделы справочника"><a href="#s-grades">Сплавы и группы ISO</a><a href="#s-coat">Покрытия</a><a href="#s-mill">Фрезы</a><a href="#s-drill">Свёрла</a><a href="#s-tap">Метчики</a><a href="#s-cool">СОЖ</a><a href="#s-trouble">Если что-то не так</a></nav>
+
+  <section class="sheet" id="s-grades">
+    <h2>Группы обрабатываемых материалов и твёрдые сплавы</h2>
+    <p>Буква группы ISO и цвет одинаковы у всех производителей: по ним подбирают и пластины, и режимы. Число после буквы (01…50) — от износостойкого сплава для чистовой обработки на стабильном станке (01–10) к вязкому для черновой и прерывистого резания (30–50).</p>
+    <div class="tbl"><table class="ref"><thead><tr><th>Группа</th><th>Материалы</th><th>Стружка и особенности</th></tr></thead><tbody>
+      <tr><td><span class="iso P">P</span> сталь</td><td>углеродистые и легированные стали, стальное литьё</td><td>сливная, нужен стружколом; основной износ — по задней поверхности и лунка</td></tr>
+      <tr><td><span class="iso M">M</span> нержавейка</td><td>аустенитные 12Х18Н10Т, 08Х18Н10, дуплекс</td><td>вязкая, налипает, наклёп — острая кромка, не останавливаться в резе</td></tr>
+      <tr><td><span class="iso K">K</span> чугун</td><td>серый СЧ, высокопрочный ВЧ, ковкий</td><td>элементная, абразивная пыль; часто без СОЖ</td></tr>
+      <tr><td><span class="iso N">N</span> цветные</td><td>алюминий, медь, латунь, бронза</td><td>налипание на кромку — полированная передняя поверхность, большой положительный угол</td></tr>
+      <tr><td><span class="iso S">S</span> жаропрочные</td><td>никелевые ХН77ТЮР, Inconel; титан ВТ6</td><td>высокая температура в зоне резания, малая скорость, обязательно СОЖ</td></tr>
+      <tr><td><span class="iso H">H</span> закалённые</td><td>стали 45–65 HRC, отбелённый чугун</td><td>керамика, CBN, малые глубины</td></tr>
+    </tbody></table></div>
+    <h3 style="margin-top:6px">Отечественные марки твёрдых сплавов и примерные группы ISO</h3>
+    <div class="tbl"><table class="ref"><thead><tr><th>Марка (ГОСТ 3882)</th><th>Группа ISO</th><th>Применение</th></tr></thead><tbody>
+      <tr><td>Т30К4</td><td>P01</td><td>чистовое точение стали, высокие скорости, стабильные условия</td></tr>
+      <tr><td>Т15К6</td><td>P10</td><td>получистовое и чистовое точение стали — самый распространённый</td></tr>
+      <tr><td>Т14К8</td><td>P20</td><td>черновое и получистовое точение стали</td></tr>
+      <tr><td>Т5К10</td><td>P30</td><td>черновое точение стали, неравномерный припуск</td></tr>
+      <tr><td>ТТ7К12</td><td>P40</td><td>тяжёлая черновая обработка стали, удары</td></tr>
+      <tr><td>ВК3, ВК3-М</td><td>K01</td><td>чистовая обработка чугуна и цветных</td></tr>
+      <tr><td>ВК6, ВК6-М</td><td>K10–K20</td><td>чугун, цветные металлы, нержавейка, жаропрочные — универсальный</td></tr>
+      <tr><td>ВК8</td><td>K20–K30</td><td>черновая обработка чугуна, нержавейки и жаропрочных, сверление</td></tr>
+    </tbody></table></div>
+    <p class="hint">Соответствие ориентировочное: в отечественной классификации нет покрытий и современных мелкозернистых сплавов. Импортные и китайские пластины подбирайте по группе ISO в каталоге производителя.</p>
+  </section>
+
+  <section class="sheet" id="s-coat">
+    <h2>Покрытия</h2>
+    <div class="tbl"><table class="ref"><thead><tr><th>Покрытие</th><th>Цвет</th><th>Где работает</th></tr></thead><tbody>
+      <tr><td>TiN</td><td>золотистый</td><td>универсальное для быстрорежущего инструмента: свёрла, метчики; до 500–600 °C</td></tr>
+      <tr><td>TiCN</td><td>серо-фиолетовый</td><td>твёрже TiN: метчики, фрезы по углеродистой стали, абразивные материалы</td></tr>
+      <tr><td>TiAlN, AlTiN</td><td>тёмно-фиолетовый, чёрный</td><td>высокие температуры, сталь и чугун, работа всухую, закалённая сталь; плохо — по алюминию</td></tr>
+      <tr><td>AlCrN</td><td>серый</td><td>жаропрочные сплавы, нержавейка, высокие скорости</td></tr>
+      <tr><td>CVD: TiCN + Al₂O₃</td><td>чёрный, жёлтый слой</td><td>толстое покрытие токарных пластин для стали и чугуна, черновая и средняя обработка</td></tr>
+      <tr><td>PVD (тонкое)</td><td>разный</td><td>острая кромка: нержавейка, жаропрочные, чистовая обработка, фрезерование</td></tr>
+      <tr><td>Без покрытия, DLC, ZrN</td><td>серебристый, золотистый</td><td>алюминий и цветные: покрытие не должно налипать, кромка — максимально острая</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="sheet" id="s-mill">
+    <h2>Концевые фрезы</h2>
+    <div class="tbl"><table class="ref"><thead><tr><th>Материал</th><th>Число зубьев</th><th>Угол спирали</th><th>Покрытие</th></tr></thead><tbody>
+      <tr><td><span class="iso N">N</span> алюминий</td><td>2–3: большие канавки для стружки</td><td>35–45°</td><td>без покрытия, DLC, ZrN; полированные канавки</td></tr>
+      <tr><td><span class="iso P">P</span> сталь</td><td>4; пазы — 3; чистовая — 5–6</td><td>30–45°</td><td>TiAlN, AlTiN</td></tr>
+      <tr><td><span class="iso M">M</span> нержавейка</td><td>4–5, неравный шаг против вибраций</td><td>35–45°</td><td>AlTiN, AlCrN</td></tr>
+      <tr><td><span class="iso K">K</span> чугун</td><td>4–6</td><td>30°</td><td>TiAlN, TiCN</td></tr>
+      <tr><td><span class="iso H">H</span> закалённая</td><td>4–6 и больше</td><td>30–45°</td><td>AlTiN, специальные</td></tr>
+    </tbody></table></div>
+    <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:4px;max-width:78ch">
+      <li>Вылет фрезы держите минимальным: жёсткость падает пропорционально кубу вылета. Длинные фрезы — только там, где без них не достать.</li>
+      <li>Фрезы с радиусом на углах служат заметно дольше, чем острые, — берите их, если чертёж допускает радиус в углу кармана.</li>
+      <li>Для черновой обработки — фрезы со стружкоделительными канавками («кукурузы»): меньше нагрузка и вибрации.</li>
+      <li>Попутное фрезерование (кромка входит в толстую часть стружки) на станках с ЧПУ предпочтительнее встречного: меньше наклёп и лучше поверхность.</li>
+    </ul>
+  </section>
+
+  <section class="sheet" id="s-drill">
+    <h2>Свёрла</h2>
+    <div class="tbl"><table class="ref"><thead><tr><th>Тип</th><th>Где применять</th><th>Глубина</th><th>Точность отверстия</th></tr></thead><tbody>
+      <tr><td>Спиральное Р6М5</td><td>универсальные станки, малые партии, мягкие материалы</td><td>до 5–10D с выводом</td><td>H12–H14, разбивка 0,1–0,3 мм</td></tr>
+      <tr><td>Твердосплавное монолитное</td><td>ЧПУ, серия; с внутренней подачей СОЖ — в 3–5 раз производительнее</td><td>3D, 5D, 8D; длинные — до 30D</td><td>H8–H10</td></tr>
+      <tr><td>Со сменными пластинами</td><td>отверстия от 12–14 мм, ЧПУ, большой съём</td><td>2–5D</td><td>H11–H12</td></tr>
+      <tr><td>Со сменной головкой</td><td>серия, Ø 8–40 мм, без переточки</td><td>1,5–12D</td><td>H8–H10</td></tr>
+      <tr><td>Ружейное</td><td>глубокие отверстия, высокая прямолинейность</td><td>20–100D и больше</td><td>H7–H9</td></tr>
+    </tbody></table></div>
+    <ul style="margin:0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:4px;max-width:78ch">
+      <li>Угол при вершине 118° — универсальный для Р6М5; 130–140° — для твёрдых и вязких материалов (нержавейка, легированная сталь) и у твердосплавных свёрл.</li>
+      <li>Перед сверлением на ЧПУ — центровка сверлом с углом не меньше угла сверла (обычно 90° или 120°), иначе сверло уводит.</li>
+      <li>Глубже 3–5 диаметров без внутренней подачи СОЖ сверлят с выводом (цикл G83).</li>
+    </ul>
+  </section>
+
+  <section class="sheet" id="s-tap">
+    <h2>Метчики</h2>
+    <div class="tbl"><table class="ref"><thead><tr><th>Тип</th><th>Куда идёт стружка</th><th>Отверстия</th></tr></thead><tbody>
+      <tr><td>С прямыми канавками</td><td>остаётся в канавках</td><td>чугун, латунь, короткая стружка; ручная нарезка</td></tr>
+      <tr><td>С подточкой (шахматный заход, «форма B»)</td><td>вперёд, по ходу метчика</td><td>сквозные — самый производительный вариант</td></tr>
+      <tr><td>Со спиральными канавками 35–45°</td><td>назад, из отверстия</td><td>глухие отверстия в стали, нержавейке, алюминии</td></tr>
+      <tr><td>Раскатник (бесстружечный)</td><td>стружки нет — витки выдавливаются</td><td>пластичные материалы: сталь до ~1000 МПа, алюминий, медь; отверстие больше, чем под нарезной</td></tr>
+    </tbody></table></div>
+    <p><b>Заборная часть</b> (DIN 2197): форма A — 6–8 витков, для сквозных отверстий и ручной нарезки; B — 3,5–5,5 витка с подточкой, сквозные; C — 2–3 витка, глухие и сквозные; E — 1,5–2 витка, глухие с малым недорезом. Чем короче заборная часть, тем больше нагрузка на первые витки.</p>
+  </section>
+
+  <section class="sheet" id="s-cool">
+    <h2>СОЖ</h2>
+    <div class="tbl"><table class="ref"><thead><tr><th>Материал</th><th>Что подавать</th></tr></thead><tbody>
+      <tr><td><span class="iso P">P</span> сталь</td><td>эмульсия 5–8 %; на высоких скоростях твердосплавными пластинами с покрытием можно всухую — но без перерывов подачи</td></tr>
+      <tr><td><span class="iso M">M</span> нержавейка</td><td>эмульсия 8–10 % обильно; масло для резьбонарезания и развёртывания</td></tr>
+      <tr><td><span class="iso K">K</span> чугун</td><td>обычно всухую с отсосом пыли; эмульсия — при сверлении глубоких отверстий</td></tr>
+      <tr><td><span class="iso N">N</span> алюминий</td><td>эмульсия 6–10 % или туман (МОЖ); всухую налипает на кромку</td></tr>
+      <tr><td><span class="iso S">S</span> жаропрочные, титан</td><td>эмульсия высокой концентрации под давлением, в зону резания</td></tr>
+      <tr><td><span class="iso H">H</span> закалённые</td><td>CBN и керамика — часто всухую: резкие перепады температуры вызывают трещины</td></tr>
+    </tbody></table></div>
+    <p>Главное правило для твёрдого сплава: либо обильно и постоянно, либо совсем без СОЖ. Прерывистое охлаждение даёт термические трещины на кромке.</p>
+  </section>
+
+  <section class="sheet" id="s-trouble">
+    <h2>Если что-то не так</h2>
+    <div class="tbl"><table class="ref"><thead><tr><th>Проблема</th><th>Что попробовать</th></tr></thead><tbody>
+      <tr><td>Быстрый износ по задней поверхности</td><td>снизить скорость резания; более износостойкий сплав (меньше число ISO)</td></tr>
+      <tr><td>Сколы кромки</td><td>более вязкий сплав (больше число ISO), пластина прочнее (больше угол при вершине, негативная), меньше подача на входе</td></tr>
+      <tr><td>Нарост на кромке</td><td>увеличить скорость; острая позитивная пластина; СОЖ; для алюминия — полированная пластина без покрытия</td></tr>
+      <tr><td>Длинная сливная стружка</td><td>увеличить подачу или глубину; стружколом для меньших подач (F вместо M)</td></tr>
+      <tr><td>Вибрации</td><td>уменьшить вылет; меньше радиус при вершине; угол в плане ближе к 90°; позитивная пластина; изменить обороты на 10–20 %</td></tr>
+      <tr><td>Плохая шероховатость</td><td>больше радиус при вершине или пластина Wiper; меньше подача; выше скорость</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <footer><span>Рекомендации общего характера. Точные марки сплавов, стружколомы и режимы — в каталоге производителя инструмента.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="plastiny.html">Пластины и державки</a></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const Q={
+ mat:[["P","Сталь"],["M","Нержавейка"],["K","Чугун"],["N","Алюминий, цветные"],["S","Жаропрочные, титан"],["H","Закалённая сталь"]],
+ op:[["f","Чистовая"],["m","Получистовая"],["r","Черновая"]],
+ prof:[["ext","Наружное, ступени"],["copy","Сложный контур, копирование"],["face","Торцы, подрезка"],["bore","Расточка отверстий"]],
+ cond:[["good","Хорошие: жёсткая деталь, ровный припуск"],["avg","Обычные"],["bad","Тяжёлые: удары, корка, вылет"]]
+};
+const KEY="vybor-v1";
+let st={mat:"P",op:"m",prof:"ext",cond:"avg"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+Object.keys(Q).forEach(k=>{ $("o-"+k).innerHTML=Q[k].map(([v,t])=>`<button type="button" class="pbtn" data-q="${k}" data-v="${v}">${t}</button>`).join(""); });
+document.querySelectorAll("[data-q]").forEach(b=>b.addEventListener("click",()=>{ st[b.dataset.q]=b.dataset.v; rec(); }));
+const MATNAME={P:"сталь",M:"нержавейка",K:"чугун",N:"алюминий",S:"жаропрочные",H:"закалённая сталь"};
+function rec(){
+  save();
+  document.querySelectorAll("[data-q]").forEach(b=>b.classList.toggle("on",st[b.dataset.q]===b.dataset.v));
+  const {mat,op,prof,cond}=st;
+  // форма
+  let shape, why;
+  if(prof==="copy"){ shape=op==="f"?"V":"D"; why=op==="f"?"ромб 35° — достаёт в узкие поднутрения":"ромб 55° — контур и копирование при достаточной прочности"; }
+  else if(prof==="bore"){ shape=op==="r"?"C":"D"; why=op==="r"?"ромб 80° — прочная вершина для черновой расточки":"ромб 55° — меньше сила отжима расточной оправки"; }
+  else if(prof==="face"){ shape=op==="r"?"S":"C"; why=op==="r"?"квадрат 90° — восемь прочных вершин":"ромб 80° — точение и подрезка одной пластиной"; }
+  else { shape=op==="r"?(cond==="bad"?"S":"C"):op==="f"?"C":"C"; why=op==="r"&&cond==="bad"?"квадрат — самая прочная вершина среди многогранных":"ромб 80° — универсальная: точение, подрезка, фаски"; if(op==="m"&&cond!=="bad"&&prof==="ext") why+=". Альтернатива — тригон W: три вершины по 80°"; }
+  if(mat==="H"){ shape=prof==="copy"?"D":"C"; }
+  if(mat==="S"&&op==="r"&&prof!=="copy"){ shape="R"; why="круглая — самая прочная кромка и тонкая стружка: жаропрочные любят именно её"; }
+  // негатив / позитив
+  const pos=prof==="bore"||mat==="N"||(op==="f"&&mat!=="K")||mat==="S"&&op!=="r";
+  const clr=pos?"C":"N", type=pos?"T":"G";
+  // радиус
+  const r=op==="f"?"04":op==="m"?"08":(cond==="bad"?"16":"12");
+  const rv=+r/10;
+  // стружколом
+  const cb=mat==="N"?"AL":mat==="H"?"":mat+({f:"F",m:"M",r:"R"}[op]);
+  // размер
+  const size={C:pos?"09":"12",D:pos?"11":"15",V:"16",S:"12",R:"12",W:"08",T:"16"}[shape];
+  const thick=shape==="R"?"04":pos?"T3":(shape==="V"?"04":"04");
+  const code=shape==="R"?`RC${pos?"M":"M"}${pos?"T":"X"} 1204M0`:`${shape}${clr}M${type} ${size}${thick}${r}${cb?"-"+cb:""}`;
+  $("code").textContent=code;
+  // сплав
+  const iso=mat+(cond==="good"?(op==="r"?"15":"10"):cond==="avg"?(op==="f"?"15":"25"):"30");
+  const coat={P:"CVD (толстое, TiCN + Al₂O₃)",K:"CVD (Al₂O₃)",M:"PVD или тонкое CVD",S:"PVD (TiAlN, AlCrN)",N:"без покрытия или DLC, полированная",H:"CBN или смешанная керамика"}[mat];
+  const ru={P:op==="f"?"Т15К6 (чистовая — Т30К4)":cond==="bad"?"Т5К10, ТТ7К12":"Т15К6, Т14К8",K:"ВК6, ВК8 для черновой",M:"ВК6, ВК8",S:"ВК6-М, ВК8",N:"ВК6, ВК3",H:"твёрдый сплав не годится — CBN, керамика"}[mat];
+  const fRange=op==="f"?[0.05,rv*0.5]:op==="m"?[0.15,Math.min(0.4,rv*0.5)]:[0.3,Math.min(0.7,rv*0.6)];
+  const ap=op==="f"?"0,2–1 мм":op==="m"?"1–3 мм":"3–8 мм";
+  const rows=[
+    ["Форма",`<span class="v">${shape}</span>${why}`],
+    ["Пластина",`<span class="v">${pos?"позитивная":"негативная"}</span>${pos?"острая кромка, меньше сила резания и отжим":"двусторонняя, прочная, вдвое больше кромок"}`],
+    ["Радиус при вершине",`<span class="v">${String(rv).replace(".",",")} мм</span>${op==="f"?"чистовая: меньше сила резания и вибрации":op==="r"?"черновая: прочнее вершина, больше подача":"компромисс прочности и шероховатости"}`],
+    ["Стружколом",`<span class="v">${cb||"—"}</span>${cb==="AL"?"для алюминия: острый, полированный — название у производителей разное":mat==="H"?"для CBN и керамики стружколом обычно не нужен; фаска на кромке":`${MATNAME[mat]}, ${({f:"чистовая",m:"средняя",r:"черновая"})[op]} обработка — так обозначают многие производители`}`],
+    ["Сплав ISO",`<span class="v">${iso}</span>${cond==="bad"?"вязкий сплав — выдержит удары":cond==="good"?"износостойкий — выше скорость и стойкость":"универсальный выбор"}`],
+    ["Покрытие",`<span class="v" style="font-size:14px">${coat}</span>`],
+    ["Отечественные аналоги",`${ru}`],
+    ["Стартовые режимы",`подача ${String(fRange[0]).replace(".",",")}–${String(+fRange[1].toFixed(2)).replace(".",",")} мм/об, глубина ${ap}`]
+  ];
+  $("rec").innerHTML=rows.map(([k,v])=>`<div class="rrow"><b>${k}</b><div>${v}</div></div>`).join("");
+  const mi={P:1,M:4,K:5,N:7,S:9,H:11}[mat];
+  $("links").innerHTML=window.siteLink?`<a class="btn sm" href="${siteLink("plastiny.html",{kind:"ins",ins:code})}">Расшифровать ${code.split(" ")[0]} →</a><a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"turn",mat:mi,tool:mat==="H"?"carb":"carb",vcManual:null,vals:{turn:{f:String(+((fRange[0]+fRange[1])/2).toFixed(2)).replace(".",","),re:String(rv).replace(".",",")}}})}">Режимы резания →</a>`:"";
+}
+rec();
+})();
+</script>
+
+<!--site:body--><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

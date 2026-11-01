@@ -24,6 +24,8 @@
 | shesterni.html | Зубчатые колёса |
 | natyag.html | Сборка с натягом |
 | gkody.html | G-коды и M-коды |
+| vybor-instrumenta.html | Выбор режущего инструмента |
+| plastiny.html | Обозначение пластин и державок |
 | massa-metalla.html | Масса металла |
 | analogi-staley.html | Аналоги сталей и сплавов |
 
