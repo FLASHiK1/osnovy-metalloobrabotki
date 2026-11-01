@@ -1,0 +1,168 @@
+<title>Калькулятор гибки листа</title>
+<meta name="description" content="Развёртка листовой детали при гибке: K-фактор по DIN 6935, припуск и вычет на изгиб, усилие гибки на листогибе, подбор V-матрицы, минимальный радиус.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: слева материал, толщина, радиус и полки; справа длина развёртки крупно, усилие и проверки; схема нейтрального слоя */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.flanges{display:flex;flex-direction:column;gap:8px}
+.frow{display:grid;grid-template-columns:40px minmax(0,1fr) 34px;gap:8px;align-items:center}
+.frow b{font-family:var(--f-num);font-size:13px;color:var(--muted)}
+.del{width:34px;height:34px;border-radius:4px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;font-size:18px}
+.del:hover{border-color:var(--line);color:var(--bad)}
+.big{font-family:var(--f-num);font-size:clamp(34px,5vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:400;margin-left:6px}
+.scheme svg{display:block;width:100%;max-width:460px;height:auto}
+.seg2{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-strong);border-radius:5px;overflow:hidden}
+.seg2 button{border:0;background:var(--paper);padding:7px;cursor:pointer;font-size:13px}
+.seg2 button+button{border-left:1px solid var(--line-strong)}
+.seg2 button[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+@media (max-width:860px){ .main{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Гибка листа</h1>
+      <p>Введите толщину, радиус и размеры полок с чертежа. Калькулятор посчитает длину развёртки, усилие гибки на листогибе и подскажет V-матрицу.</p>
+    </div>
+    <div class="std">K-фактор по DIN 6935<br>воздушная гибка в V-матрице</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="field"><label for="mat">Материал</label><select id="mat"></select></div>
+      <div class="grid3">
+        <div class="field"><label for="s"><span>Толщина s</span><i>мм</i></label><input type="text" id="s" inputmode="decimal" value="2"></div>
+        <div class="field"><label for="r"><span>Внутр. радиус r</span><i>мм</i></label><input type="text" id="r" inputmode="decimal" value="2"></div>
+        <div class="field"><label for="ang"><span>Угол гиба β</span><i>°</i></label><input type="text" id="ang" inputmode="decimal" value="90"></div>
+      </div>
+      <div class="hint">β — на сколько градусов загибается полка: для прямого угла 90°. Все гибы детали считаются с одинаковыми r и β.</div>
+      <div>
+        <div class="field" style="margin-bottom:8px"><label>Размеры полок на чертеже</label>
+          <div class="seg2" role="group" aria-label="Как проставлены размеры"><button type="button" data-dim="out" aria-pressed="true">Наружные</button><button type="button" data-dim="in" aria-pressed="false">Внутренние</button></div></div>
+        <div class="flanges" id="flanges"></div>
+        <button type="button" class="btn sm" id="addF" style="margin-top:8px">+ Добавить полку</button>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="kmode">K-фактор</label><select id="kmode"><option value="auto">Авто по DIN 6935</option><option value="man">Ввести вручную</option></select></div>
+        <div class="field"><label for="k"><span>K</span><i>доля s</i></label><input type="text" id="k" inputmode="decimal"></div>
+        <div class="field"><label for="Lb"><span>Длина линии гиба</span><i>мм</i></label><input type="text" id="Lb" inputmode="decimal" value="1000"></div>
+        <div class="field"><label for="V"><span>Ширина V-матрицы</span><i>мм</i></label><input type="text" id="V" inputmode="decimal" placeholder="авто"></div>
+      </div>
+      <div id="err" class="note bad" hidden></div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Длина развёртки</div><div class="big" id="L">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="extra"></dl>
+      <div style="display:flex;flex-direction:column;gap:8px" id="notes"></div>
+      <div class="scheme" id="scheme"></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p>При гибе наружные волокна растягиваются, внутренние сжимаются. Длину не меняет только нейтральный слой — он лежит на расстоянии K·s от внутренней поверхности. По нему и считают развёртку.</p>
+      <div class="formula">припуск на изгиб  BA = π · β/180 · (r + K·s)
+наружный отступ   OSSB = (r + s) · tan(β/2)
+развёртка (наружные размеры) = Σ полок − n·2·OSSB + n·BA
+вычет на изгиб    BD = 2·OSSB − BA
+K по DIN 6935:    K = (0,65 + 0,5·lg(r/s)) / 2,  не больше 0,5</div>
+      <p><b>Усилие воздушной гибки</b>: F = 1,33 · σв · s² · L / V, где σв — временное сопротивление, V — ширина матрицы. Рекомендуемая матрица: V ≈ 8·s до 3 мм, 10·s до 10 мм, 12·s толще. Внутренний радиус при воздушной гибке получается примерно V/6, минимальная полка ≈ 0,7·V.</p>
+      <p>Значения σв и минимальных радиусов — ориентировочные для отожжённого или горячекатаного листа. Для точной развёртки сделайте пробный гиб на своём листогибе и подберите K по факту.</p>
+    </div>
+  </details>
+
+  <footer><span>Результат — расчётный. Фактическая развёртка зависит от партии металла, инструмента и направления проката.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// [название, σв МПа, мин. радиус в долях s]
+const MATS=[["Сталь 08пс, Ст3, 10 (холоднокатаная/горячекатаная)",400,.5],["Сталь 09Г2С",490,1],["Сталь 45",600,1.5],["Нержавеющая 12Х18Н10Т, AISI 304",540,1],["Алюминий АД0, АМг2",200,1],["Алюминий АД31",200,1],["Алюминиевый сплав АМг6",320,2],["Дюралюминий Д16Т",420,3],["Медь М1 (мягкая)",220,.5],["Латунь Л63",340,.5]];
+const VSER=[4,6,8,10,12,16,20,25,32,40,50,63,80,100,125,160,200,250];
+const KEY="gibka-v1";
+let st={mat:0,s:"2",r:"2",ang:"90",dim:"out",fl:["50","100","50"],kmode:"auto",k:"",Lb:"1000",V:""};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x&&Array.isArray(x.fl)) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+$("mat").innerHTML=MATS.map((m,i)=>`<option value="${i}">${m[0]} — σв ≈ ${m[1]} МПа</option>`).join("");
+["mat","s","r","ang","kmode","k","Lb","V"].forEach(id=>{ $(id).value=st[id]; });
+document.querySelectorAll("[data-dim]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.dim===st.dim?"true":"false"));
+function renderF(){
+  $("flanges").innerHTML=st.fl.map((v,i)=>`<div class="frow"><b>${String.fromCharCode(1072+i)}</b><input type="text" id="f-${i}" inputmode="decimal" value="${v}" aria-label="Полка ${i+1}, мм"><button type="button" class="del" data-del="${i}" aria-label="Удалить полку"${st.fl.length<=2?" disabled":""}>×</button></div>`).join("");
+}
+$("flanges").addEventListener("input",e=>{ const i=+e.target.id.split("-")[1]; st.fl[i]=e.target.value; calc(); });
+$("flanges").addEventListener("click",e=>{ const b=e.target.closest("[data-del]"); if(!b||st.fl.length<=2) return; st.fl.splice(+b.dataset.del,1); renderF(); calc(); });
+$("addF").addEventListener("click",()=>{ if(st.fl.length>=8) return; st.fl.push("50"); renderF(); calc(); $("f-"+(st.fl.length-1)).focus(); });
+document.querySelectorAll("[data-dim]").forEach(b=>b.addEventListener("click",()=>{ st.dim=b.dataset.dim; document.querySelectorAll("[data-dim]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); calc(); }));
+["mat","kmode"].forEach(id=>$(id).addEventListener("change",()=>{ st[id]=$(id).value; calc(); }));
+["s","r","ang","k","Lb","V"].forEach(id=>$(id).addEventListener("input",()=>{ st[id]=$(id).value; calc(); }));
+
+function calc(){
+  save();
+  const m=MATS[+st.mat], s=num(st.s), r=num(st.r), b=num(st.ang), Lb=num(st.Lb);
+  const fl=st.fl.map(num);
+  let ok=s>0&&r>=0&&b>0&&b<180&&fl.every(x=>x>0);
+  ["s","ang"].forEach(id=>$(id).classList.toggle("bad",!(num(st[id])>0)));
+  $("r").classList.toggle("bad",!(r>=0));
+  fl.forEach((x,i)=>{ const el=$("f-"+i); if(el) el.classList.toggle("bad",!(x>0)); });
+  const auto=st.kmode==="auto";
+  let K=NaN;
+  if(s>0&&r>=0){ const rs=Math.max(r/s,0.05); K=Math.min(.5,Math.max(.2,(0.65+0.5*Math.log10(rs))/2)); }
+  if(auto){ $("k").value=isFinite(K)?String(+K.toFixed(3)).replace(".",","):""; $("k").readOnly=true; }
+  else { $("k").readOnly=false; K=num(st.k); $("k").classList.toggle("bad",!(K>0&&K<=.5)); if(!(K>0&&K<=.5)) ok=false; }
+  $("err").hidden=ok; $("err").textContent="Проверьте поля: толщина и полки больше 0, угол от 1 до 179°, K от 0 до 0,5.";
+  if(!ok){ $("L").textContent="—"; $("kpis").innerHTML=""; $("extra").innerHTML=""; $("notes").innerHTML=""; return; }
+  const n=fl.length-1, br=b*Math.PI/180;
+  const BA=br*(r+K*s), OSSB=(r+s)*Math.tan(br/2), ISSB=r*Math.tan(br/2);
+  const sum=fl.reduce((a,x)=>a+x,0);
+  const L=st.dim==="out"?sum-n*2*OSSB+n*BA:sum-n*2*ISSB+n*BA;
+  const BD=2*OSSB-BA;
+  // матрица и усилие
+  const mult=s<=3?8:s<=10?10:12;
+  let Vrec=VSER.find(v=>v>=s*mult*0.9)||VSER[VSER.length-1];
+  let V=num(st.V); const Vauto=!(V>0); if(Vauto) V=Vrec;
+  const F=1.33*m[1]*s*s*(Lb>0?Lb:1000)/V; // Н
+  const Fm=1.33*m[1]*s*s*1000/V;
+  $("L").innerHTML=`${fmt(L,2)}<small>мм</small>`;
+  $("kpis").innerHTML=[["Усилие гибки",fmt(F/9806.65,1),"тс"],["На 1 м гиба",fmt(Fm/9806.65,1),"тс/м"],["V-матрица"+(Vauto?" (рекоменд.)":""),fmt(V,0),"мм"],["Радиус от матрицы ≈",fmt(V/6,1),"мм"]]
+    .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}<small>${u}</small></span></div>`).join("");
+  $("extra").innerHTML=[["Число гибов",n],["K-фактор",fmt(K,3)+(auto?" (DIN 6935)":"")],["Припуск на изгиб BA",fmt(BA,3)+" мм"],["Вычет на изгиб BD",fmt(BD,3)+" мм"],["Нейтральный слой от внутр. стороны",fmt(K*s,3)+" мм"],["Масса заготовки 1 м шириной (сталь)",fmt(L*s*7.85/1000,2)+" кг"]]
+    .map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  const notes=[];
+  if(r<m[2]*s) notes.push(["bad",`Радиус меньше минимального для этого материала (≈ ${fmt(m[2]*s,1)} мм = ${String(m[2]).replace(".",",")}·s): возможны трещины на наружной стороне. Увеличьте радиус или гните поперёк проката.`]);
+  const minF=0.7*V, shortF=fl.map((x,i)=>[x,i]).filter(([x])=>x<minF);
+  if(shortF.length) notes.push(["warn",`Полка ${shortF.map(([,i])=>String.fromCharCode(1072+i)).join(", ")} короче ≈ ${fmt(minF,0)} мм (0,7·V): она провалится в матрицу V${fmt(V,0)}. Возьмите матрицу меньше или удлините полку.`]);
+  if(Math.abs(V/6-r)>Math.max(0.5,r*0.3)) notes.push(["note",`Матрица V${fmt(V,0)} при воздушной гибке даст радиус около ${fmt(V/6,1)} мм, а в расчёте ${fmt(r,1)} мм. Для точной развёртки подставьте фактический радиус или подберите матрицу ≈ V${fmt(r*6,0)}.`]);
+  $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
+  drawScheme(s,r,K,b);
+}
+function drawScheme(s,r,K,b){
+  // схема одного гиба (не в масштабе): внутренняя и наружная поверхности, нейтральный слой пунктиром
+  const W=460,H=230,cx=170,cy=110,T=18, ri=Math.max(6,Math.min(50,r/s*T)), ro=ri+T, rn=ri+K*T, br=b*Math.PI/180, F1=140, F2=95;
+  const P=(rad,th)=>[cx-rad*Math.sin(th), cy-rad*Math.cos(th)];
+  const dir=[-Math.cos(br), Math.sin(br)], la=b>180?1:0;
+  const f=v=>v.toFixed(1);
+  const [ix,iy]=P(ri,br),[ox,oy]=P(ro,br),[nx,ny]=P(rn,br);
+  const shape=`M${cx+F1},${f(cy-ri)} L${cx},${f(cy-ri)} A${f(ri)},${f(ri)} 0 ${la} 0 ${f(ix)},${f(iy)} L${f(ix+dir[0]*F2)},${f(iy+dir[1]*F2)} L${f(ox+dir[0]*F2)},${f(oy+dir[1]*F2)} L${f(ox)},${f(oy)} A${f(ro)},${f(ro)} 0 ${la} 1 ${cx},${f(cy-ro)} L${cx+F1},${f(cy-ro)} Z`;
+  const neu=`M${cx+F1},${f(cy-rn)} L${cx},${f(cy-rn)} A${f(rn)},${f(rn)} 0 ${la} 0 ${f(nx)},${f(ny)} L${f(nx+dir[0]*F2)},${f(ny+dir[1]*F2)}`;
+  const t=(x,y,txt,c,sz)=>`<text x="${x}" y="${f(y)}" font-family="var(--f-ui)" font-size="${sz||11}" fill="${c||"var(--muted)"}">${txt}</text>`;
+  $("scheme").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема гиба с нейтральным слоем, не в масштабе">
+   <path d="${shape}" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+   <path d="${neu}" fill="none" stroke="var(--hot)" stroke-width="1.5" stroke-dasharray="5 4"/>
+   <circle cx="${cx}" cy="${cy}" r="2" fill="var(--muted)"/>
+   ${t(cx+F1+6,cy-rn+4,"нейтральный слой","var(--hot)",12)}
+   ${t(cx+40,cy-ro-6,"наружная сторона")}${t(cx+40,cy-ri+14,"внутренняя сторона, r")}
+   ${t(10,16,`β = ${fmt(b,0)}°, K = ${fmt(K,3)} · схема не в масштабе`)}</svg>`;
+}
+renderF(); calc();
+})();
+</script>

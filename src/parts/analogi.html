@@ -1,0 +1,130 @@
+<title>Аналоги марок сталей и сплавов</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Зарубежные аналоги российских марок сталей и сплавов: ГОСТ, EN/DIN, AISI/ASTM, китайский GB. 40Х, 45, 12Х18Н10Т, ШХ15, Р6М5, Д16, ВТ6 и другие.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: строка поиска и фильтры групп, таблица соответствия во всю ширину; выбранная марка раскрывается карточкой */
+.search{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.search input{font-size:17px;padding:10px 12px}
+.grp{display:inline-block;font-size:11px;font-weight:600;border-radius:3px;padding:1px 6px;background:var(--bg);color:var(--muted);white-space:nowrap}
+table.an td{white-space:nowrap}
+table.an td.ru{font-weight:700;font-family:var(--f-num)}
+table.an td.m{font-family:var(--f-num);font-size:13px}
+table.an tbody tr{cursor:pointer}
+table.an tbody tr:hover td{background:var(--accent-soft)}
+table.an td .apx{color:var(--warn);font-weight:600;margin-left:2px}
+mark{background:var(--warn-soft);color:inherit;border-radius:2px}
+.empty{padding:20px 0;color:var(--muted)}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Аналоги марок сталей и сплавов</h1>
+      <p>Найдите российскую марку и её ближайшие аналоги по европейскому EN/DIN, американскому AISI/ASTM и китайскому GB. Поиск работает в обе стороны: можно ввести 1.4301, 304 или 40Cr.</p>
+    </div>
+    <div class="std">ГОСТ · EN 10027 · AISI/UNS · GB/T</div>
+  </header>
+
+  <section class="sheet">
+    <div class="search">
+      <div class="field"><label for="q">Марка в любой системе</label><input type="text" id="q" placeholder="например 40Х, C45, 1.4541, 52100, GCr15" autocomplete="off"></div>
+      <button type="button" class="btn" id="clear">Сбросить</button>
+    </div>
+    <div class="chips" id="groups"></div>
+    <div class="note warn">Аналог — это марка, близкая по химическому составу и назначению, а не точная копия. Механические свойства, допуски по составу и требования к поставке отличаются. Для ответственных деталей сравнивайте химсостав и свойства по стандартам обеих марок.</div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2 id="cnt">Марки</h2><span class="hint"><span class="apx">≈</span> — приближённое соответствие · нажмите на строку, чтобы скопировать</span></div>
+    <div class="tbl"><table class="an"><thead><tr><th>Россия (ГОСТ)</th><th>Стандарт</th><th>EN / DIN</th><th>Номер EN</th><th>AISI / ASTM / UNS</th><th>Китай GB</th><th>Группа</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <div class="empty" id="empty" hidden>Ничего не найдено. Попробуйте ввести марку без пробелов и дефисов или напишите нам, какую марку добавить.</div>
+  </section>
+
+  <footer><span>Соответствия составлены по справочным таблицам аналогов (марочники сталей и сплавов, стандарты EN 10027, ГОСТ, GB/T). Таблица будет пополняться.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// [ГОСТ марка, стандарт, EN/DIN имя, номер, AISI/ASTM, GB, группа, приближённо(поля)]
+const D=[
+ ["Ст3сп","ГОСТ 380","S235JR","1.0038","A283 Gr.C ≈","Q235B","Конструкционная"],
+ ["09Г2С","ГОСТ 19281","S355J2 ≈","1.0577","A572 Gr.50 ≈","Q355 (Q345)","Конструкционная"],
+ ["10","ГОСТ 1050","C10","1.0301","1010","10","Конструкционная"],
+ ["20","ГОСТ 1050","C22","1.0402","1020","20","Конструкционная"],
+ ["35","ГОСТ 1050","C35","1.0501","1035","35","Конструкционная"],
+ ["45","ГОСТ 1050","C45","1.0503","1045","45","Конструкционная"],
+ ["20Х","ГОСТ 4543","20Cr4","1.7027","5120","20Cr","Легированная"],
+ ["40Х","ГОСТ 4543","41Cr4","1.7035","5140","40Cr","Легированная"],
+ ["18ХГТ","ГОСТ 4543","20MnCr5 ≈","1.7147","—","20CrMnTi","Легированная"],
+ ["30ХГСА","ГОСТ 4543","—","—","—","30CrMnSiA","Легированная"],
+ ["40ХН2МА","ГОСТ 4543","34CrNiMo6","1.6582","4340","40CrNiMoA","Легированная"],
+ ["38Х2МЮА","ГОСТ 4543","41CrAlMo7-10","1.8509","—","38CrMoAl","Легированная"],
+ ["65Г","ГОСТ 14959","—","—","1066 ≈","65Mn","Пружинная"],
+ ["60С2А","ГОСТ 14959","61SiCr7 ≈","1.7108","9260 ≈","60Si2MnA","Пружинная"],
+ ["ШХ15","ГОСТ 801","100Cr6","1.3505","52100","GCr15","Подшипниковая"],
+ ["У8А","ГОСТ 1435","C80U","1.1525","W1 ≈","T8A","Инструментальная"],
+ ["У10А","ГОСТ 1435","C105U","1.1545","W1 ≈","T10A","Инструментальная"],
+ ["ХВГ","ГОСТ 5950","105WCr6 ≈","1.2419","—","CrWMn","Инструментальная"],
+ ["Х12МФ","ГОСТ 5950","X153CrMoV12 ≈","1.2379","D2 ≈","Cr12MoV","Инструментальная"],
+ ["5ХНМ","ГОСТ 5950","55NiCrMoV7","1.2714","L6 ≈","5CrNiMo","Инструментальная"],
+ ["4Х5МФС","ГОСТ 5950","X40CrMoV5-1","1.2344","H13","4Cr5MoSiV1","Инструментальная"],
+ ["Р6М5","ГОСТ 19265","HS6-5-2C","1.3343","M2","W6Mo5Cr4V2","Быстрорежущая"],
+ ["Р18","ГОСТ 19265","HS18-0-1","1.3355","T1","W18Cr4V","Быстрорежущая"],
+ ["12Х17","ГОСТ 5632","X6Cr17","1.4016","430","10Cr17","Нержавеющая"],
+ ["20Х13","ГОСТ 5632","X20Cr13","1.4021","420","20Cr13","Нержавеющая"],
+ ["40Х13","ГОСТ 5632","X46Cr13","1.4034","420 ≈","40Cr13","Нержавеющая"],
+ ["95Х18","ГОСТ 5632","X105CrMo17 ≈","1.4125","440C ≈","9Cr18","Нержавеющая"],
+ ["08Х18Н10","ГОСТ 5632","X5CrNi18-10","1.4301","304","06Cr19Ni10","Нержавеющая"],
+ ["12Х18Н10Т","ГОСТ 5632","X6CrNiTi18-10","1.4541","321","06Cr18Ni11Ti","Нержавеющая"],
+ ["03Х17Н14М3","ГОСТ 5632","X2CrNiMo17-12-2 ≈","1.4404","316L","022Cr17Ni12Mo2","Нержавеющая"],
+ ["10Х17Н13М2Т","ГОСТ 5632","X6CrNiMoTi17-12-2","1.4571","316Ti","06Cr17Ni12Mo2Ti","Нержавеющая"],
+ ["ХН77ТЮР","ГОСТ 5632","NiCr20TiAl","2.4952","Nimonic 80A, UNS N07080","GH4033","Жаропрочный никелевый"],
+ ["СЧ20","ГОСТ 1412","EN-GJL-200","5.1300","ASTM A48 Class 30 ≈","HT200","Чугун"],
+ ["ВЧ50","ГОСТ 7293","EN-GJS-500-7","5.3200","—","QT500-7","Чугун"],
+ ["Д16","ГОСТ 4784","EN AW-2024","AlCu4Mg1","2024","2A12","Алюминиевый"],
+ ["АМг6","ГОСТ 4784","AlMg6 ≈","—","5456 ≈","5A06","Алюминиевый"],
+ ["АД31","ГОСТ 4784","EN AW-6063","AlMg0,7Si","6063","6063","Алюминиевый"],
+ ["В95","ГОСТ 4784","EN AW-7075 ≈","AlZn5,5MgCu","7075 ≈","7A04","Алюминиевый"],
+ ["М1","ГОСТ 859","Cu-ETP ≈","CW004A","C11000","T2","Медь и сплавы"],
+ ["Л63","ГОСТ 15527","CuZn37","CW508L","C27200","H62 ≈","Медь и сплавы"],
+ ["ЛС59-1","ГОСТ 15527","CuZn39Pb2 ≈","CW612N","C37700 ≈","HPb59-1","Медь и сплавы"],
+ ["БрАЖ9-4","ГОСТ 18175","CuAl10Fe3 ≈","CW306G","C61900 ≈","QAl9-4","Медь и сплавы"],
+ ["ВТ1-0","ГОСТ 19807","Ti Grade 2 ≈","3.7035","Grade 2 ≈","TA2","Титановый"],
+ ["ВТ6","ГОСТ 19807","TiAl6V4","3.7165","Grade 5 (Ti-6Al-4V)","TC4","Титановый"]
+];
+const GROUPS=["Все",...new Set(D.map(r=>r[6]))];
+let grp="Все";
+function norm(s){ return String(s).toLowerCase().replace(/[\s\-.,()/]/g,"").replace(/ё/g,"е")
+  .replace(/[aceopxyhtkmb]/g,c=>({a:"а",c:"с",e:"е",o:"о",p:"р",x:"х",y:"у",h:"н",t:"т",k:"к",m:"м",b:"в"}[c])); }
+const LAT=s=>String(s).toLowerCase().replace(/[\s\-.,()/]/g,"");
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function cell(v,q){ let h=esc(v).replace(/ ≈/g,'<span class="apx">≈</span>'); return h; }
+$("groups").innerHTML=GROUPS.map(g=>`<button type="button" class="pbtn${g===grp?" on":""}" data-g="${g}">${g}</button>`).join("");
+$("groups").addEventListener("click",e=>{ const b=e.target.closest("[data-g]"); if(!b) return; grp=b.dataset.g; document.querySelectorAll("#groups .pbtn").forEach(x=>x.classList.toggle("on",x===b)); render(); });
+$("q").addEventListener("input",render);
+$("clear").addEventListener("click",()=>{ $("q").value=""; grp="Все"; document.querySelectorAll("#groups .pbtn").forEach(x=>x.classList.toggle("on",x.dataset.g==="Все")); render(); $("q").focus(); });
+function render(){
+  const q=$("q").value.trim(), nq=norm(q), lq=LAT(q);
+  const rows=D.filter(r=>(grp==="Все"||r[6]===grp)&&(!q||r.slice(0,6).some(v=>norm(v).includes(nq)||LAT(v).includes(lq))));
+  $("cnt").textContent=`Марки: ${rows.length}`;
+  $("empty").hidden=rows.length>0;
+  $("rows").innerHTML=rows.map((r,i)=>`<tr data-i="${D.indexOf(r)}" tabindex="0"><td class="ru">${esc(r[0])}</td><td class="muted">${esc(r[1])}</td><td class="m">${cell(r[2])}</td><td class="m">${cell(r[3])}</td><td class="m">${cell(r[4])}</td><td class="m">${cell(r[5])}</td><td><span class="grp">${esc(r[6])}</span></td></tr>`).join("");
+}
+function copyRow(i){
+  const r=D[i]; const t=`${r[0]} (${r[1]}) — EN: ${r[2]} / ${r[3]}; AISI/ASTM: ${r[4]}; GB: ${r[5]}`;
+  const ok=()=>toast("Скопировано: "+r[0]);
+  try{ navigator.clipboard.writeText(t).then(ok,()=>toast(t)); }catch(e){ toast(t); }
+}
+$("rows").addEventListener("click",e=>{ const tr=e.target.closest("tr[data-i]"); if(tr) copyRow(+tr.dataset.i); });
+$("rows").addEventListener("keydown",e=>{ if(e.key==="Enter"){ const tr=e.target.closest("tr[data-i]"); if(tr) copyRow(+tr.dataset.i); } });
+let tt=null;
+function toast(s){ const el=$("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2200); }
+render();
+})();
+</script>

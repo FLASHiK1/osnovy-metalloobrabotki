@@ -1,0 +1,157 @@
+<title>Калькулятор конусов</title>
+<meta name="description" content="Расчёт конуса: конусность, угол и уклон по диаметрам и длине, угол поворота верхних салазок, смещение задней бабки, конусы Морзе и нормальные конусности ГОСТ 8593.">
+<!--HEAD-->
+<style>
+/*BASE*/
+/* Layout: ввод слева со схемой конуса, справа конусность и способы обточки; ниже справочник Морзе и нормальных конусностей */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.seg3{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line-strong);border-radius:5px;overflow:hidden}
+.seg3 button{border:0;background:var(--paper);padding:8px;cursor:pointer;font-size:13px}
+.seg3 button+button{border-left:1px solid var(--line-strong)}
+.seg3 button[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+.cone svg{display:block;width:100%;max-width:460px;height:auto}
+.method{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.method b{font-size:14px}
+.method .v{font-family:var(--f-num);font-size:20px;font-weight:600}
+table.ref tbody tr{cursor:pointer}
+table.ref tbody tr:hover td{background:var(--accent-soft)}
+@media (max-width:860px){ .main{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Конусы</h1>
+      <p>По двум диаметрам и длине калькулятор найдёт конусность, угол и уклон. Покажет, на сколько повернуть верхние салазки или сместить заднюю бабку, чтобы выточить конус. Ниже — конусы Морзе и нормальные конусности.</p>
+    </div>
+    <div class="std">ГОСТ 8593-81, ГОСТ 25557-2016<br>(конусы Морзе)</div>
+  </header>
+
+  <div class="main">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="seg3" role="group" aria-label="Что известно"><button type="button" data-m="dd" aria-pressed="true">Знаю D, d и L</button><button type="button" data-m="dc" aria-pressed="false">Знаю D, конусность и L</button></div>
+      <div class="grid3" id="inputs"></div>
+      <div class="field"><label for="Ld"><span>Длина детали между центрами L<sub>д</sub></span><i>мм</i></label><input type="text" id="Ld" inputmode="decimal" placeholder="для смещения задней бабки"></div>
+      <div id="err" class="note bad" hidden></div>
+      <div class="cone" id="cone"></div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="extra"></dl>
+      <div id="methods" style="display:flex;flex-direction:column;gap:10px"></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Конусы Морзе</h2><span class="hint">нажмите строку, чтобы подставить в расчёт</span></div>
+    <div class="tbl" id="morse"></div>
+    <p class="hint" style="margin:0">D — диаметр в основной плоскости (у торца втулки). Конусности разных номеров Морзе немного отличаются — это исторические дюймовые размеры.</p>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Нормальные конусности и углы</h2><span class="hint">ГОСТ 8593-81</span></div>
+    <div class="tbl" id="norm"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">конусность   C = (D − d) / L         записывают как 1 : (1/C)
+уклон        i = C / 2
+угол конуса  α = 2 · arctg(C/2)
+угол уклона  α/2 — на него поворачивают верхние салазки
+смещение задней бабки  h = (D − d)/2 · Lд / L</div>
+      <p>Смещение задней бабки подходит для длинных пологих конусов: обычно не больше ±15 мм и не больше 1/50 длины детали, иначе центровые отверстия разбиваются. Поворотом верхних салазок точат короткие конусы любого угла, но подача только ручная.</p>
+    </div>
+  </details>
+
+  <footer><span>Углы округлены до секунды. Для калибров и инструментальных конусов сверяйте с ГОСТ 25557 и ГОСТ 2848.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const MORSE=[["Морзе 0",9.045,19.212],["Морзе 1",12.065,20.047],["Морзе 2",17.780,20.020],["Морзе 3",23.825,19.922],["Морзе 4",31.267,19.254],["Морзе 5",44.399,19.002],["Морзе 6",63.348,19.180],["Метрический 4",4,20],["Метрический 6",6,20],["Метрический 80",80,20],["Метрический 100",100,20]];
+const NORM=[["1:200",1/200],["1:100",1/100],["1:50",1/50],["1:30",1/30],["1:20",1/20],["1:15",1/15],["1:12",1/12],["1:10",1/10],["1:8",1/8],["1:7",1/7],["1:5",1/5],["1:3",1/3],["7:24",7/24],["30°",null,30],["45°",null,45],["60°",null,60],["75°",null,75],["90°",null,90],["120°",null,120]];
+const USE={"1:50":"конические штифты","1:20":"метрические инструментальные конусы","1:10":"посадки на вал с передачей момента","7:24":"хвостовики фрез: SK, BT, ISO","1:16":"трубная коническая резьба","60°":"центровые отверстия, резьба","90°":"зенковки, фаски","120°":"защитные фаски центровых","1:5":"легкоразъёмные соединения","1:3":"быстроразъёмные соединения"};
+const KEY="konusy-v1";
+let st={mode:"dd",D:"30",d:"25",L:"50",C:"1:10",Ld:"200"};
+try{ const x=JSON.parse(localStorage.getItem(KEY)||"null"); if(x) st=Object.assign(st,x); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^-?\d*\.?\d+$/.test(t)?+t:NaN; }
+function fmt(v,d){ if(!isFinite(v)) return "—"; const s=v.toFixed(d); const [a,b]=s.split("."); const ai=a.replace(/\B(?=(\d{3})+(?!\d))/g," "); return b?ai+","+b:ai; }
+function dms(deg){ let t=Math.round(deg*3600); const d=Math.floor(t/3600); t-=d*3600; const m=Math.floor(t/60), s=t-m*60; return `${d}°${String(m).padStart(2,"0")}′${String(s).padStart(2,"0")}″`; }
+function parseC(s){ // «1:20», «7:24», «0,05», «3°» (угол конуса)
+  const t=String(s).trim().replace(/,/g,".").replace(/\s+/g,"");
+  let m=t.match(/^(\d*\.?\d+):(\d*\.?\d+)$/); if(m) return +m[1]/+m[2];
+  m=t.match(/^(\d*\.?\d+)°$/); if(m) return 2*Math.tan(+m[1]/2*Math.PI/180);
+  m=t.match(/^\d*\.?\d+$/); if(m) return +t;
+  return NaN;
+}
+function renderInputs(){
+  document.querySelectorAll("[data-m]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===st.mode?"true":"false"));
+  const f=(id,l,u,ph)=>`<div class="field"><label for="${id}"><span>${l}</span><i>${u}</i></label><input type="text" id="${id}" inputmode="decimal" value="${st[id]||""}"${ph?` placeholder="${ph}"`:""}></div>`;
+  $("inputs").innerHTML=st.mode==="dd"?f("D","Больший диаметр D","мм")+f("d","Меньший диаметр d","мм")+f("L","Длина конуса L","мм")
+    :f("D","Больший диаметр D","мм")+f("C","Конусность","1:x или угол°","1:20 или 60°")+f("L","Длина конуса L","мм");
+}
+$("inputs").addEventListener("input",e=>{ st[e.target.id]=e.target.value; calc(); });
+$("Ld").value=st.Ld; $("Ld").addEventListener("input",()=>{ st.Ld=$("Ld").value; calc(); });
+document.querySelectorAll("[data-m]").forEach(b=>b.addEventListener("click",()=>{ st.mode=b.dataset.m; renderInputs(); calc(); }));
+
+function calc(){
+  save();
+  const D=num(st.D), L=num(st.L);
+  let d, C;
+  if(st.mode==="dd"){ d=num(st.d); C=(D-d)/L; } else { C=parseC(st.C); d=D-C*L; }
+  const ok=D>0&&L>0&&C>0&&d>=0&&isFinite(C);
+  ["D","L"].forEach(id=>$(id)&&$(id).classList.toggle("bad",!(num(st[id])>0)));
+  if($("d")) $("d").classList.toggle("bad",!(num(st.d)>=0&&num(st.d)<D));
+  if($("C")) $("C").classList.toggle("bad",!(parseC(st.C)>0));
+  $("err").hidden=ok; $("err").textContent=st.mode==="dd"?"Меньший диаметр должен быть меньше большего, длина — больше 0.":"Конусность — в виде 1:20, 7:24, 0,05 или угол конуса 60°. Меньший диаметр не должен получиться отрицательным.";
+  if(!ok){ $("kpis").innerHTML=""; $("extra").innerHTML=""; $("methods").innerHTML=""; $("cone").innerHTML=""; return; }
+  const half=Math.atan(C/2)*180/Math.PI, full=2*half;
+  $("kpis").innerHTML=[["Конусность","1 : "+fmt(1/C,C>.1?3:2),""],["Угол конуса α",dms(full),""],["Угол уклона α/2",dms(half),""],[st.mode==="dd"?"Уклон i":"Меньший диаметр d",st.mode==="dd"?fmt(C/2,5):fmt(d,3),st.mode==="dd"?"":"мм"]]
+   .map(([l,v,u])=>`<div class="kpi"><span class="l">${l}</span><span class="v" style="font-size:clamp(18px,2.4vw,24px)">${v}<small>${u}</small></span></div>`).join("");
+  let near=null; for(const n of NORM){ const c=n[1]!=null?n[1]:2*Math.tan(n[2]/2*Math.PI/180); if(Math.abs(c-C)/C<0.0005) near=(near?near+", ":"")+n[0]; }
+  for(const m of MORSE) if(Math.abs(1/m[2]-C)/C<0.0005) near=(near?near+", ":"")+m[0];
+  $("extra").innerHTML=[["Конусность (десятичная)",fmt(C,5)],["α/2 в градусах",fmt(half,4)+"°"],["Разница радиусов",fmt((D-d)/2,3)+" мм"],["Совпадает со стандартной",near||"нет"]].map(([a,v])=>`<dt>${a}</dt><dd>${v}</dd>`).join("");
+  const Ld=num(st.Ld), meth=[];
+  meth.push(`<div class="method"><b>Поворот верхних салазок</b><span class="v">${dms(half)}</span><span class="hint">Поверните салазки на угол уклона α/2. Подходит для коротких конусов любой крутизны; длина ограничена ходом салазок (обычно 100–150 мм).</span></div>`);
+  if(Ld>0){
+    const h=(D-d)/2*Ld/L, okH=h<=15&&h<=Ld/50;
+    meth.push(`<div class="method"><b>Смещение задней бабки</b><span class="v">${fmt(h,2)} мм</span><span class="hint">${Ld<L?"Длина детали меньше длины конуса — проверьте Lд.":okH?"В допустимых пределах: не больше 15 мм и 1/50 длины детали.":`<span style="color:var(--bad)">Слишком большое смещение (допустимо до ${fmt(Math.min(15,Ld/50),1)} мм): центровые отверстия разобьются. Точите поворотом салазок или по копирной линейке.</span>`}</span></div>`);
+  }
+  meth.push(`<div class="method"><b>Конусная (копирная) линейка</b><span class="v">${dms(half)}</span><span class="hint">Установите линейку на угол α/2 — для длинных конусов с механической подачей. Обычно до 10–12°.</span></div>`);
+  meth.push(`<div class="method"><b>Станок с ЧПУ</b><span class="v">X${fmt(d,3).replace(",",".")} → X${fmt(D,3).replace(",",".")} на Z ${fmt(L,2).replace(",",".")}</span><span class="hint">Программирование в диаметрах: линейный ход G01 от меньшего диаметра к большему на длине L. Не забудьте коррекцию на радиус вершины (G41/G42), иначе конус выйдет с ошибкой.</span></div>`);
+  $("methods").innerHTML=meth.join("");
+  drawCone(D,d,L,full);
+}
+function drawCone(D,d,L,full){
+  const W=460,H=170,x0=60,x1=340,cy=85, sc=Math.min(110/D, 1e9), hD=Math.max(30,D/2*sc), hd=Math.max(8,hD*d/D);
+  const s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема конуса, не в масштабе">
+   <line x1="30" y1="${cy}" x2="${W-60}" y2="${cy}" stroke="var(--muted)" stroke-dasharray="10 3 2 3"/>
+   <path d="M${x0},${cy-hD} L${x1},${cy-hd} L${x1},${cy+hd} L${x0},${cy+hD} Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+   <text x="${x0-8}" y="${cy+4}" text-anchor="end" font-family="var(--f-num)" font-size="12" fill="var(--ink)">⌀${fmt(D,2)}</text>
+   <text x="${x1+8}" y="${cy+4}" font-family="var(--f-num)" font-size="12" fill="var(--ink)">⌀${fmt(d,2)}</text>
+   <line x1="${x0}" y1="${cy+hD+14}" x2="${x1}" y2="${cy+hD+14}" stroke="var(--ink)"/><line x1="${x0}" y1="${cy+hD+8}" x2="${x0}" y2="${cy+hD+20}" stroke="var(--ink)"/><line x1="${x1}" y1="${cy+hD+8}" x2="${x1}" y2="${cy+hD+20}" stroke="var(--ink)"/>
+   <text x="${(x0+x1)/2}" y="${Math.min(H-4,cy+hD+30)}" text-anchor="middle" font-family="var(--f-num)" font-size="12" fill="var(--ink)">L = ${fmt(L,1)}</text>
+   <text x="${(x0+x1)/2}" y="${cy-hD-6>12?cy-hD-6:12}" text-anchor="middle" font-family="var(--f-num)" font-size="12" fill="var(--hot)">α = ${dms(full)}</text></svg>`;
+  $("cone").innerHTML=s;
+}
+$("morse").innerHTML=`<table class="ref"><thead><tr><th>Конус</th><th class="n">D, мм</th><th class="n">Конусность</th><th class="n">α/2</th></tr></thead><tbody>${MORSE.map((m,i)=>`<tr data-mi="${i}" tabindex="0"><td><b>${m[0]}</b></td><td class="n">${fmt(m[1],3)}</td><td class="n">1 : ${fmt(m[2],3)}</td><td class="n">${dms(Math.atan(1/m[2]/2)*180/Math.PI)}</td></tr>`).join("")}</tbody></table>`;
+$("norm").innerHTML=`<table class="ref"><thead><tr><th>Обозначение</th><th class="n">Конусность</th><th class="n">Угол α</th><th class="n">α/2</th><th>Где применяется</th></tr></thead><tbody>${NORM.map((n,i)=>{const c=n[1]!=null?n[1]:2*Math.tan(n[2]/2*Math.PI/180); const a=2*Math.atan(c/2)*180/Math.PI; return `<tr data-ni="${i}" tabindex="0"><td><b>${n[0]}</b></td><td class="n">${n[1]!=null?fmt(c,5):"1 : "+fmt(1/c,3)}</td><td class="n">${dms(a)}</td><td class="n">${dms(a/2)}</td><td class="muted">${USE[n[0]]||""}</td></tr>`;}).join("")}</tbody></table>`;
+function pick(e){
+  const tr=e.target.closest("tr[data-mi],tr[data-ni]"); if(!tr) return;
+  st.mode="dc";
+  if(tr.dataset.mi!=null){ const m=MORSE[+tr.dataset.mi]; st.D=String(m[1]).replace(".",","); st.C="1:"+String(m[2]).replace(".",","); }
+  else { const n=NORM[+tr.dataset.ni]; st.C=n[0]; }
+  renderInputs(); calc(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); toast("Подставлено: "+tr.cells[0].textContent);
+}
+["morse","norm"].forEach(id=>{ $(id).addEventListener("click",pick); $(id).addEventListener("keydown",e=>{ if(e.key==="Enter") pick(e); }); });
+let tt=null; function toast(s){ const el=$("toast"); el.textContent=s; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),1800); }
+renderInputs(); calc();
+})();
+</script>

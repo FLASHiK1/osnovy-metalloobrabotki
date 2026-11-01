@@ -1,0 +1,16 @@
+{
+  "name": "Основы металлообработки",
+  "short_name": "Металлообработка",
+  "description": "Инженерные калькуляторы: посадки, размерные цепи, шероховатость, режимы резания, резьбы, конусы, гибка, сварка, масса, аналоги сталей.",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f3f0",
+  "theme_color": "#1d5a7a",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
