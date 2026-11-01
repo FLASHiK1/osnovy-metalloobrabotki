@@ -9,7 +9,8 @@ KEYS = {"posadki.html": "posadki-v1", "razmernye-cepi.html": "razm-cepi-v1", "re
         "zatyazhka.html": "zatyazhka-v1", "shesterni.html": "shesterni-v1", "natyag.html": "natyag-v1", "gkody.html": "gkody-v1",
         "plastiny.html": "plastiny-v1", "vybor-instrumenta.html": "vybor-v1",
         "marki-staley.html": "marki-v1", "podshipniki.html": "podsh-v1", "dopuski-formy.html": "dopforma-v1", "cveta-pobezhalosti.html": "cveta-v1",
-        "rezba-rezcom.html": "rezcom-v1", "edinicy.html": "edinicy-v1"}
+        "rezba-rezcom.html": "rezcom-v1", "edinicy.html": "edinicy-v1",
+        "raschet-vala.html": "val-v1", "bolt-na-srez.html": "boltsrez-v1", "svarnoy-shov.html": "shov-v1", "pruzhina-szhatiya.html": "pruzhina-v1", "progib-balki.html": "balka-v1", "remennaya-peredacha.html": "remen-v1", "cepnaya-peredacha.html": "cep-v1", "gidrocilindr.html": "gidro-v1", "marshrut-otverstiya.html": "otverstie-v1", "normirovanie.html": "norm-v1"}
 METRIKA_HEAD = """<!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){

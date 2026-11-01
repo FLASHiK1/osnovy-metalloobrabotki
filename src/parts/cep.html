@@ -1,0 +1,87 @@
+<title>Цепная передача: число звеньев и межосевое</title>
+<meta name="description" content="Расчёт геометрии цепной передачи с роликовой цепью: передаточное число, делительные диаметры звёздочек, число звеньев цепи, уточнённое межосевое расстояние, скорость цепи и длина. Шаги по ГОСТ 13568 и ISO 606.">
+<!--HEAD-->
+<style>
+/*BASE*/
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Цепная передача: число звеньев и межосевое</h1>
+      <p>Выберите шаг цепи, числа зубьев звёздочек и примерное межосевое расстояние. Калькулятор посчитает число звеньев (округлит до чётного, чтобы не ставить переходное звено), точное межосевое под это число и диаметры звёздочек.</p>
+    </div>
+    <div class="std">Приводные роликовые цепи<br>ГОСТ 13568, ISO 606</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="p">Шаг цепи</label><select id="p"></select></div>
+        <div class="field"><label for="n1"><span>Обороты ведущей звёздочки</span><i>об/мин</i></label><input type="text" id="n1" inputmode="decimal"></div>
+        <div class="field"><label for="z1"><span>Зубьев ведущей z₁</span></label><input type="text" id="z1" inputmode="numeric"></div>
+        <div class="field"><label for="z2"><span>Зубьев ведомой z₂</span></label><input type="text" id="z2" inputmode="numeric"></div>
+        <div class="field"><label for="a"><span>Межосевое (примерно)</span><i>мм</i></label><input type="text" id="a" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Рекомендуемое межосевое — 30–50 шагов цепи. Для ведущей звёздочки рекомендуется z₁ ≈ 29 − 2·u, но не меньше 13; при скорости выше 2 м/с — не меньше 17.</div>
+      <div id="err" class="note bad" hidden>Проверьте поля: числа зубьев от 7 до 200, межосевое больше суммы радиусов звёздочек.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Число звеньев цепи</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">u = z₂ / z₁
+d = p / sin(180° / z)                                        — делительный диаметр звёздочки
+Lt = 2a/p + (z₁ + z₂)/2 + ((z₂ − z₁)/(2π))² · p/a          — число звеньев, округляют до чётного
+a = p/4 · [Lt − (z₁+z₂)/2 + √((Lt − (z₁+z₂)/2)² − 8·((z₂ − z₁)/(2π))²)]
+v = z₁ · p · n₁ / 60 000                                     — скорость цепи, м/с
+w = 4 · z₁ · n₁ / (60 · Lt)                                  — число ударов звена о зубья в секунду</div>
+      <p>Межосевое уменьшают на 0,2–0,4 %, чтобы цепь имела небольшое провисание: туго натянутая цепь быстро изнашивается. Если межосевое не регулируется, ставят натяжную звёздочку.</p>
+      <p>Нечётное число звеньев требует переходного звена, а оно слабее основных. Поэтому число звеньев округляют до чётного. Тогда лучше брать нечётное z₁, чтобы износ распределялся по зубьям равномерно.</p>
+      <p>Разрушающую нагрузку и допустимую частоту вращения для выбранной цепи берите по ГОСТ 13568 или каталогу производителя.</p>
+    </div>
+  </details>
+
+  <footer><span>Геометрический расчёт роликовой цепной передачи. Выбор цепи по нагрузке — по стандарту или каталогу.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const P=[[8,"8,0 (ПР-8)"],[9.525,"9,525 (3/8″)"],[12.7,"12,7 (1/2″)"],[15.875,"15,875 (5/8″)"],[19.05,"19,05 (3/4″)"],[25.4,"25,4 (1″)"],[31.75,"31,75 (1¼″)"],[38.1,"38,1 (1½″)"],[44.45,"44,45 (1¾″)"],[50.8,"50,8 (2″)"],[63.5,"63,5 (2½″)"]];
+$("p").innerHTML=P.map(x=>`<option value="${x[0]}">${x[1]} мм</option>`).join("");
+const st={p:"15.875",n1:"200",z1:"19",z2:"38",a:"600"};
+C.bind("cep-v1",st,["p","n1","z1","z2","a"],calc);
+function calc(){
+  const v=C.read(st,{n1:[0,1e5],z1:[7,200],z2:[7,400],a:[1,1e5]});
+  const p=+st.p, z1=Math.round(v.z1), z2=Math.round(v.z2);
+  const d=z=>p/Math.sin(Math.PI/z), ok=v.ok&&z2>=z1&&v.a>(d(z1)+d(z2))/2;
+  if(v.ok&&!ok){ $("z2").classList.toggle("bad",z2<z1); $("a").classList.toggle("bad",v.a<=(d(z1)+d(z2))/2); }
+  $("err").hidden=ok; $("warn").hidden=true;
+  if(!ok){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; return; }
+  const u=z2/z1, D=(z2-z1)/(2*Math.PI), S=(z1+z2)/2;
+  const Lraw=2*v.a/p+S+D*D*p/v.a, Lt=Math.max(2,Math.round(Lraw/2)*2);
+  const K=Lt-S, a=p/4*(K+Math.sqrt(K*K-8*D*D)), sp=z1*p*v.n1/60000, w=4*z1*v.n1/(60*Lt);
+  $("big").innerHTML=`${Lt}<small>звеньев</small>`;
+  C.kpis($("kpis"),[["Межосевое точно",f(a,1),"мм"],["Монтажное (−0,3 %)",f(a*0.997,1),"мм"],["Длина цепи",f(Lt*p/1000,3),"м"],["Скорость цепи",f(sp,2),"м/с"]]);
+  C.kv($("kv"),[["Передаточное число u",f(u,3)],["Обороты ведомой",v.n1?f(v.n1/u,1)+" об/мин":"—"],["Делительный диаметр ведущей",f(d(z1),2)+" мм"],["Делительный диаметр ведомой",f(d(z2),2)+" мм"],["Расчётное число звеньев",f(Lraw,2)],["Межосевое в шагах",f(a/p,1)],["Ударов звена в секунду",f(w,1)],["Рекомендуемое z₁ для u = "+f(u,2),String(Math.max(13,Math.round(29-2*u)))]]);
+  const okA=a/p>=30&&a/p<=50, okZ=z1>=(sp>2?17:13);
+  C.verdict($("ver"),okA&&okZ,[okA?`межосевое ${f(a/p,0)} шагов — в рекомендуемых 30–50`:`межосевое ${f(a/p,0)} шагов — вне рекомендуемых 30–50`,okZ?"число зубьев ведущей достаточно":`мало зубьев ведущей: при ${f(sp,1)} м/с нужно не меньше ${sp>2?17:13}`].join("; ")+".");
+  const wn=[]; if(u>7) wn.push("Передаточное число больше 7 — лучше две ступени."); if(sp>15) wn.push("Скорость цепи выше 15 м/с — проверьте допустимую частоту вращения по каталогу, нужна хорошая смазка."); if(z2>120) wn.push("Больше 120 зубьев на ведомой: изношенная цепь начнёт соскакивать.");
+  if(wn.length){ $("warn").hidden=false; $("warn").textContent=wn.join(" "); }
+}
+calc();
+})();
+</script>

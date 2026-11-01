@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/progib-balki.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Прогиб и прочность балки — Основы металлообработки">
+<meta property="og:description" content="Расчёт балки на изгиб: максимальный момент, напряжение и прогиб для консоли, балки на двух опорах и с защемлёнными концами при сосредоточенной и распределённой нагрузке. Сечения: прямоугольник, круг, труба, профильная труба или свои I и W.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/progib-balki.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="balka-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Прогиб и прочность балки</title>
+<meta name="description" content="Расчёт балки на изгиб: максимальный момент, напряжение и прогиб для консоли, балки на двух опорах и с защемлёнными концами при сосредоточенной и распределённой нагрузке. Сечения: прямоугольник, круг, труба, профильная труба или свои I и W.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+.schemes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.schemes button{font:inherit;font-size:12px;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);border-radius:5px;padding:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.schemes button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.schemes svg{width:100%;max-width:120px;height:auto}
+@media (max-width:480px){ .schemes{grid-template-columns:repeat(2,minmax(0,1fr))} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Прогиб и прочность балки</h1>
+      <p>Выберите схему закрепления и нагрузку, затем сечение и материал. Калькулятор найдёт наибольший изгибающий момент, напряжение и прогиб и сравнит их с допускаемыми.</p>
+    </div>
+    <div class="std">Сопротивление материалов<br>Изгиб балки постоянного сечения</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="schemes" id="scheme" role="group" aria-label="Схема"></div>
+      <div class="grid2">
+        <div class="field"><label for="L"><span>Пролёт (вылет) L</span><i>мм</i></label><input type="text" id="L" inputmode="decimal"></div>
+        <div class="field" id="Fbox"><label for="F"><span>Сила F</span><i>кН</i></label><input type="text" id="F" inputmode="decimal"></div>
+        <div class="field" id="qbox"><label for="q"><span>Распределённая нагрузка q</span><i>кН/м</i></label><input type="text" id="q" inputmode="decimal"></div>
+        <div class="field" id="abox"><label for="a"><span>Расстояние от левой опоры до силы</span><i>мм</i></label><input type="text" id="a" inputmode="decimal"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="sec">Сечение</label><select id="sec"><option value="rect">Прямоугольник b × h</option><option value="round">Круг d</option><option value="tube">Труба D × t</option><option value="rtube">Профильная труба B × H × t</option><option value="own">Свои I и W (двутавр, швеллер…)</option></select></div>
+        <div class="field" data-s="rect rtube"><label for="b"><span id="bl">Ширина b</span><i>мм</i></label><input type="text" id="b" inputmode="decimal"></div>
+        <div class="field" data-s="rect rtube"><label for="h"><span id="hl">Высота h</span><i>мм</i></label><input type="text" id="h" inputmode="decimal"></div>
+        <div class="field" data-s="round tube"><label for="D"><span id="Dl">Диаметр</span><i>мм</i></label><input type="text" id="D" inputmode="decimal"></div>
+        <div class="field" data-s="tube rtube"><label for="t"><span>Толщина стенки t</span><i>мм</i></label><input type="text" id="t" inputmode="decimal"></div>
+        <div class="field" data-s="own"><label for="I"><span>Момент инерции I</span><i>см⁴</i></label><input type="text" id="I" inputmode="decimal"></div>
+        <div class="field" data-s="own"><label for="W"><span>Момент сопротивления W</span><i>см³</i></label><input type="text" id="W" inputmode="decimal"></div>
+        <div class="field" data-s="own"><label for="A"><span>Площадь сечения</span><i>см²</i></label><input type="text" id="A" inputmode="decimal"></div>
+        <div class="field"><label for="mat">Материал</label><select id="mat"><option value="steel">Сталь, E 206 000 МПа</option><option value="al">Алюминиевый сплав, E 70 000</option><option value="ci">Серый чугун, E ≈ 100 000</option><option value="ti">Титановый сплав, E 110 000</option></select></div>
+        <div class="field"><label for="sa"><span>Допускаемое напряжение</span><i>МПа</i></label><input type="text" id="sa" inputmode="decimal"></div>
+        <div class="field"><label for="fl">Допустимый прогиб</label><select id="fl"><option value="150">L/150 — консоли, неответственные</option><option value="200">L/200 — балки площадок, кронштейны</option><option value="250">L/250 — балки общего назначения</option><option value="400">L/400 — подкрановые, рамы станков</option><option value="1000">L/1000 — направляющие, точные узлы</option></select></div>
+      </div>
+      <label class="hint" style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--ink)"><input type="checkbox" id="self"> Учесть собственный вес балки</label>
+      <div class="hint">Для балки из Ст3 при статической нагрузке допускаемое напряжение обычно 140–160 МПа. Для двутавра и швеллера возьмите I и W относительно нужной оси из сортамента (ГОСТ 8239, 8240, 57837).</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Наибольший прогиб</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="ver2" class="verdict" hidden></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Формулы для схем</summary>
+    <div class="tbody">
+      <div class="formula">Консоль, сила на конце:          M = F·L          f = F·L³ / (3·E·I)
+Консоль, равномерная нагрузка:   M = q·L²/2       f = q·L⁴ / (8·E·I)
+Две опоры, сила в точке a:       M = F·a·b/L      f = F·b·(L² − b²)^1,5 / (9·√3·L·E·I),  b ≤ a
+Две опоры, равномерная:          M = q·L²/8       f = 5·q·L⁴ / (384·E·I)
+Заделка с двух сторон, сила в середине:  M = F·L/8    f = F·L³ / (192·E·I)
+Заделка с двух сторон, равномерная:      M = q·L²/12  f = q·L⁴ / (384·E·I)
+σ = M / W</div>
+      <p>При учёте собственного веса его прогиб и момент складываются с прогибом и моментом от нагрузки. Для несимметричного положения силы это даёт небольшой запас, потому что наибольшие значения лежат в разных сечениях.</p>
+      <p>Расчёт не учитывает касательные напряжения (важны для коротких высоких балок), потерю устойчивости плоской формы изгиба (узкие высокие сечения без раскрепления) и местную устойчивость тонких стенок.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчёт по формулам сопротивления материалов для балки постоянного сечения. Строительные конструкции проверяйте по СП 16.13330.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="raschet-vala.html">Расчёт вала</a> <a href="bolt-na-srez.html">Болт на срез</a> <a href="svarnoy-shov.html">Сварной шов</a> <a href="pruzhina-szhatiya.html">Пружина сжатия</a> <a href="remennaya-peredacha.html">Ремённая передача</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="marshrut-otverstiya.html">Маршрут отверстия</a> <a href="normirovanie.html">Нормирование</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const MAT={steel:[206000,7850],al:[70000,2700],ci:[100000,7200],ti:[110000,4500]};
+// схема: [название, нагрузка F|q, опоры]
+const SCH={cf:["Консоль, сила","F","c"],cq:["Консоль, равномерная","q","c"],sf:["Две опоры, сила","F","s"],sq:["Две опоры, равномерная","q","s"],ff:["Заделки, сила в середине","F","f"],fq:["Заделки, равномерная","q","f"]};
+function pic(k){
+  const [,ld,sp]=SCH[k]; let s='<svg viewBox="0 0 120 54" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">';
+  s+='<line x1="12" y1="34" x2="108" y2="34" stroke-width="3"/>';
+  const wall=x=>`<line x1="${x}" y1="22" x2="${x}" y2="46"/>`+[0,1,2,3].map(i=>`<line x1="${x}" y1="${24+i*6}" x2="${x+(x<60?-5:5)}" y2="${28+i*6}" stroke-width="1"/>`).join("");
+  const pin=x=>`<path d="M${x} 35 l-5 9 h10 z"/>`;
+  if(sp==="c") s+=wall(12); else if(sp==="s") s+=pin(16)+pin(104); else s+=wall(12)+wall(108);
+  const ax=sp==="c"?106:60;
+  if(ld==="F") s+=`<line x1="${ax}" y1="6" x2="${ax}" y2="30"/><path d="M${ax-4} 24 L${ax} 31 L${ax+4} 24" />`;
+  else { s+='<line x1="14" y1="14" x2="106" y2="14" stroke-width="1"/>'; for(let x=18;x<=104;x+=12) s+=`<line x1="${x}" y1="14" x2="${x}" y2="30" stroke-width="1"/><path d="M${x-2.5} 26 L${x} 31 L${x+2.5} 26" stroke-width="1"/>`; }
+  return s+"</svg>";
+}
+$("scheme").innerHTML=Object.keys(SCH).map(k=>`<button type="button" data-k="${k}">${pic(k)}<span>${SCH[k][0]}</span></button>`).join("");
+const st={sch:"sq",L:"2000",F:"5",q:"2",a:"1000",sec:"rtube",b:"40",h:"80",D:"60",t:"3",I:"198",W:"39,7",A:"13,2",mat:"steel",sa:"160",fl:"250",self:false};
+const set=C.bind("balka-v1",st,["L","F","q","a","sec","b","h","D","t","I","W","A","mat","sa","fl","self"],calc);
+C.seg("scheme",()=>st.sch,k=>set({sch:k}));
+function section(v){
+  const s=st.sec;
+  if(s==="rect") return {I:v.b*v.h**3/12,W:v.b*v.h**2/6,A:v.b*v.h,H:v.h};
+  if(s==="round") return {I:Math.PI*v.D**4/64,W:Math.PI*v.D**3/32,A:Math.PI*v.D**2/4,H:v.D};
+  if(s==="tube"){ const d=v.D-2*v.t, I=Math.PI*(v.D**4-d**4)/64; return {I,W:2*I/v.D,A:Math.PI*(v.D**2-d**2)/4,H:v.D}; }
+  if(s==="rtube"){ const I=(v.b*v.h**3-(v.b-2*v.t)*(v.h-2*v.t)**3)/12; return {I,W:2*I/v.h,A:v.b*v.h-(v.b-2*v.t)*(v.h-2*v.t),H:v.h}; }
+  return {I:v.I*1e4,W:v.W*1e3,A:v.A*100,H:NaN};
+}
+function beam(k,P,L,a,E,I){ // P — Н или Н/мм; возвращает [M Н·мм, f мм]
+  switch(k){
+    case "cf": return [P*L,P*L**3/(3*E*I)];
+    case "cq": return [P*L*L/2,P*L**4/(8*E*I)];
+    case "sf": { const b=Math.min(a,L-a), aa=L-b; return [P*aa*b/L,P*b*Math.pow(L*L-b*b,1.5)/(9*Math.sqrt(3)*L*E*I)]; }
+    case "sq": return [P*L*L/8,5*P*L**4/(384*E*I)];
+    case "ff": return [P*L/8,P*L**3/(192*E*I)];
+    case "fq": return [P*L*L/12,P*L**4/(384*E*I)];
+  }
+}
+function calc(){
+  const [,ld,sp]=SCH[st.sch];
+  $("Fbox").hidden=ld!=="F"; $("qbox").hidden=ld!=="q"; $("abox").hidden=st.sch!=="sf";
+  document.querySelectorAll("[data-s]").forEach(e=>e.hidden=!e.dataset.s.split(" ").includes(st.sec));
+  $("bl").textContent=st.sec==="rtube"?"Ширина B":"Ширина b"; $("hl").textContent=st.sec==="rtube"?"Высота H (в плоскости изгиба)":"Высота h (в плоскости изгиба)";
+  $("Dl").textContent=st.sec==="tube"?"Наружный диаметр D":"Диаметр d";
+  const spec={L:[1,1e6],sa:[1,5000]};
+  if(ld==="F") spec.F=[0,1e7]; else spec.q=[0,1e7];
+  if(st.sch==="sf") spec.a=[0,C.num(st.L)||1e6];
+  ({rect:["b","h"],round:["D"],tube:["D","t"],rtube:["b","h","t"],own:["I","W","A"]})[st.sec].forEach(id=>spec[id]=[1e-6,1e7]);
+  let v=C.read(st,spec), geo=true;
+  if(v.ok&&st.sec==="tube"&&2*v.t>=v.D){ geo=false; $("t").classList.add("bad"); }
+  if(v.ok&&st.sec==="rtube"&&(2*v.t>=v.b||2*v.t>=v.h)){ geo=false; $("t").classList.add("bad"); }
+  $("err").hidden=v.ok&&geo;
+  if(!v.ok||!geo){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=$("ver2").hidden=true; return; }
+  const [E,rho]=MAT[st.mat], S=section(v), L=v.L;
+  let [M,fl]=ld==="F"?beam(st.sch,v.F*1000,L,v.a,E,S.I):beam(st.sch,v.q,L,v.a,E,S.I);
+  const qs=rho*1e-9*S.A*9.81; // Н/мм
+  if(st.self){ const sw=beam(sp==="c"?"cq":sp==="s"?"sq":"fq",qs,L,0,E,S.I); M+=sw[0]; fl+=sw[1]; }
+  const sg=M/S.W, flim=L/+st.fl;
+  $("big").innerHTML=`${f(fl,fl<1?3:fl<10?2:1)}<small>мм</small>`;
+  C.kpis($("kpis"),[["Прогиб в долях пролёта",fl>0?"L/"+f(L/fl,0):"—",""],["Напряжение σ",f(sg,0),"МПа"],["Момент M",C.sig(M/1e6),"кН·м"],["Масса балки",C.sig(rho*1e-9*S.A*L),"кг"]]);
+  C.kv($("kv"),[["Момент инерции I",C.sig(S.I/1e4)+" см⁴"],["Момент сопротивления W",C.sig(S.W/1e3)+" см³"],["Площадь сечения",C.sig(S.A/100)+" см²"],["Погонный вес",C.sig(qs*1000/9.81)+" кг/м"],"-",["Допустимый прогиб L/"+st.fl,f(flim,2)+" мм"],["Запас по напряжению",f(v.sa/sg,2)]]);
+  C.verdict($("ver"),sg<=v.sa,`по прочности: σ = ${f(sg,0)} МПа ${sg<=v.sa?"≤":">"} ${f(v.sa,0)} МПа.`);
+  C.verdict($("ver2"),fl<=flim,`по жёсткости: прогиб ${f(fl,2)} мм ${fl<=flim?"≤":">"} L/${st.fl} = ${f(flim,2)} мм.`);
+}
+calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

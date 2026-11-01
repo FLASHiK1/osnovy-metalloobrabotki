@@ -17,7 +17,7 @@ function check(name, ok, info) {
 }
 async function text(p, sel) { return norm(await p.textContent(sel)); }
 
-const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
+const PAGES = ["index.html", "raschet-vala.html", "bolt-na-srez.html", "svarnoy-shov.html", "pruzhina-szhatiya.html", "progib-balki.html", "remennaya-peredacha.html", "cepnaya-peredacha.html", "gidrocilindr.html", "marshrut-otverstiya.html", "normirovanie.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html", "rezby.html",
   "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
   "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html", "marki-staley.html", "podshipniki.html", "dopuski-formy.html", "cveta-pobezhalosti.html", "rezba-rezcom.html", "edinicy.html", "glossariy.html", "politika.html", "stati-kvalitet.html", "stati-posadka-podshipnika.html", "stati-termoobrabotka.html", "stati-rezba-rezcom.html", "stati-lomayutsya-metchiki.html", "stati-chertezh-oboznacheniya.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
@@ -49,6 +49,53 @@ const PAGES = ["index.html", "posadki.html", "razmernye-cepi.html", "sherokhovat
       check(f, bar === 1 && !wide && p.errors.length === 0, `меню ${bar}, прокрутка ${wide}, ошибки ${p.errors.join("; ")}`);
       await done(p);
     }
+
+    console.log("Прочность и приводы");
+    { const p = await page("raschet-vala.html");
+      let t = await text(p, ".cm section[aria-live]"); check("вал: 7,5 кВт, 1450 об/мин → T 49,40 Н·м, Ø24", t.includes("49,40") && t.includes("Ø24"), t);
+      await p.fill("#m", "60"); await settle(p); t = await text(p, "#kpis"); check("вал: с изгибом 60 Н·м расчёт по Mэкв", /По изгибу с кручением\s*2\d,\d/.test(t), t);
+      await done(p); }
+    { const p = await page("bolt-na-srez.html");
+      check("призонный: τ 75 МПа, смятие 77 МПа", (await text(p, "#kpis")).includes("75") && (await text(p, "#kpis")).includes("77"));
+      await p.click('[data-k="gap"]'); await settle(p);
+      const t = await text(p, ".cm section[aria-live]"); check("с зазором: затяжка 93,3 кН, M12 не хватает", t.includes("93,3") && t.includes("Не проходит"), t);
+      await done(p); }
+    { const p = await page("svarnoy-shov.html");
+      check("внахлёст 50 кН, k6, 200 мм → 60 МПа, проходит", (await text(p, "#big")).includes("60") && (await text(p, "#ver")).includes("Проходит"));
+      await p.click('[data-k="ring"]'); await settle(p);
+      check("кольцевой шов: расчёт есть", /МПа/.test(await text(p, "#big")), await text(p, "#big"));
+      await done(p); }
+    { const p = await page("pruzhina-szhatiya.html");
+      const t = await text(p, ".cm section[aria-live]"); check("пружина 2×20×8: 3,37 Н/мм, до упора 578 МПа", t.includes("3,37") && t.includes("578"), t);
+      await done(p); }
+    { const p = await page("progib-balki.html");
+      check("профиль 40×80×3, 2 м, 2 кН/м → 3,62 мм", (await text(p, "#big")).includes("3,62"), await text(p, "#big"));
+      await p.click('#scheme [data-k="cf"]'); await settle(p);
+      check("консоль: другой прогиб", !(await text(p, "#big")).includes("3,62"));
+      await done(p); }
+    { const p = await page("remennaya-peredacha.html");
+      const t = await text(p, "#kpis"); check("ремень 100/200, a 400 → 1250 мм, a 386", t.includes("1 250") && t.includes("386"), t);
+      await p.click("#tbl tbody tr:first-child"); await settle(p);
+      check("строка таблицы подставляет межосевое", (await p.inputValue("#a")) !== "400");
+      await done(p); }
+    { const p = await page("cepnaya-peredacha.html");
+      check("цепь 15,875, 19/38, a 600 → 104 звена", (await text(p, "#big")).includes("104"), await text(p, "#big"));
+      await done(p); }
+    { const p = await page("gidrocilindr.html");
+      check("Ø63/36, 160 бар → 47,38 кН", (await text(p, "#big")).includes("47,38"), await text(p, "#big"));
+      await p.fill("#Fn", "100"); await settle(p); await p.click("#apply"); await settle(p);
+      check("подбор под 100 кН → Ø100", (await p.inputValue("#D")) === "100", await p.inputValue("#D"));
+      await done(p); }
+    { const p = await page("marshrut-otverstiya.html");
+      let t = await text(p, "#route"); check("Ø20 H7: сверло 18,3 → зенкер 19,8 → 19,93 → 20", ["18,3", "19,8", "19,93", "Развёртывание чистовое"].every(x => t.includes(x)), t);
+      await p.selectOption("#it", "12"); await p.selectOption("#ra", "12.5"); await settle(p);
+      t = await text(p, "#route"); check("H12 — только сверление", !t.includes("Зенкер") && t.includes("Сверление"), t);
+      await done(p); }
+    { const p = await page("normirovanie.html");
+      check("три перехода → ΣTo 1,22 мин", (await text(p, "#kpis")).includes("1,22"), await text(p, "#kpis"));
+      await p.click("#addOp"); await settle(p);
+      check("добавлен четвёртый переход", (await p.$$eval(".op", x => x.length)) === 4);
+      await done(p); }
 
     console.log("Посадки");
     { const p = await page("posadki.html");

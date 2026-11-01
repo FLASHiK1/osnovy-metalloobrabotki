@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/bolt-na-srez.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Болтовое соединение на срез и смятие — Основы металлообработки">
+<meta property="og:description" content="Расчёт болтов, нагруженных поперёк оси: призонный болт на срез и смятие, болт с зазором — потребное усилие затяжки по трению на стыке. Число болтов, плоскости среза, классы прочности 4.6–12.9.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/bolt-na-srez.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="boltsrez-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Болтовое соединение на срез и смятие</title>
+<meta name="description" content="Расчёт болтов, нагруженных поперёк оси: призонный болт на срез и смятие, болт с зазором — потребное усилие затяжки по трению на стыке. Число болтов, плоскости среза, классы прочности 4.6–12.9.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Болтовое соединение на срез и смятие</h1>
+      <p>Сила действует поперёк болтов и пытается сдвинуть детали. Призонный болт, поставленный без зазора, работает на срез и смятие. Обычный болт в отверстии с зазором держит нагрузку трением, поэтому его нужно затянуть с достаточным усилием.</p>
+    </div>
+    <div class="std">Детали машин: резьбовые соединения<br>Классы прочности — ISO 898-1</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="cseg" id="mode" role="group" aria-label="Тип соединения"><button type="button" data-k="fit">Призонный болт (без зазора)</button><button type="button" data-k="gap">Болт с зазором (на трении)</button></div>
+      <div class="grid2">
+        <div class="field"><label for="F"><span>Сдвигающая сила на соединение</span><i>кН</i></label><input type="text" id="F" inputmode="decimal"></div>
+        <div class="field"><label for="z"><span>Число болтов</span><i>шт</i></label><input type="text" id="z" inputmode="numeric"></div>
+        <div class="field"><label for="i">Плоскостей среза (стыков)</label><select id="i"><option value="1">1 — две детали внахлёст</option><option value="2">2 — деталь между двумя накладками</option><option value="3">3</option><option value="4">4</option></select></div>
+        <div class="field"><label for="cls">Класс прочности болта</label><select id="cls"></select></div>
+      </div>
+      <div class="grid2" id="fitBox">
+        <div class="field"><label for="d"><span>Диаметр стержня в отверстии</span><i>мм</i></label><input type="text" id="d" inputmode="decimal"></div>
+        <div class="field"><label for="s"><span>Наименьшая сминаемая толщина</span><i>мм</i></label><input type="text" id="s" inputmode="decimal"></div>
+        <div class="field"><label for="plate">Материал деталей</label><select id="plate"><option value="235">Ст3, σт ≈ 235 МПа</option><option value="245">Сталь 20, σт ≈ 245 МПа</option><option value="325">09Г2С, σт ≈ 325 МПа</option><option value="355">Сталь 45, σт ≈ 355 МПа</option><option value="160">Алюминий АМг6, σ₀,₂ ≈ 160 МПа</option></select></div>
+        <div class="field"><label for="load">Нагрузка</label><select id="load"><option value="st">Статическая</option><option value="var">Переменная, с толчками</option></select></div>
+      </div>
+      <div class="grid2" id="gapBox">
+        <div class="field"><label for="size">Резьба болта</label><select id="size"></select></div>
+        <div class="field"><label for="fr">Трение на стыке деталей</label><select id="fr"><option value="0.15">Сталь по стали, сухие обработанные — 0,15</option><option value="0.2">Чистые обезжиренные — 0,20</option><option value="0.1">Есть следы масла — 0,10</option><option value="0.3">Дробеструйная обработка — 0,30</option></select></div>
+        <div class="field"><label for="K"><span>Запас по сдвигу K</span></label><input type="text" id="K" inputmode="decimal"></div>
+      </div>
+      <div class="hint" id="hint"></div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint" id="bigL"></div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="rel" class="hint"></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <p><b>Призонный болт</b> (ГОСТ 7817, стержень по посадке H7/m6 или H7/k6) передаёт силу стержнем:</p>
+      <div class="formula">τср = 4·F / (π·d²·z·i)  ≤ [τ]ср = 0,4·σт   (переменная нагрузка 0,25·σт)
+σсм = F / (d·s·z)      ≤ [σ]см = 0,8·σт   (переменная нагрузка 0,6·σт), σт — слабейшей детали</div>
+      <p>s — наименьшая суммарная толщина, сминаемая в одну сторону. При двух плоскостях среза это меньшее из толщины средней детали и суммы толщин накладок.</p>
+      <p><b>Болт с зазором</b> не должен касаться стенок отверстия: силу держит трение на стыке, созданное затяжкой.</p>
+      <div class="formula">Fзат = K · F / (f · i · z)       — потребное усилие затяжки одного болта
+Fдоп ≈ 0,7 · σт · As              — допустимая затяжка (с учётом кручения от ключа)</div>
+      <p>K = 1,3–1,5 при статической и 1,8–2 при переменной нагрузке. Соединение на трении требует в 5–8 раз большей затяжки, чем сила сдвига на болт, поэтому при больших поперечных силах ставят призонные болты, штифты или упоры.</p>
+    </div>
+  </details>
+
+  <footer><span>Допускаемые напряжения — ориентировочные значения из курса деталей машин. Для строительных металлоконструкций используйте методику СП 16.13330.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="raschet-vala.html">Расчёт вала</a> <a href="svarnoy-shov.html">Сварной шов</a> <a href="pruzhina-szhatiya.html">Пружина сжатия</a> <a href="progib-balki.html">Прогиб балки</a> <a href="remennaya-peredacha.html">Ремённая передача</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="marshrut-otverstiya.html">Маршрут отверстия</a> <a href="normirovanie.html">Нормирование</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const COARSE={6:1,8:1.25,10:1.5,12:1.75,14:2,16:2,18:2.5,20:2.5,22:2.5,24:3,27:3,30:3.5,36:4,42:4.5,48:5};
+const CLS=[["4.6",240],["5.6",300],["5.8",400],["6.8",480],["8.8",640],["10.9",940],["12.9",1100]];
+const re=(c,d)=>c==="8.8"&&d>16?660:CLS.find(x=>x[0]===c)[1];
+$("cls").innerHTML=CLS.map(c=>`<option value="${c[0]}">${c[0]}</option>`).join("");
+$("size").innerHTML=Object.keys(COARSE).map(d=>`<option value="${d}">M${d}</option>`).join("");
+const st={mode:"fit",F:"20",z:"2",i:"1",cls:"8.8",d:"13",s:"10",plate:"235",load:"st",size:"12",fr:"0.15",K:"1,4"};
+const set=C.bind("boltsrez-v1",st,["F","z","i","cls","d","s","plate","load","size","fr","K"],calc);
+C.seg("mode",()=>st.mode,k=>set({mode:k}));
+$("load").addEventListener("change",()=>{ if(st.mode==="gap") set({K:st.load==="var"?"1,8":"1,4"}); });
+function calc(){
+  const fit=st.mode==="fit"; $("fitBox").hidden=!fit; $("gapBox").hidden=fit;
+  $("hint").textContent=fit?"Призонный болт М12 по ГОСТ 7817 имеет стержень Ø13, М16 — Ø17, М20 — Ø21: стержень на 1 мм толще резьбы.":"K = 1,3–1,5 при статической нагрузке, 1,8–2 при переменной и вибрации.";
+  const spec={F:[1e-6,1e7],z:[1,1000]};
+  if(fit){ spec.d=[1,200]; spec.s=[0.1,1000]; } else spec.K=[1,5];
+  const v=C.read(st,spec); const z=Math.round(v.z), i=+st.i;
+  $("err").hidden=v.ok; $("rel").innerHTML="";
+  if(!v.ok){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; return; }
+  const F=v.F*1000;
+  if(fit){
+    const sb=re(st.cls,v.d), sp=+st.plate, varL=st.load==="var";
+    const tA=(varL?0.25:0.4)*sb, cA=(varL?0.6:0.8)*Math.min(sb,sp);
+    const tau=4*F/(Math.PI*v.d*v.d*z*i), cm=F/(v.d*v.s*z);
+    const zt=Math.ceil(4*F/(Math.PI*v.d*v.d*i*tA)), zc=Math.ceil(F/(v.d*v.s*cA)), zNeed=Math.max(zt,zc,1);
+    $("bigL").textContent="Нужно болтов при этом диаметре"; $("big").innerHTML=`${zNeed}<small>шт</small>`;
+    C.kpis($("kpis"),[["Срез τ",f(tau,0),"МПа"],["Допускаемое [τ]ср",f(tA,0),"МПа"],["Смятие σсм",f(cm,0),"МПа"],["Допускаемое [σ]см",f(cA,0),"МПа"]]);
+    C.kv($("kv"),[["Сила на один болт",f(F/z/1000,2)+" кН"],["Сила на одну плоскость среза",f(F/z/i/1000,2)+" кН"],["Предел текучести болта",f(sb,0)+" МПа"],["Предел текучести деталей",f(sp,0)+" МПа"],"-",["Загрузка по срезу",f(tau/tA*100,0)+" %"],["Загрузка по смятию",f(cm/cA*100,0)+" %"]]);
+    const ok=tau<=tA&&cm<=cA;
+    C.verdict($("ver"),ok,ok?`${z} болт(а) Ø${f(v.d,v.d%1?1:0)} выдерживают нагрузку.`:`${tau>tA?"срез":"смятие"} — увеличьте диаметр, число болтов${cm>cA?" или толщину деталей":""}.`);
+  } else {
+    const d=+st.size, P=COARSE[d], d2=d-.649519*P, d3=d-1.226869*P, As=Math.PI/4*((d2+d3)/2)**2, R=re(st.cls,d), fr=+st.fr;
+    const Fz=v.K*F/(fr*i*z), Fdop=0.7*R*As, sEq=1.3*Fz/As;
+    let best=""; for(const dd of Object.keys(COARSE).map(Number)){ const pp=COARSE[dd], a=Math.PI/4*((dd-.649519*pp+dd-1.226869*pp)/2)**2; if(0.7*re(st.cls,dd)*a>=Fz){ best="M"+dd; break; } }
+    $("bigL").textContent="Потребная затяжка одного болта"; $("big").innerHTML=`${f(Fz/1000,1)}<small>кН</small>`;
+    C.kpis($("kpis"),[["Допустимо для M"+d+" "+st.cls,f(Fdop/1000,1),"кН"],["Загрузка болта",f(Fz/Fdop*100,0),"%"],["Сдвиг на болт",f(F/z/1000,2),"кН"],["Затяжка / сдвиг",f(Fz/(F/z),1),"раз"]]);
+    C.kv($("kv"),[["Площадь сечения по резьбе As",f(As,1)+" мм²"],["Предел текучести",f(R,0)+" МПа"],["Напряжение с учётом кручения 1,3·Fзат/As",f(sEq,0)+" МПа"],["Наименьшая подходящая резьба класса "+st.cls,best||"нет до M48"]]);
+    const ok=Fz<=Fdop;
+    C.verdict($("ver"),ok,ok?`M${d} класса ${st.cls} можно затянуть с нужным усилием.`:`M${d} класса ${st.cls} не обеспечит такую затяжку. ${best?"Подойдёт "+best+", или":"Нужны"} призонные болты, штифты или упор.`);
+    if(window.siteLink) $("rel").innerHTML=`<a href="${window.siteLink("zatyazhka.html",{size:d+"|"+P,cls:st.cls})}">Момент затяжки для M${d} ${st.cls} →</a>`;
+  }
+}
+calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

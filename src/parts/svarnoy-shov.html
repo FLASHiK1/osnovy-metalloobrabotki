@@ -1,0 +1,124 @@
+<title>Прочность сварного шва</title>
+<meta name="description" content="Проверка стыкового и углового сварного шва: растяжение, сжатие, изгиб, срез. Нахлёсточное соединение фланговыми и лобовыми швами, кольцевой шов вокруг вала или трубы при кручении и изгибе. Потребный катет и длина шва.">
+<!--HEAD-->
+<style>
+/*BASE*/
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Прочность сварного шва</h1>
+      <p>Выберите тип соединения, введите нагрузку и размеры шва. Калькулятор посчитает напряжения в шве и сравнит их с допускаемыми для выбранного способа сварки, а для угловых швов найдёт потребный катет.</p>
+    </div>
+    <div class="std">Детали машин: сварные соединения<br>Угловой шов — по высоте 0,7·k</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="cseg" id="type" role="group" aria-label="Тип соединения"><button type="button" data-k="butt">Стыковой шов</button><button type="button" data-k="lap">Угловые швы внахлёст</button><button type="button" data-k="ring">Кольцевой шов вокруг вала</button></div>
+      <div class="grid2">
+        <div class="field" data-for="butt lap ring"><label for="F"><span id="Fl">Сила</span><i>кН</i></label><input type="text" id="F" inputmode="decimal"></div>
+        <div class="field" data-for="butt"><label for="dir">Направление силы</label><select id="dir"><option value="t">Растяжение</option><option value="c">Сжатие</option></select></div>
+        <div class="field" data-for="butt ring"><label for="M"><span>Изгибающий момент</span><i>Н·м</i></label><input type="text" id="M" inputmode="decimal"></div>
+        <div class="field" data-for="ring"><label for="T"><span>Крутящий момент</span><i>Н·м</i></label><input type="text" id="T" inputmode="decimal"></div>
+        <div class="field" data-for="butt"><label for="s"><span>Толщина листа s</span><i>мм</i></label><input type="text" id="s" inputmode="decimal"></div>
+        <div class="field" data-for="butt"><label for="l"><span>Длина шва</span><i>мм</i></label><input type="text" id="l" inputmode="decimal"></div>
+        <div class="field" data-for="lap ring"><label for="k"><span>Катет шва k</span><i>мм</i></label><input type="text" id="k" inputmode="decimal"></div>
+        <div class="field" data-for="lap"><label for="L"><span>Суммарная длина всех швов</span><i>мм</i></label><input type="text" id="L" inputmode="decimal"></div>
+        <div class="field" data-for="ring"><label for="D"><span>Диаметр по шву (вала, трубы)</span><i>мм</i></label><input type="text" id="D" inputmode="decimal"></div>
+        <div class="field" data-for="lap ring"><label for="smin"><span>Толщина тонкой детали</span><i>мм</i></label><input type="text" id="smin" inputmode="decimal"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="mat">Основной металл</label><select id="mat"><option value="235">Ст3, σт ≈ 235 МПа</option><option value="245">Сталь 20, σт ≈ 245 МПа</option><option value="325">09Г2С, σт ≈ 325 МПа</option><option value="355">Сталь 45, σт ≈ 355 МПа</option></select></div>
+        <div class="field"><label for="weld">Сварка</label><select id="weld"><option value="auto">Автомат под флюсом, ручная Э42А/Э50А</option><option value="man">Ручная электродами Э42, Э50</option></select></div>
+        <div class="field"><label for="sf"><span>Запас прочности [s]</span></label><input type="text" id="sf" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Запас [s] = 1,35–1,6 для статической нагрузки и сталей типа Ст3; при переменной нагрузке допускаемые напряжения дополнительно снижают коэффициентом 0,5–0,9 в зависимости от цикла.</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint" id="bigL">Напряжение в шве</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">[σ]р = σт / [s]                         — допускаемое для основного металла
+Стыковой:   σ = F/(s·l) + 6·M/(s·l²)     ≤ [σ′]
+Внахлёст:   τ = F / (0,7·k·ΣL)             ≤ [τ′]
+Кольцевой:  τF = F/(π·0,7·k·D),  τM = 4·M/(π·0,7·k·D²),  τT = 2·T/(π·0,7·k·D²)
+            τ = √((τF + τM)² + τT²)        ≤ [τ′]</div>
+      <p>Допускаемые напряжения в шве [σ′] и [τ′] — в долях от [σ]р:</p>
+      <div class="tbl"><table><thead><tr><th>Сварка</th><th class="n">Растяжение</th><th class="n">Сжатие</th><th class="n">Срез</th></tr></thead><tbody>
+        <tr><td>Автоматическая под флюсом, ручная электродами Э42А, Э50А</td><td class="n">1,0</td><td class="n">1,0</td><td class="n">0,65</td></tr>
+        <tr><td>Ручная электродами Э42, Э50</td><td class="n">0,9</td><td class="n">1,0</td><td class="n">0,6</td></tr></tbody></table></div>
+      <p>Угловой шов разрушается по биссектрисе — сечению высотой 0,7·k (для ручной сварки). Катет не делают меньше 3 мм и больше 1,2 толщины тонкой детали. Фланговые швы длиннее 60·k работают неравномерно, их расчётную длину ограничивают.</p>
+      <p>В длину шва не включают кратеры на концах: при сварке без выводных планок из фактической длины вычитают примерно по k с каждого конца.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчёт для машиностроительных узлов по курсу деталей машин. Строительные конструкции рассчитывают по СП 16.13330.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const K={auto:{t:1,c:1,s:0.65},man:{t:0.9,c:1,s:0.6}};
+const st={type:"lap",F:"50",dir:"t",M:"0",T:"500",s:"10",l:"200",k:"6",L:"200",D:"60",smin:"8",mat:"235",weld:"man",sf:"1,5"};
+C.bind("shov-v1",st,["F","dir","M","T","s","l","k","L","D","smin","mat","weld","sf"],calc);
+C.seg("type",()=>st.type,k=>{ st.type=k; try{localStorage.setItem("shov-v1",JSON.stringify(st));}catch(e){} calc(); });
+function calc(){
+  document.querySelectorAll("[data-for]").forEach(e=>e.hidden=!e.dataset.for.split(" ").includes(st.type));
+  $("Fl").textContent=st.type==="butt"?"Сила поперёк шва":st.type==="lap"?"Сдвигающая сила":"Осевая сила";
+  const spec={sf:[1,10]};
+  if(st.type==="butt") Object.assign(spec,{F:[0,1e7],M:[0,1e9],s:[0.5,500],l:[1,1e5]});
+  if(st.type==="lap") Object.assign(spec,{F:[1e-6,1e7],k:[1,100],L:[1,1e5],smin:[0.5,500]});
+  if(st.type==="ring") Object.assign(spec,{F:[0,1e7],M:[0,1e9],T:[0,1e9],k:[1,100],D:[1,1e4],smin:[0.5,500]});
+  const v=C.read(st,spec); $("err").hidden=v.ok; $("warn").hidden=true;
+  if(!v.ok){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; return; }
+  const sr=+st.mat/v.sf, kk=K[st.weld], F=(v.F||0)*1000;
+  if(st.type==="butt"){
+    const M=v.M*1000, sF=F/(v.s*v.l), sM=6*M/(v.s*v.l*v.l), sg=sF+sM, A=sr*(st.dir==="c"?kk.c:kk.t);
+    $("bigL").textContent="Нормальное напряжение в шве"; $("big").innerHTML=`${f(sg,0)}<small>МПа</small>`;
+    C.kpis($("kpis"),[["Допускаемое [σ′]",f(A,0),"МПа"],["Загрузка",f(sg/A*100,0),"%"],["От силы",f(sF,0),"МПа"],["От изгиба",f(sM,0),"МПа"]]);
+    C.kv($("kv"),[["[σ]р основного металла",f(sr,0)+" МПа"],["Коэффициент шва",String(st.dir==="c"?kk.c:kk.t).replace(".",",")],["Площадь шва s·l",f(v.s*v.l,0)+" мм²"],["Наименьшая длина шва при этой нагрузке",f(minLenButt(F,M,v.s,A),0)+" мм"]]);
+    C.verdict($("ver"),sg<=A,sg<=A?"шов равнопрочен нагрузке.":"увеличьте длину шва или толщину листа, либо замените стык на соединение с накладками.");
+  } else {
+    const kz=0.7*v.k, A=sr*kk.s;
+    let tau, rows;
+    if(st.type==="lap"){
+      tau=F/(kz*v.L);
+      const kNeed=F/(0.7*v.L*A), LNeed=F/(kz*A);
+      rows=[["Расчётная высота 0,7·k",f(kz,2)+" мм"],["Площадь среза 0,7·k·ΣL",f(kz*v.L,0)+" мм²"],["Нужный катет при этой длине",f(kNeed,1)+" мм"],["Нужная длина при этом катете",f(LNeed,0)+" мм"]];
+      C.kpis($("kpis"),[["Допускаемое [τ′]",f(A,0),"МПа"],["Загрузка",f(tau/A*100,0),"%"],["Сила на 1 мм шва",f(F/v.L,0),"Н/мм"],["Нужный катет",f(Math.max(kNeed,3),1),"мм"]]);
+      if(v.L>60*v.k*2) { $("warn").hidden=false; $("warn").textContent="Если это два фланговых шва, каждый длиннее 60·k: нагрузка по длине распределяется неравномерно, в расчёт берут не больше 60·k каждого."; }
+    } else {
+      const D=v.D, tF=F/(Math.PI*kz*D), tM=4*v.M*1000/(Math.PI*kz*D*D), tT=2*v.T*1000/(Math.PI*kz*D*D);
+      tau=Math.hypot(tF+tM,tT);
+      const kNeed=tau*v.k/A;
+      rows=[["От осевой силы τF",f(tF,1)+" МПа"],["От изгиба τM",f(tM,1)+" МПа"],["От кручения τT",f(tT,1)+" МПа"],"-",["Расчётная высота 0,7·k",f(kz,2)+" мм"],["Длина шва по окружности",f(Math.PI*D,0)+" мм"]];
+      C.kpis($("kpis"),[["Допускаемое [τ′]",f(A,0),"МПа"],["Загрузка",f(tau/A*100,0),"%"],["Нужный катет",f(Math.max(kNeed,3),1),"мм"],["Предельный момент T",C.sig(A*Math.PI*kz*D*D/2/1000),"Н·м"]]);
+    }
+    $("bigL").textContent="Касательное напряжение в шве"; $("big").innerHTML=`${f(tau,0)}<small>МПа</small>`;
+    C.kv($("kv"),[["[σ]р основного металла",f(sr,0)+" МПа"],["Коэффициент на срез",String(kk.s).replace(".",",")]].concat(rows));
+    C.verdict($("ver"),tau<=A,tau<=A?"прочность шва обеспечена.":"увеличьте катет или длину шва.");
+    const kmax=1.2*v.smin;
+    if(v.k<3||v.k>kmax){ $("warn").hidden=false; $("warn").textContent=v.k<3?"Катет меньше 3 мм на практике не выполняют.":`Катет больше 1,2 толщины тонкой детали (${f(kmax,1)} мм): прожог и перегрев кромки.`; }
+  }
+}
+function minLenButt(F,M,s,A){ // корень уравнения F/(s l) + 6M/(s l²) = A
+  const a=A*s; return (F+Math.sqrt(F*F+24*M*a))/(2*a);
+}
+calc();
+})();
+</script>

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/normirovanie.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Нормирование: основное и штучное время — Основы металлообработки">
+<meta property="og:description" content="Расчёт основного (машинного) времени на точение, подрезку торца, сверление, фрезерование и нарезание резьбы с учётом врезания и перебега. Штучное и штучно-калькуляционное время, выработка за смену.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/normirovanie.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="norm-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Нормирование: основное и штучное время</title>
+<meta name="description" content="Расчёт основного (машинного) времени на точение, подрезку торца, сверление, фрезерование и нарезание резьбы с учётом врезания и перебега. Штучное и штучно-калькуляционное время, выработка за смену.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+.ops{display:flex;flex-direction:column;gap:10px}
+.op{border:1px solid var(--line);border-radius:5px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.op-h{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.op-h select{width:auto;flex:1 1 200px}
+.op-r{font-family:var(--f-num);font-size:14px}
+.op-r b{font-size:17px}
+.addrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.addrow select{width:auto;flex:1 1 200px}
+.f6{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){ .f6{grid-template-columns:repeat(2,minmax(0,1fr))} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Нормирование: основное и штучное время</h1>
+      <p>Добавьте переходы обработки детали и введите режимы резания. Калькулятор посчитает основное время каждого перехода с учётом врезания и перебега. Затем он сложит штучное время с вспомогательным и подготовительно-заключительным и покажет, сколько деталей выйдет за смену.</p>
+    </div>
+    <div class="std">Укрупнённое техническое нормирование<br>Tшт = (To + Tв)·(1 + (αобс + αотд)/100)</div>
+  </header>
+
+  <section class="sheet" aria-label="Переходы">
+    <div class="sheet-head"><h2>Переходы</h2><span class="hint">Время в минутах</span></div>
+    <div class="ops" id="ops"></div>
+    <div class="addrow"><select id="addType" aria-label="Тип перехода"></select><button type="button" class="btn" id="addOp">Добавить переход</button></div>
+  </section>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Нормы на деталь">
+      <div class="grid2">
+        <div class="field"><label for="tv"><span>Вспомогательное время Tв на деталь</span><i>мин</i></label><input type="text" id="tv" inputmode="decimal"></div>
+        <div class="field"><label for="ao"><span>Обслуживание рабочего места αобс</span><i>%</i></label><input type="text" id="ao" inputmode="decimal"></div>
+        <div class="field"><label for="ar"><span>Отдых и личные надобности αотд</span><i>%</i></label><input type="text" id="ar" inputmode="decimal"></div>
+        <div class="field"><label for="tpz"><span>Подготовительно-заключительное на партию</span><i>мин</i></label><input type="text" id="tpz" inputmode="decimal"></div>
+        <div class="field"><label for="N"><span>Деталей в партии</span><i>шт</i></label><input type="text" id="N" inputmode="numeric"></div>
+        <div class="field"><label for="shift"><span>Длительность смены</span><i>ч</i></label><input type="text" id="shift" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Tв — установка и снятие детали, подвод инструмента, смена инструмента, измерения. На токарном станке с ЧПУ для детали средней сложности это обычно 0,5–2 мин. На универсальном — больше. αобс + αотд обычно 8–12 %.</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным.</div>
+    </section>
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Штучно-калькуляционное время</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">n = 1000·v / (π·D)                          — обороты по скорости резания
+To = (l + l₁ + l₂) · i / (n · s)              — точение, сверление, резьба (s — подача или шаг, мм/об)
+To = (l + l₁ + l₂) · i / Sм,  Sм = fz · z · n  — фрезерование
+Tшт = (ΣTo + Tв) · (1 + (αобс + αотд)/100)
+Tшк = Tшт + Tп-з / N</div>
+      <p>Врезание l₁ и перебег l₂:</p>
+      <ul>
+        <li>точение — t/tg φ + 1…2 мм на подвод и 1…3 мм перебега (у упора — без перебега);</li>
+        <li>сверление — 0,3·D (заборный конус 118°) плюс 1…2 мм, для сквозного отверстия ещё 1…3 мм выхода;</li>
+        <li>торцевое фрезерование симметричное — 0,5·(D − √(D² − B²)) + 1…3 мм, на выход — половина диаметра фрезы, если надо пройти всю поверхность;</li>
+        <li>фрезерование концевой фрезой сбоку — √(B·(D − B)) + 1…3 мм;</li>
+        <li>резьба — 2…3 шага на подвод. Метчик выкручивается, поэтому время удваивается при одинаковых оборотах.</li>
+      </ul>
+      <p>При торцевании с постоянными оборотами расчёт ведётся по наибольшему диаметру. На ЧПУ с постоянной скоростью резания (G96) обороты растут к центру, и время меньше.</p>
+    </div>
+  </details>
+
+  <footer><span>Укрупнённый расчёт. Для заводских норм используйте отраслевые нормативы вспомогательного времени.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="raschet-vala.html">Расчёт вала</a> <a href="bolt-na-srez.html">Болт на срез</a> <a href="svarnoy-shov.html">Сварной шов</a> <a href="pruzhina-szhatiya.html">Пружина сжатия</a> <a href="progib-balki.html">Прогиб балки</a> <a href="remennaya-peredacha.html">Ремённая передача</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="marshrut-otverstiya.html">Маршрут отверстия</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+// тип: [название, поля [ключ, подпись, единица, по умолчанию]]
+const T={
+ turn:["Точение продольное",[["D","Диаметр","мм","50"],["L","Длина обработки","мм","100"],["i","Число проходов","","2"],["v","Скорость резания","м/мин","180"],["s","Подача","мм/об","0,25"],["t","Глубина резания","мм","1,5"],["phi","Угол в плане φ","°","95"]]],
+ face:["Подрезка торца",[["D","Наружный диаметр","мм","50"],["d","Внутренний диаметр","мм","0"],["i","Число проходов","","1"],["v","Скорость резания","м/мин","150"],["s","Подача","мм/об","0,15"]]],
+ drill:["Сверление",[["D","Диаметр сверла","мм","10"],["L","Глубина","мм","30"],["v","Скорость резания","м/мин","25"],["s","Подача","мм/об","0,15"],["thru","Сквозное (1 — да, 0 — нет)","","1"]]],
+ mill:["Фрезерование торцевой фрезой",[["Df","Диаметр фрезы","мм","80"],["z","Число зубьев","","6"],["fz","Подача на зуб","мм/зуб","0,12"],["v","Скорость резания","м/мин","200"],["L","Длина обработки","мм","200"],["B","Ширина фрезерования","мм","60"],["i","Число проходов","","1"]]],
+ side:["Фрезерование концевой фрезой",[["Df","Диаметр фрезы","мм","16"],["z","Число зубьев","","4"],["fz","Подача на зуб","мм/зуб","0,05"],["v","Скорость резания","м/мин","120"],["L","Длина обработки","мм","150"],["B","Ширина (радиальная глубина)","мм","4"],["i","Число проходов","","2"]]],
+ thread:["Резьба резцом",[["D","Диаметр резьбы","мм","20"],["P","Шаг","мм","2,5"],["L","Длина резьбы","мм","30"],["i","Число проходов","","8"],["n","Обороты","об/мин","600"]]],
+ tap:["Резьба метчиком",[["D","Диаметр резьбы","мм","10"],["P","Шаг","мм","1,5"],["L","Глубина резьбы","мм","20"],["n","Обороты","об/мин","300"]]]
+};
+$("addType").innerHTML=Object.keys(T).map(k=>`<option value="${k}">${T[k][0]}</option>`).join("");
+const KEY="norm-v1";
+const st={tv:"1,5",ao:"5",ar:"4",tpz:"30",N:"50",shift:"8",ops:null,addType:"turn"};
+function def(k){ const o={type:k}; T[k][1].forEach(x=>o[x[0]]=x[3]); return o; }
+C.bind(KEY,st,["tv","ao","ar","tpz","N","shift","addType"],calc);
+if(!Array.isArray(st.ops)) st.ops=[def("face"),def("turn"),def("drill")];
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function renderOps(){
+  $("ops").innerHTML=st.ops.map((o,j)=>{ const t=T[o.type]; if(!t) return "";
+    return `<div class="op" data-j="${j}"><div class="op-h"><select data-type aria-label="Тип перехода ${j+1}">${Object.keys(T).map(k=>`<option value="${k}"${k===o.type?" selected":""}>${j+1}. ${T[k][0]}</option>`).join("")}</select><span class="op-r" id="r${j}"></span><button type="button" class="btn sm del" data-del aria-label="Удалить переход ${j+1}">Удалить</button></div>
+    <div class="f6">${t[1].map(x=>`<div class="field"><label for="o${j}${x[0]}"><span>${x[1]}</span><i>${x[2]}</i></label><input type="text" id="o${j}${x[0]}" data-k="${x[0]}" inputmode="decimal" value="${C.esc(o[x[0]]??x[3])}"></div>`).join("")}</div></div>`; }).join("")||'<div class="hint">Переходов нет — добавьте первый.</div>';
+}
+$("ops").addEventListener("input",e=>{ const el=e.target.closest("[data-k]"); if(!el) return; const j=+el.closest(".op").dataset.j; st.ops[j][el.dataset.k]=el.value; save(); calc(); });
+$("ops").addEventListener("change",e=>{ if(!e.target.matches("[data-type]")) return; const j=+e.target.closest(".op").dataset.j; st.ops[j]=def(e.target.value); save(); renderOps(); calc(); });
+$("ops").addEventListener("click",e=>{ if(!e.target.closest("[data-del]")) return; const j=+e.target.closest(".op").dataset.j; st.ops.splice(j,1); save(); renderOps(); calc(); });
+$("addOp").addEventListener("click",()=>{ st.ops.push(def(st.addType)); save(); renderOps(); calc(); const ins=document.querySelectorAll(".op:last-child input"); if(ins[0]) ins[0].focus(); });
+function opTime(o){ // минуты или NaN
+  const g=k=>C.num(o[k]), pos=k=>g(k)>0;
+  const rpm=D=>1000*g("v")/(Math.PI*D);
+  switch(o.type){
+    case "turn": { if(!["D","L","i","v","s"].every(pos)||!(g("t")>=0)||!(g("phi")>0&&g("phi")<=180)) return NaN; const ph=g("phi"), l1=(ph>=90?0:g("t")/Math.tan(ph*Math.PI/180))+2, n=rpm(g("D")); return {t:(g("L")+l1+2)*g("i")/(n*g("s")),n}; }
+    case "face": { if(!["D","i","v","s"].every(pos)||!(g("d")>=0&&g("d")<g("D"))) return NaN; const n=rpm(g("D")); return {t:((g("D")-g("d"))/2+2)*g("i")/(n*g("s")),n}; }
+    case "drill": { if(!["D","L","v","s"].every(pos)) return NaN; const n=rpm(g("D")); return {t:(g("L")+0.3*g("D")+2+(g("thru")>0?2:0))/(n*g("s")),n}; }
+    case "mill": case "side": { if(!["Df","z","fz","v","L","B","i"].every(pos)) return NaN; const D=g("Df"), B=Math.min(g("B"),D), n=rpm(D), Sm=g("fz")*g("z")*n;
+      const l1=o.type==="mill"?0.5*(D-Math.sqrt(D*D-B*B))+2:Math.sqrt(B*(D-B))+2; return {t:(g("L")+l1+2)*g("i")/Sm,n,Sm}; }
+    case "thread": { if(!["D","P","L","i","n"].every(pos)) return NaN; return {t:(g("L")+2.5*g("P"))*g("i")/(g("n")*g("P")),n:g("n")}; }
+    case "tap": { if(!["D","P","L","n"].every(pos)) return NaN; return {t:2*(g("L")+2.5*g("P"))/(g("n")*g("P")),n:g("n")}; }
+  }
+  return NaN;
+}
+function calc(){
+  let To=0, bad=false;
+  st.ops.forEach((o,j)=>{ const r=opTime(o), el=$("r"+j); if(!el) return;
+    if(!r||!isFinite(r.t)){ bad=true; el.innerHTML='<span style="color:var(--bad)">проверьте данные</span>'; return; }
+    To+=r.t; el.innerHTML=`<b>${f(r.t,2)}</b> мин · ${f(r.n,0)} об/мин${r.Sm?" · "+f(r.Sm,0)+" мм/мин":""}`; });
+  const v=C.read(st,{tv:[0,1e4],ao:[0,100],ar:[0,100],tpz:[0,1e5],N:[1,1e7],shift:[0.1,24]});
+  $("err").hidden=v.ok;
+  if(!v.ok||bad||!st.ops.length){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; return; }
+  const Top=To+v.tv, Tsht=Top*(1+(v.ao+v.ar)/100), Tshk=Tsht+v.tpz/v.N, perShift=Math.floor(v.shift*60/Tshk);
+  $("big").innerHTML=`${f(Tshk,2)}<small>мин</small>`;
+  C.kpis($("kpis"),[["Основное время ΣTo",f(To,2),"мин"],["Штучное Tшт",f(Tsht,2),"мин"],["Деталей за смену",String(perShift),"шт"],["Партия целиком",f(Tshk*v.N/60,1),"ч"]]);
+  C.kv($("kv"),[["Оперативное To + Tв",f(Top,2)+" мин"],["Доля машинного времени",f(To/Tsht*100,0)+" %"],["Надбавка на обслуживание и отдых",f(Tsht-Top,2)+" мин"],["Подготовительно-заключительное на деталь",f(v.tpz/v.N,2)+" мин"],["Норма выработки в час",f(60/Tshk,1)+" шт"]]);
+}
+renderOps(); calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

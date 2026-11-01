@@ -1,0 +1,95 @@
+<title>Расчёт гидроцилиндра</title>
+<meta name="description" content="Усилие толкания и втягивания гидроцилиндра по давлению, скорость штока и время хода по расходу насоса, объём масла. Подбор диаметра поршня под нужное усилие и проверка штока на продольный изгиб по Эйлеру.">
+<!--HEAD-->
+<style>
+/*BASE*/
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Расчёт гидроцилиндра</h1>
+      <p>Введите диаметры поршня и штока, давление и расход. Калькулятор посчитает усилия и скорости в обе стороны, время хода и объём масла. Если нужно определённое усилие, он подберёт диаметр поршня из стандартного ряда и проверит шток на продольный изгиб.</p>
+    </div>
+    <div class="std">Ряды диаметров — ГОСТ 6540, ISO 3320<br>Устойчивость штока — формула Эйлера</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="D">Диаметр поршня D, мм</label><select id="D"></select></div>
+        <div class="field"><label for="d">Диаметр штока d, мм</label><select id="d"></select></div>
+        <div class="field"><label for="p"><span>Рабочее давление</span><i>бар</i></label><input type="text" id="p" inputmode="decimal"></div>
+        <div class="field"><label for="Q"><span>Подача насоса</span><i>л/мин</i></label><input type="text" id="Q" inputmode="decimal"></div>
+        <div class="field"><label for="L"><span>Ход штока</span><i>мм</i></label><input type="text" id="L" inputmode="decimal"></div>
+        <div class="field"><label for="eta"><span>Механический КПД</span><i>%</i></label><input type="text" id="eta" inputmode="decimal"></div>
+        <div class="field"><label for="Fn"><span>Нужное усилие толкания</span><i>кН</i></label><input type="text" id="Fn" inputmode="decimal" placeholder="необязательно"></div>
+        <div class="field"><label for="mount">Закрепление (для изгиба штока)</label><select id="mount"><option value="2">Корпус жёстко, шток свободен — μ 2</option><option value="1" selected>Шарниры с обеих сторон — μ 1</option><option value="0.7">Жёстко и шарнир — μ 0,7</option><option value="0.5">Жёстко с обеих сторон — μ 0,5</option></select></div>
+      </div>
+      <div class="hint">КПД цилиндра учитывает трение уплотнений: 90–95 %. 100 бар = 10 МПа ≈ 102 кгс/см².</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным. Шток должен быть тоньше поршня.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Усилие толкания</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="need" class="note" hidden></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">A₁ = π·D²/4,  A₂ = π·(D² − d²)/4            — площади поршневой и штоковой полости
+F₁ = p · A₁ · η,   F₂ = p · A₂ · η              — толкание и втягивание
+v₁ = Q / A₁,       v₂ = Q / A₂                  — скорости, втягивание быстрее
+Fкр = π² · E · I / (μ · L)²,  I = π·d⁴/64       — критическая сила для штока (Эйлер)</div>
+      <p>Расчётная длина для изгиба — полный вылет штока плюс длина цилиндра между точками крепления. Здесь для простоты взят удвоенный ход: при креплении за заднюю проушину и переднюю вилку это близко к реальности. Запас устойчивости обычно берут не меньше 3,5. Формула Эйлера справедлива для гибких штоков; для коротких толстых штоков решает прочность на сжатие.</p>
+      <p>Ряды диаметров поршня и штока — по ГОСТ 6540 (ISO 3320). Отношение площадей φ = A₁/A₂ для серийных цилиндров обычно 1,25–2.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчёт без учёта противодавления в сливной линии и потерь в трубопроводах. Давление ограничено клапаном насосной станции.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const DS=[10,12,16,20,25,32,40,50,63,80,90,100,110,125,140,160,180,200,220,250,280,320,360,400];
+const RODS=[4,5,6,8,10,12,14,16,18,20,22,25,28,32,36,40,45,50,56,63,70,80,90,100,110,125,140,160,180,200,220,250,280,320,360];
+$("D").innerHTML=DS.map(x=>`<option value="${x}">${x}</option>`).join("");
+$("d").innerHTML=RODS.map(x=>`<option value="${x}">${x}</option>`).join("");
+const st={D:"63",d:"36",p:"160",Q:"20",L:"400",eta:"95",Fn:"",mount:"1"};
+const set=C.bind("gidro-v1",st,["D","d","p","Q","L","eta","Fn","mount"],calc);
+function fillRods(){ const D=+st.D; $("d").innerHTML=RODS.filter(x=>x<D*0.8).map(x=>`<option value="${x}">${x}</option>`).join(""); if(!RODS.includes(+st.d)||+st.d>=D*0.8){ const r=RODS.filter(x=>x<D*0.8); st.d=String(r.reduce((b,x)=>Math.abs(x-D*0.56)<Math.abs(b-D*0.56)?x:b,r[0])); } $("d").value=st.d; }
+function calc(){
+  fillRods();
+  const v=C.read(st,{p:[0.1,1000],Q:[0,1e4],L:[1,1e5],eta:[30,100]});
+  const Fn=C.num(st.Fn), FnBad=st.Fn.trim()!==""&&!(Fn>0); $("Fn").classList.toggle("bad",FnBad);
+  $("err").hidden=v.ok&&!FnBad;
+  if(!v.ok||FnBad){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; $("need").hidden=true; return; }
+  const D=+st.D, d=+st.d, pM=v.p/10, eta=v.eta/100;
+  const A1=Math.PI*D*D/4, A2=Math.PI*(D*D-d*d)/4, F1=pM*A1*eta, F2=pM*A2*eta;
+  const q=v.Q*1e6/60; // мм³/с
+  const v1=q/A1, v2=q/A2, t1=v.L/v1, t2=v.L/v2;
+  $("big").innerHTML=`${C.sig(F1/1000)}<small>кН</small>`;
+  C.kpis($("kpis"),[["Усилие втягивания",C.sig(F2/1000),"кН"],["То же, тонн-силы",f(F1/9806.65,2)+" / "+f(F2/9806.65,2),"тс"],["Скорость выдвижения",v.Q?C.sig(v1*60/1000):"—","м/мин"],["Скорость втягивания",v.Q?C.sig(v2*60/1000):"—","м/мин"]]);
+  const E=206000, I=Math.PI*d**4/64, Lk=+st.mount*2*v.L, Fcr=Math.PI**2*E*I/(Lk*Lk), n=Fcr/F1;
+  C.kv($("kv"),[["Площадь поршня A₁",f(A1/100,2)+" см²"],["Площадь кольца A₂",f(A2/100,2)+" см²"],["Отношение площадей φ",f(A1/A2,2)],["Время выдвижения",v.Q?f(t1,1)+" с":"—"],["Время втягивания",v.Q?f(t2,1)+" с":"—"],["Масло на выдвижение",f(A1*v.L/1e6,2)+" л"],["Мощность при выдвижении",v.Q?f(pM*q/1e6,2)+" кВт":"—"],"-",
+    ["Расчётная длина штока μ·2L",f(Lk,0)+" мм"],["Критическая сила по Эйлеру",C.sig(Fcr/1000)+" кН"],["Запас устойчивости",f(n,1)]]);
+  C.verdict($("ver"),n>=3.5,n>=3.5?`шток Ø${d} устойчив: запас ${f(n,1)} ≥ 3,5.`:`шток Ø${d} может потерять устойчивость: запас ${f(n,1)} < 3,5 — нужен толще шток или другое крепление.`);
+  if(Fn>0){
+    const Dmin=Math.sqrt(4*Fn*1000/(Math.PI*pM*eta)), Dok=DS.find(x=>x>=Dmin), dmin=Math.pow(64*3.5*Fn*1000*Lk*Lk/(Math.PI**3*E),0.25), dok=RODS.find(x=>x>=dmin);
+    $("need").hidden=false;
+    $("need").innerHTML=`Для ${f(Fn,1)} кН при ${f(v.p,0)} бар нужен поршень не меньше Ø${f(Dmin,1)} мм — стандартный <b>Ø${Dok||"больше 400"}</b>. Шток при этом ходе и креплении — не тоньше Ø${f(dmin,1)} мм, стандартный <b>Ø${dok||"—"}</b>. `+(Dok&&Dok!==D?`<button type="button" class="btn sm" id="apply">Подставить</button>`:"");
+    const b=$("apply"); if(b) b.onclick=()=>{ set({D:String(Dok)}); if(dok&&dok<Dok*0.8) set({d:String(dok)}); };
+  } else $("need").hidden=true;
+}
+calc();
+})();
+</script>

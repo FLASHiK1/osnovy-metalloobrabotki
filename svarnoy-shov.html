@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/svarnoy-shov.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Прочность сварного шва — Основы металлообработки">
+<meta property="og:description" content="Проверка стыкового и углового сварного шва: растяжение, сжатие, изгиб, срез. Нахлёсточное соединение фланговыми и лобовыми швами, кольцевой шов вокруг вала или трубы при кручении и изгибе. Потребный катет и длина шва.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/svarnoy-shov.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="shov-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Прочность сварного шва</title>
+<meta name="description" content="Проверка стыкового и углового сварного шва: растяжение, сжатие, изгиб, срез. Нахлёсточное соединение фланговыми и лобовыми швами, кольцевой шов вокруг вала или трубы при кручении и изгибе. Потребный катет и длина шва.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Прочность сварного шва</h1>
+      <p>Выберите тип соединения, введите нагрузку и размеры шва. Калькулятор посчитает напряжения в шве и сравнит их с допускаемыми для выбранного способа сварки, а для угловых швов найдёт потребный катет.</p>
+    </div>
+    <div class="std">Детали машин: сварные соединения<br>Угловой шов — по высоте 0,7·k</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="cseg" id="type" role="group" aria-label="Тип соединения"><button type="button" data-k="butt">Стыковой шов</button><button type="button" data-k="lap">Угловые швы внахлёст</button><button type="button" data-k="ring">Кольцевой шов вокруг вала</button></div>
+      <div class="grid2">
+        <div class="field" data-for="butt lap ring"><label for="F"><span id="Fl">Сила</span><i>кН</i></label><input type="text" id="F" inputmode="decimal"></div>
+        <div class="field" data-for="butt"><label for="dir">Направление силы</label><select id="dir"><option value="t">Растяжение</option><option value="c">Сжатие</option></select></div>
+        <div class="field" data-for="butt ring"><label for="M"><span>Изгибающий момент</span><i>Н·м</i></label><input type="text" id="M" inputmode="decimal"></div>
+        <div class="field" data-for="ring"><label for="T"><span>Крутящий момент</span><i>Н·м</i></label><input type="text" id="T" inputmode="decimal"></div>
+        <div class="field" data-for="butt"><label for="s"><span>Толщина листа s</span><i>мм</i></label><input type="text" id="s" inputmode="decimal"></div>
+        <div class="field" data-for="butt"><label for="l"><span>Длина шва</span><i>мм</i></label><input type="text" id="l" inputmode="decimal"></div>
+        <div class="field" data-for="lap ring"><label for="k"><span>Катет шва k</span><i>мм</i></label><input type="text" id="k" inputmode="decimal"></div>
+        <div class="field" data-for="lap"><label for="L"><span>Суммарная длина всех швов</span><i>мм</i></label><input type="text" id="L" inputmode="decimal"></div>
+        <div class="field" data-for="ring"><label for="D"><span>Диаметр по шву (вала, трубы)</span><i>мм</i></label><input type="text" id="D" inputmode="decimal"></div>
+        <div class="field" data-for="lap ring"><label for="smin"><span>Толщина тонкой детали</span><i>мм</i></label><input type="text" id="smin" inputmode="decimal"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="mat">Основной металл</label><select id="mat"><option value="235">Ст3, σт ≈ 235 МПа</option><option value="245">Сталь 20, σт ≈ 245 МПа</option><option value="325">09Г2С, σт ≈ 325 МПа</option><option value="355">Сталь 45, σт ≈ 355 МПа</option></select></div>
+        <div class="field"><label for="weld">Сварка</label><select id="weld"><option value="auto">Автомат под флюсом, ручная Э42А/Э50А</option><option value="man">Ручная электродами Э42, Э50</option></select></div>
+        <div class="field"><label for="sf"><span>Запас прочности [s]</span></label><input type="text" id="sf" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Запас [s] = 1,35–1,6 для статической нагрузки и сталей типа Ст3; при переменной нагрузке допускаемые напряжения дополнительно снижают коэффициентом 0,5–0,9 в зависимости от цикла.</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint" id="bigL">Напряжение в шве</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">[σ]р = σт / [s]                         — допускаемое для основного металла
+Стыковой:   σ = F/(s·l) + 6·M/(s·l²)     ≤ [σ′]
+Внахлёст:   τ = F / (0,7·k·ΣL)             ≤ [τ′]
+Кольцевой:  τF = F/(π·0,7·k·D),  τM = 4·M/(π·0,7·k·D²),  τT = 2·T/(π·0,7·k·D²)
+            τ = √((τF + τM)² + τT²)        ≤ [τ′]</div>
+      <p>Допускаемые напряжения в шве [σ′] и [τ′] — в долях от [σ]р:</p>
+      <div class="tbl"><table><thead><tr><th>Сварка</th><th class="n">Растяжение</th><th class="n">Сжатие</th><th class="n">Срез</th></tr></thead><tbody>
+        <tr><td>Автоматическая под флюсом, ручная электродами Э42А, Э50А</td><td class="n">1,0</td><td class="n">1,0</td><td class="n">0,65</td></tr>
+        <tr><td>Ручная электродами Э42, Э50</td><td class="n">0,9</td><td class="n">1,0</td><td class="n">0,6</td></tr></tbody></table></div>
+      <p>Угловой шов разрушается по биссектрисе — сечению высотой 0,7·k (для ручной сварки). Катет не делают меньше 3 мм и больше 1,2 толщины тонкой детали. Фланговые швы длиннее 60·k работают неравномерно, их расчётную длину ограничивают.</p>
+      <p>В длину шва не включают кратеры на концах: при сварке без выводных планок из фактической длины вычитают примерно по k с каждого конца.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчёт для машиностроительных узлов по курсу деталей машин. Строительные конструкции рассчитывают по СП 16.13330.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="raschet-vala.html">Расчёт вала</a> <a href="bolt-na-srez.html">Болт на срез</a> <a href="pruzhina-szhatiya.html">Пружина сжатия</a> <a href="progib-balki.html">Прогиб балки</a> <a href="remennaya-peredacha.html">Ремённая передача</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="marshrut-otverstiya.html">Маршрут отверстия</a> <a href="normirovanie.html">Нормирование</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const K={auto:{t:1,c:1,s:0.65},man:{t:0.9,c:1,s:0.6}};
+const st={type:"lap",F:"50",dir:"t",M:"0",T:"500",s:"10",l:"200",k:"6",L:"200",D:"60",smin:"8",mat:"235",weld:"man",sf:"1,5"};
+C.bind("shov-v1",st,["F","dir","M","T","s","l","k","L","D","smin","mat","weld","sf"],calc);
+C.seg("type",()=>st.type,k=>{ st.type=k; try{localStorage.setItem("shov-v1",JSON.stringify(st));}catch(e){} calc(); });
+function calc(){
+  document.querySelectorAll("[data-for]").forEach(e=>e.hidden=!e.dataset.for.split(" ").includes(st.type));
+  $("Fl").textContent=st.type==="butt"?"Сила поперёк шва":st.type==="lap"?"Сдвигающая сила":"Осевая сила";
+  const spec={sf:[1,10]};
+  if(st.type==="butt") Object.assign(spec,{F:[0,1e7],M:[0,1e9],s:[0.5,500],l:[1,1e5]});
+  if(st.type==="lap") Object.assign(spec,{F:[1e-6,1e7],k:[1,100],L:[1,1e5],smin:[0.5,500]});
+  if(st.type==="ring") Object.assign(spec,{F:[0,1e7],M:[0,1e9],T:[0,1e9],k:[1,100],D:[1,1e4],smin:[0.5,500]});
+  const v=C.read(st,spec); $("err").hidden=v.ok; $("warn").hidden=true;
+  if(!v.ok){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; return; }
+  const sr=+st.mat/v.sf, kk=K[st.weld], F=(v.F||0)*1000;
+  if(st.type==="butt"){
+    const M=v.M*1000, sF=F/(v.s*v.l), sM=6*M/(v.s*v.l*v.l), sg=sF+sM, A=sr*(st.dir==="c"?kk.c:kk.t);
+    $("bigL").textContent="Нормальное напряжение в шве"; $("big").innerHTML=`${f(sg,0)}<small>МПа</small>`;
+    C.kpis($("kpis"),[["Допускаемое [σ′]",f(A,0),"МПа"],["Загрузка",f(sg/A*100,0),"%"],["От силы",f(sF,0),"МПа"],["От изгиба",f(sM,0),"МПа"]]);
+    C.kv($("kv"),[["[σ]р основного металла",f(sr,0)+" МПа"],["Коэффициент шва",String(st.dir==="c"?kk.c:kk.t).replace(".",",")],["Площадь шва s·l",f(v.s*v.l,0)+" мм²"],["Наименьшая длина шва при этой нагрузке",f(minLenButt(F,M,v.s,A),0)+" мм"]]);
+    C.verdict($("ver"),sg<=A,sg<=A?"шов равнопрочен нагрузке.":"увеличьте длину шва или толщину листа, либо замените стык на соединение с накладками.");
+  } else {
+    const kz=0.7*v.k, A=sr*kk.s;
+    let tau, rows;
+    if(st.type==="lap"){
+      tau=F/(kz*v.L);
+      const kNeed=F/(0.7*v.L*A), LNeed=F/(kz*A);
+      rows=[["Расчётная высота 0,7·k",f(kz,2)+" мм"],["Площадь среза 0,7·k·ΣL",f(kz*v.L,0)+" мм²"],["Нужный катет при этой длине",f(kNeed,1)+" мм"],["Нужная длина при этом катете",f(LNeed,0)+" мм"]];
+      C.kpis($("kpis"),[["Допускаемое [τ′]",f(A,0),"МПа"],["Загрузка",f(tau/A*100,0),"%"],["Сила на 1 мм шва",f(F/v.L,0),"Н/мм"],["Нужный катет",f(Math.max(kNeed,3),1),"мм"]]);
+      if(v.L>60*v.k*2) { $("warn").hidden=false; $("warn").textContent="Если это два фланговых шва, каждый длиннее 60·k: нагрузка по длине распределяется неравномерно, в расчёт берут не больше 60·k каждого."; }
+    } else {
+      const D=v.D, tF=F/(Math.PI*kz*D), tM=4*v.M*1000/(Math.PI*kz*D*D), tT=2*v.T*1000/(Math.PI*kz*D*D);
+      tau=Math.hypot(tF+tM,tT);
+      const kNeed=tau*v.k/A;
+      rows=[["От осевой силы τF",f(tF,1)+" МПа"],["От изгиба τM",f(tM,1)+" МПа"],["От кручения τT",f(tT,1)+" МПа"],"-",["Расчётная высота 0,7·k",f(kz,2)+" мм"],["Длина шва по окружности",f(Math.PI*D,0)+" мм"]];
+      C.kpis($("kpis"),[["Допускаемое [τ′]",f(A,0),"МПа"],["Загрузка",f(tau/A*100,0),"%"],["Нужный катет",f(Math.max(kNeed,3),1),"мм"],["Предельный момент T",C.sig(A*Math.PI*kz*D*D/2/1000),"Н·м"]]);
+    }
+    $("bigL").textContent="Касательное напряжение в шве"; $("big").innerHTML=`${f(tau,0)}<small>МПа</small>`;
+    C.kv($("kv"),[["[σ]р основного металла",f(sr,0)+" МПа"],["Коэффициент на срез",String(kk.s).replace(".",",")]].concat(rows));
+    C.verdict($("ver"),tau<=A,tau<=A?"прочность шва обеспечена.":"увеличьте катет или длину шва.");
+    const kmax=1.2*v.smin;
+    if(v.k<3||v.k>kmax){ $("warn").hidden=false; $("warn").textContent=v.k<3?"Катет меньше 3 мм на практике не выполняют.":`Катет больше 1,2 толщины тонкой детали (${f(kmax,1)} мм): прожог и перегрев кромки.`; }
+  }
+}
+function minLenButt(F,M,s,A){ // корень уравнения F/(s l) + 6M/(s l²) = A
+  const a=A*s; return (F+Math.sqrt(F*F+24*M*a))/(2*a);
+}
+calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

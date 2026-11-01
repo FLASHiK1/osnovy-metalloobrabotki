@@ -168,11 +168,11 @@ a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
     <div>
       <div class="eyebrow">Справочник-калькулятор для технологов, конструкторов и станочников</div>
       <h1>Основы металло&shy;обработки</h1>
-      <p>Расчёты, которые нужны каждый день у чертежа и у станка: допуски и посадки, размерные цепи, шероховатость, режимы резания, резьбы, конусы, G-коды, момент затяжки, зубчатые колёса, сборка с натягом, гибка и раскрой листа, расход на сварку, масса заготовки, аналоги марок, дюймы и себестоимость. Всё по ГОСТ, с переводом из ISO, китайских GB и старых ОСТ. Бесплатно, без регистрации.</p>
+      <p>Расчёты, которые нужны каждый день у чертежа и у станка: допуски и посадки, размерные цепи, шероховатость, режимы резания, резьбы, конусы, G-коды, момент затяжки, зубчатые колёса, сборка с натягом, прочность валов, болтов, швов и балок, пружины, ремённые и цепные передачи, гидроцилиндры, маршруты обработки и нормирование, гибка и раскрой листа, расход на сварку, масса заготовки, аналоги марок, дюймы и себестоимость. Всё по ГОСТ, с переводом из ISO, китайских GB и старых ОСТ. Бесплатно, без регистрации.</p>
       <div class="hsearch"><input type="search" id="hq" placeholder="Найти: посадка H7, резьба M10, 40Х, подшипник 180205…" aria-label="Поиск по сайту" autocomplete="off"><div id="hres" class="hres"></div></div>
     </div>
     <div class="facts">
-      <div><b>26</b><span>инструментов</span></div>
+      <div><b>36</b><span>инструментов</span></div>
       <div><b>ГОСТ</b><span>ISO · GB · ОСТ</span></div>
       <div><b>0 ₽</b><span>без регистрации</span></div>
     </div>
@@ -188,12 +188,14 @@ a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
   </section>
 
   <section class="sec">
-    <header><h2>Обработка</h2><p>Режимы, инструмент, резьбы</p></header>
+    <header><h2>Обработка</h2><p>Режимы, резьбы, маршруты, нормирование</p></header>
     <div class="cards">
       <a class="card" href="rezhimy-rezaniya.html"><div><h3>Режимы резания</h3><p>Точение, фрезерование, сверление и резьбофрезерование: обороты, подача, мощность, момент, машинное время. Проверка, потянет ли станок, и строка для программы ЧПУ.</p><div class="tags"><span>ISO P M K N S H</span><span>твёрдый сплав · Р6М5</span><span>G96 · G94 · G03</span></div></div><span class="go" aria-hidden="true">→</span></a>
       <a class="card" href="rezby.html"><div><h3>Резьбы</h3><p>Диаметры и допуски метрической резьбы 6g/6H, сверло под метчик и раскатник, отверстия под крепёж, размер под ключ, трубная резьба G.</p><div class="tags"><span>ГОСТ 24705</span><span>ГОСТ 16093</span><span>ГОСТ 6357</span></div></div><span class="go" aria-hidden="true">→</span></a>
       <a class="card" href="rezba-rezcom.html"><div><h3>Нарезание резьбы резцом</h3><p>Число проходов и глубина каждого с уменьшающимся врезанием, обороты, готовые кадры G76 и G92 для Fanuc, GSK, KND.</p><div class="tags"><span>G76 · G92</span><span>проходы</span></div></div><span class="go" aria-hidden="true">→</span></a>
       <a class="card" href="konusy.html"><div><h3>Конусы</h3><p>Конусность, угол и уклон по диаметрам и длине. На сколько повернуть верхние салазки или сместить заднюю бабку. Конусы Морзе, 7:24 и нормальные конусности.</p><div class="tags"><span>ГОСТ 8593</span><span>Морзе 0–6</span><span>7:24</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="marshrut-otverstiya.html"><div><h3>Маршрут обработки отверстия</h3><p>Сверление, зенкерование, развёртывание для H7–H14: диаметры инструмента и припуски на каждый переход.</p><div class="tags"><span>H7 … H14</span><span>припуски</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="normirovanie.html"><div><h3>Нормирование: основное и штучное время</h3><p>Машинное время точения, сверления, фрезерования и резьбы с врезанием и перебегом, штучное время, выработка за смену.</p><div class="tags"><span>To · Tшт · Tшк</span><span>выработка</span></div></div><span class="go" aria-hidden="true">→</span></a>
     </div>
   </section>
 
@@ -218,6 +220,26 @@ a.card .go{font-size:22px;color:var(--muted);transition:transform .15s}
       <a class="card" href="zatyazhka.html"><div><h3>Момент затяжки болтов</h3><p>Усилие и момент затяжки для M3–M48, классов 4.6–12.9 и нержавеющих A2, A4 с учётом трения в резьбе и под головкой. Таблица моментов для всех размеров.</p><div class="tags"><span>VDI 2230</span><span>Н·м · кгс·м</span></div></div><span class="go" aria-hidden="true">→</span></a>
       <a class="card" href="shesterni.html"><div><h3>Зубчатые колёса</h3><p>Диаметры, межосевое расстояние, перекрытие и длина общей нормали для прямозубых и косозубых колёс. Как узнать модуль у готовой шестерни.</p><div class="tags"><span>модуль · z · β</span><span>ГОСТ 16532</span></div></div><span class="go" aria-hidden="true">→</span></a>
       <a class="card" href="natyag.html"><div><h3>Сборка с натягом</h3><p>До скольких градусов нагреть ступицу или охладить вал, контактное давление, передаваемый момент и усилие запрессовки.</p><div class="tags"><span>формулы Ляме</span><span>нагрев · азот</span></div></div><span class="go" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <header><h2>Прочность</h2><p>Валы, болты, швы, пружины, балки</p></header>
+    <div class="cards">
+      <a class="card" href="raschet-vala.html"><div><h3>Расчёт вала на кручение и изгиб</h3><p>Диаметр по мощности и оборотам или моменту, эквивалентный момент при изгибе, проверка напряжений и угла закручивания.</p><div class="tags"><span>кручение · изгиб</span><span>ГОСТ 6636</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="bolt-na-srez.html"><div><h3>Болтовое соединение на срез</h3><p>Призонный болт на срез и смятие, болт с зазором — потребная затяжка по трению. Сколько болтов нужно.</p><div class="tags"><span>срез · смятие</span><span>трение на стыке</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="svarnoy-shov.html"><div><h3>Прочность сварного шва</h3><p>Стыковой и угловой шов, нахлёстка, кольцевой шов вокруг вала при кручении и изгибе. Потребный катет.</p><div class="tags"><span>стыковой · угловой</span><span>катет шва</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="pruzhina-szhatiya.html"><div><h3>Расчёт пружины сжатия</h3><p>Жёсткость, осадка, длина под нагрузкой и до упора, напряжения, устойчивость, масса проволоки.</p><div class="tags"><span>жёсткость</span><span>ГОСТ 13765</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="progib-balki.html"><div><h3>Прогиб и прочность балки</h3><p>Консоль, две опоры, заделки; сила или равномерная нагрузка. Сечения: прямоугольник, круг, труба, профиль.</p><div class="tags"><span>6 схем</span><span>σ · f · L/n</span></div></div><span class="go" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <header><h2>Приводы</h2><p>Ремни, цепи, гидравлика</p></header>
+    <div class="cards">
+      <a class="card" href="remennaya-peredacha.html"><div><h3>Ремённая передача</h3><p>Длина ремня, стандартная длина и межосевое под неё, угол обхвата, скорость и число пробегов.</p><div class="tags"><span>ГОСТ 1284.1</span><span>угол обхвата</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="cepnaya-peredacha.html"><div><h3>Цепная передача</h3><p>Число звеньев роликовой цепи, точное межосевое, диаметры звёздочек, скорость цепи.</p><div class="tags"><span>ГОСТ 13568</span><span>чётное число звеньев</span></div></div><span class="go" aria-hidden="true">→</span></a>
+      <a class="card" href="gidrocilindr.html"><div><h3>Расчёт гидроцилиндра</h3><p>Усилия и скорости в обе стороны, время хода, объём масла, подбор диаметра поршня, устойчивость штока.</p><div class="tags"><span>ГОСТ 6540</span><span>Эйлер</span></div></div><span class="go" aria-hidden="true">→</span></a>
     </div>
   </section>
 

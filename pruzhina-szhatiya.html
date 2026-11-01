@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/pruzhina-szhatiya.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Расчёт пружины сжатия — Основы металлообработки">
+<meta property="og:description" content="Жёсткость, осадка и напряжения цилиндрической винтовой пружины сжатия из круглой проволоки: длина под нагрузкой, длина при соприкосновении витков, проверка на прочность и устойчивость, длина и масса проволоки.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/pruzhina-szhatiya.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="pruzhina-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Расчёт пружины сжатия</title>
+<meta name="description" content="Жёсткость, осадка и напряжения цилиндрической винтовой пружины сжатия из круглой проволоки: длина под нагрузкой, длина при соприкосновении витков, проверка на прочность и устойчивость, длина и масса проволоки.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Расчёт пружины сжатия</h1>
+      <p>Введите проволоку, диаметр пружины, число рабочих витков и свободную длину. Калькулятор посчитает жёсткость, длину под рабочей силой и напряжения. Затем он проверит, не перегрузится ли пружина, если её сжать до упора, и не потеряет ли она устойчивость.</p>
+    </div>
+    <div class="std">Цилиндрическая пружина сжатия<br>ГОСТ 13765, DIN EN 13906-1</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="d"><span>Диаметр проволоки d</span><i>мм</i></label><input type="text" id="d" inputmode="decimal"></div>
+        <div class="field"><label for="De"><span>Наружный диаметр пружины</span><i>мм</i></label><input type="text" id="De" inputmode="decimal"></div>
+        <div class="field"><label for="n"><span>Рабочих витков n</span></label><input type="text" id="n" inputmode="decimal"></div>
+        <div class="field"><label for="L0"><span>Свободная длина L₀</span><i>мм</i></label><input type="text" id="L0" inputmode="decimal"></div>
+        <div class="field"><label for="F"><span>Рабочая сила</span><i>Н</i></label><input type="text" id="F" inputmode="decimal"></div>
+        <div class="field"><label for="ends">Концы</label><select id="ends"><option value="g">Поджаты и сошлифованы</option><option value="u">Поджаты, не шлифованы</option></select></div>
+        <div class="field"><label for="mat">Материал</label><select id="mat"><option value="78500">Пружинная сталь (65Г, 60С2А, проволока ГОСТ 9389), G 78 500</option><option value="70000">Нержавеющая 12Х18Н10Т, G ≈ 70 000</option><option value="42000">Бронза БрКМц3-1, G ≈ 42 000</option></select></div>
+        <div class="field"><label for="Rm"><span>Предел прочности проволоки Rm</span><i>МПа</i></label><input type="text" id="Rm" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Rm смотрите в сертификате на проволоку: у пружинной проволоки он 1400–2400 МПа и тем выше, чем тоньше проволока. Рабочих витков на 2 меньше полного числа: крайние витки поджаты и не работают.</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным. Наружный диаметр должен быть больше двух диаметров проволоки.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Жёсткость пружины</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">D = Dнар − d,  c = D / d                         — средний диаметр и индекс
+R = G · d⁴ / (8 · D³ · n)                       — жёсткость, Н/мм
+k = (4c − 1)/(4c − 4) + 0,615/c                 — коэффициент кривизны витка (Валь)
+τ = k · 8 · F · D / (π · d³)                    — напряжение под силой F
+n₁ = n + 2;  Ls ≈ n₁·d (шлифованные), (n₁ + 1,5)·d (нешлифованные)</div>
+      <p>Проверка по DIN EN 13906-1: при сжатии до соприкосновения витков напряжение без поправки на кривизну не должно превышать 0,5·Rm. Тогда пружину можно сжать до упора без остаточной осадки. Для пружин, работающих на усталость (клапанные, с миллионами циклов), допускаемые напряжения ниже и зависят от размаха хода.</p>
+      <p>Индекс c удобно держать в пределах 4–12: при меньшем пружину трудно навить, при большем она «мягкая» и путается при хранении.</p>
+      <p>Устойчивость: если L₀ / D больше примерно 2,6 (опоры на параллельных плитах), длинная пружина при большом сжатии выгибается вбок. Её ставят на оправку или в стакан.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчёт для пружин из круглой проволоки при статической нагрузке. Модуль сдвига и прочность проволоки уточняйте по стандарту и сертификату.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="raschet-vala.html">Расчёт вала</a> <a href="bolt-na-srez.html">Болт на срез</a> <a href="svarnoy-shov.html">Сварной шов</a> <a href="progib-balki.html">Прогиб балки</a> <a href="remennaya-peredacha.html">Ремённая передача</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="marshrut-otverstiya.html">Маршрут отверстия</a> <a href="normirovanie.html">Нормирование</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const RHO={78500:7.85,70000:7.9,42000:8.8};
+const st={d:"2",De:"20",n:"8",L0:"50",F:"50",ends:"g",mat:"78500",Rm:"1800"};
+C.bind("pruzhina-v1",st,["d","De","n","L0","F","ends","mat","Rm"],calc);
+function calc(){
+  const v=C.read(st,{d:[0.05,100],De:[0.2,2000],n:[0.5,500],L0:[0.5,1e4],F:[0,1e7],Rm:[100,4000]});
+  const okD=v.De>2*v.d; if(v.ok&&!okD) $("De").classList.add("bad");
+  $("err").hidden=v.ok&&okD; $("warn").hidden=true;
+  if(!v.ok||!okD){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; return; }
+  const G=+st.mat, d=v.d, D=v.De-d, c=D/d, n=v.n, n1=n+2;
+  const k=(4*c-1)/(4*c-4)+0.615/c, R=G*d**4/(8*D**3*n);
+  const Ls=st.ends==="g"?n1*d:(n1+1.5)*d, sc=v.L0-Ls, Fc=R*sc;
+  const s=v.F/R, L=v.L0-s, tau=k*8*v.F*D/(Math.PI*d**3), tc=8*Fc*D/(Math.PI*d**3), tA=0.5*v.Rm;
+  const pitch=(v.L0-(st.ends==="g"?2:3.5)*d)/n, wire=Math.PI*D*n1, mass=RHO[G]*Math.PI*d*d/4*wire/1000;
+  $("big").innerHTML=`${C.sig(R)}<small>Н/мм</small>`;
+  C.kpis($("kpis"),[["Осадка под силой",f(s,1),"мм"],["Длина под силой",f(L,1),"мм"],["Напряжение τ",f(tau,0),"МПа"],["Сила до упора",C.sig(Fc),"Н"]]);
+  C.kv($("kv"),[["Средний диаметр D",f(D,2)+" мм"],["Индекс c = D/d",f(c,2)],["Коэффициент кривизны k",f(k,3)],["Полное число витков n₁",f(n1,1)],["Длина при соприкосновении Ls",f(Ls,1)+" мм"],["Ход до упора",f(sc,1)+" мм"],["Шаг витков",f(pitch,2)+" мм"],"-",
+    ["τ при сжатии до упора",f(tc,0)+" МПа"],["Допускаемое 0,5·Rm",f(tA,0)+" МПа"],["Длина проволоки",f(wire,0)+" мм"],["Масса",f(mass,mass<10?2:1)+" г"]]);
+  const solidOk=tc<=tA, workOk=L>Ls;
+  C.verdict($("ver"),solidOk&&workOk&&sc>0,sc<=0?"свободная длина меньше длины сжатой до упора пружины — витки уже соприкасаются.":!workOk?"рабочая сила сжимает пружину до соприкосновения витков: увеличьте жёсткость или длину.":solidOk?`пружину можно сжать до упора: ${f(tc,0)} МПа ≤ ${f(tA,0)} МПа.`:`при сжатии до упора ${f(tc,0)} МПа > ${f(tA,0)} МПа — нужен ограничитель хода или более толстая проволока.`);
+  const w=[]; if(c<4) w.push("Индекс меньше 4: такую пружину трудно навить."); if(c>12) w.push("Индекс больше 12: пружина мягкая и может путаться.");
+  if(v.L0/D>2.6&&s/v.L0>0.2) w.push(`L₀/D = ${f(v.L0/D,1)}: возможна потеря устойчивости — поставьте пружину на оправку или в стакан.`);
+  if(w.length){ $("warn").hidden=false; $("warn").textContent=w.join(" "); }
+}
+calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

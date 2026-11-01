@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/marshrut-otverstiya.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Маршрут обработки отверстия — Основы металлообработки">
+<meta property="og:description" content="Как получить отверстие нужной точности: сверление, зенкерование, черновое и чистовое развёртывание или растачивание. Диаметры инструмента и припуски на каждом переходе для отверстий H7–H14 и шероховатости Ra 12,5–0,8.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/marshrut-otverstiya.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="otverstie-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Маршрут обработки отверстия</title>
+<meta name="description" content="Как получить отверстие нужной точности: сверление, зенкерование, черновое и чистовое развёртывание или растачивание. Диаметры инструмента и припуски на каждом переходе для отверстий H7–H14 и шероховатости Ra 12,5–0,8.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+.route{display:flex;flex-direction:column;gap:0;counter-reset:st}
+.step{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+.step:last-child{border-bottom:0}
+.step::before{counter-increment:st;content:counter(st);grid-row:1/3;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--paper);display:grid;place-items:center;font-size:13px;font-weight:600}
+.step b{font-size:15px}
+.step .dia{font-family:var(--f-num);font-size:18px;font-weight:600;text-align:right;white-space:nowrap}
+.step .sub{grid-column:2/4;font-size:12px;color:var(--muted)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Маршрут обработки отверстия</h1>
+      <p>Задайте диаметр, квалитет и шероховатость отверстия. Калькулятор составит последовательность переходов в сплошном материале: сверление, зенкерование, развёртывание. Для каждого перехода он даст диаметр инструмента и оставляемый припуск.</p>
+    </div>
+    <div class="std">Типовые маршруты и припуски<br>Допуски — ГОСТ 25346 (ISO 286)</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="D"><span>Диаметр отверстия</span><i>мм</i></label><input type="text" id="D" inputmode="decimal"></div>
+        <div class="field"><label for="it">Поле допуска</label><select id="it"><option value="14">H14</option><option value="13">H13</option><option value="12">H12</option><option value="11">H11</option><option value="10">H10</option><option value="9">H9</option><option value="8">H8</option><option value="7">H7</option></select></div>
+        <div class="field"><label for="ra">Шероховатость Ra, мкм</label><select id="ra"><option value="12.5">12,5</option><option value="6.3">6,3</option><option value="3.2">3,2</option><option value="1.6">1,6</option><option value="0.8">0,8</option></select></div>
+        <div class="field"><label for="len"><span>Глубина отверстия</span><i>мм</i></label><input type="text" id="len" inputmode="decimal"></div>
+        <div class="field"><label for="way">Оборудование</label><select id="way"><option value="univ">Сверлильный, токарный — мерный инструмент</option><option value="cnc">Станок с ЧПУ — можно растачивать</option></select></div>
+      </div>
+      <div class="hint">Маршрут — для отверстия в сплошном металле (сталь, чугун, цветные сплавы). Если отверстие уже есть в отливке или поковке, сверление пропускают и начинают с зенкерования или растачивания.</div>
+      <div id="err" class="note bad" hidden>Диаметр — от 1 до 200 мм, глубина — положительное число.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Отверстие</div><div class="cbig" id="big">—</div></div>
+      <div class="hint" id="lim"></div>
+      <div class="route" id="route"></div>
+      <div id="alt" class="note" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Что даёт каждый метод</h2><span class="hint">Экономическая точность при нормальных условиях</span></div>
+    <div class="tbl"><table><thead><tr><th>Метод</th><th class="n">Квалитет</th><th class="n">Ra, мкм</th><th>Назначение</th></tr></thead><tbody>
+      <tr><td>Сверление</td><td class="n">IT12–IT14</td><td class="n">12,5–6,3</td><td>Получение отверстия в сплошном металле, крепёжные отверстия</td></tr>
+      <tr><td>Рассверливание</td><td class="n">IT12–IT13</td><td class="n">12,5–6,3</td><td>Отверстия больше 30 мм: сначала сверло меньшего диаметра</td></tr>
+      <tr><td>Зенкерование</td><td class="n">IT10–IT11</td><td class="n">6,3–3,2</td><td>Исправляет увод оси после сверла, готовит под развёртку</td></tr>
+      <tr><td>Развёртывание черновое</td><td class="n">IT8–IT9</td><td class="n">3,2–1,6</td><td>Отверстия H8–H9, подготовка к чистовой развёртке</td></tr>
+      <tr><td>Развёртывание чистовое</td><td class="n">IT7</td><td class="n">1,6–0,8</td><td>Посадочные отверстия H7 под штифты, втулки, подшипники</td></tr>
+      <tr><td>Растачивание черновое / чистовое</td><td class="n">IT9–IT11 / IT7–IT8</td><td class="n">6,3 / 1,6–0,8</td><td>Большие диаметры, точное положение оси, нестандартный размер</td></tr>
+      <tr><td>Тонкое растачивание, хонингование, раскатка</td><td class="n">IT6–IT7</td><td class="n">0,4–0,1</td><td>Гидроцилиндры, гильзы, точные посадки</td></tr></tbody></table></div>
+  </section>
+
+  <details class="theory">
+    <summary>Откуда припуски</summary>
+    <div class="tbody">
+      <p>Припуски на диаметр взяты типовыми для отверстий в сплошном материале. Под зенкер оставляют 1–3 мм в зависимости от диаметра. Под черновую развёртку — 0,15–0,3 мм. Под чистовую — 0,05–0,1 мм. Сверла выпускаются с шагом 0,1 мм, поэтому диаметр сверла округлён вниз до 0,1 мм (свыше 20 мм — до 0,5 мм).</p>
+      <p>Если оставить под развёртку слишком много, она будет рвать поверхность. Если слишком мало — не уберёт следы зенкера и будет скользить, наклёпывая металл. Для вязких сталей и алюминия припуск под чистовую развёртку берут ближе к нижней границе.</p>
+      <p>Развёртка копирует положение оси от предыдущего перехода. Если важна позиция отверстия, а не только диаметр, после сверления нужен зенкер или расточной резец, а для точных межосевых — расточка на ЧПУ или координатно-расточном станке.</p>
+    </div>
+  </details>
+
+  <footer><span>Типовой маршрут. Диаметры зенкеров и развёрток для конкретного поля допуска уточняйте по каталогу инструмента: исполнительный размер развёртки зависит от материала и разбивки.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="raschet-vala.html">Расчёт вала</a> <a href="bolt-na-srez.html">Болт на срез</a> <a href="svarnoy-shov.html">Сварной шов</a> <a href="pruzhina-szhatiya.html">Пружина сжатия</a> <a href="progib-balki.html">Прогиб балки</a> <a href="remennaya-peredacha.html">Ремённая передача</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="normirovanie.html">Нормирование</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+// допуски IT7…IT14, мкм, по интервалам размеров ГОСТ 25346
+const IV=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const IT={7:[10,12,15,18,21,25,30,35,40,46,52,57,63],8:[14,18,22,27,33,39,46,54,63,72,81,89,97],9:[25,30,36,43,52,62,74,87,100,115,130,140,155],10:[40,48,58,70,84,100,120,140,160,185,210,230,250],11:[60,75,90,110,130,160,190,220,250,290,320,360,400],12:[100,120,150,180,210,250,300,350,400,460,520,570,630],13:[140,180,220,270,330,390,460,540,630,720,810,890,970],14:[250,300,360,430,520,620,740,870,1000,1150,1300,1400,1550]};
+const itv=(q,D)=>IT[q][IV.findIndex(x=>D<=x)];
+const RA_LEVEL={"12.5":0,"6.3":1,"3.2":2,"1.6":3,"0.8":4};
+const IT_LEVEL={14:0,13:0,12:0,11:1,10:2,9:3,8:3,7:4};
+const st={D:"20",it:"7",ra:"1.6",len:"40",way:"univ"};
+C.bind("otverstie-v1",st,["D","it","ra","len","way"],calc);
+const fin=D=>D<=18?0.05:D<=50?0.07:0.1, rough=D=>D<=18?0.15:D<=30?0.2:D<=50?0.25:0.3, zen=D=>D<=14?1:D<=24?1.5:D<=50?2:3;
+const drillRound=x=>x>20?Math.floor(x*2+1e-9)/2:Math.floor(x*10+1e-9)/10;
+const n=x=>f(x,x%1===0?0:Math.round(x*100)%10===0?1:2);
+function calc(){
+  const v=C.read(st,{D:[1,200],len:[0.1,1e4]}); $("err").hidden=v.ok; $("warn").hidden=true; $("alt").hidden=true;
+  if(!v.ok){ $("big").textContent="—"; $("route").innerHTML=""; $("lim").textContent=""; return; }
+  const D=v.D, q=+st.it, T=itv(q,D)/1000, lvl=Math.max(RA_LEVEL[st.ra],IT_LEVEL[q]);
+  $("big").innerHTML=`Ø${n(D)} H${q}<small>Ra ${st.ra.replace(".",",")}</small>`;
+  $("lim").textContent=`Допуск IT${q} = ${f(T*1000,0)} мкм: от ${f(D,3)} до ${f(D+T,3)} мм`;
+  const small=D<=10, S=[]; // переходы от последнего к первому: [название, диаметр, что даёт]
+  let before=D;
+  if(lvl>=4){ S.push(["Развёртывание чистовое",D,"чистовая развёртка H7 · IT7, Ra 1,6–0,8"]); before=D-fin(D); }
+  if(lvl>=3){ S.push([lvl>=4?"Развёртывание черновое":"Развёртывание",before,(lvl>=4?"черновая развёртка":"развёртка H"+Math.max(q,8))+" · IT8–IT9, Ra 3,2–1,6"]); before=D-rough(D); }
+  else if(lvl===2&&small){ S.push(["Развёртывание",D,"развёртка H9 · IT9, Ra 3,2"]); before=D-rough(D); }
+  if(lvl>=1&&!small){ S.push(["Зенкерование",before,"зенкер"+(lvl>=3?" под развёртку":"")+" · IT10–IT11, Ra 6,3–3,2"]); before-=zen(D); }
+  const exact=lvl===0||(lvl===1&&small), dd=exact?D:drillRound(before);
+  if(dd>30){ S.push(["Рассверливание",dd,"сверло второго прохода · IT12–IT13"]); S.push(["Сверление",drillRound(Math.max(10,dd*0.5)),"первый проход сверлом примерно половины диаметра — меньше осевая сила"]); }
+  else S.push(["Сверление",dd,lvl===0?"IT12–IT14, Ra 12,5":exact?"точное короткое сверло · IT11, Ra 6,3":"спиральное сверло · IT12–IT13"]);
+  S.reverse();
+  const steps=S.map((x,i)=>[x[0],x[1],(i?`припуск ${f(x[1]-S[i-1][1],2)} мм на диаметр · `:"")+x[2]]);
+  steps.unshift(["Центрование",null,"центровочное сверло или сверло-центровка 90°: без него сверло уводит"]);
+  $("route").innerHTML=steps.map(s=>`<div class="step"><b>${s[0]}</b><span class="dia">${s[1]==null?"":"Ø"+n(s[1])}</span><span class="sub">${s[2]}</span></div>`).join("");
+  if(st.way==="cnc"&&lvl>=2&&D>=16){ $("alt").hidden=false; $("alt").textContent=`На ЧПУ вместо зенкера и развёрток можно: сверление Ø${n(drillRound(D-2))} → черновое растачивание до Ø${f(D-0.3,2)} → чистовое растачивание в размер. Растачивание исправляет положение оси и не требует мерного инструмента под каждый размер.`; }
+  else if(st.way==="cnc"&&lvl<=1&&D>=12){ $("alt").hidden=false; $("alt").textContent=`На ЧПУ отверстие H${q} можно также получить фрезерованием по винтовой интерполяции концевой фрезой — без сверла нужного диаметра.`; }
+  const w=[]; const ld=v.len/D;
+  if(ld>10) w.push(`Глубина ${f(ld,0)}·D — глубокое сверление: нужны сверла с внутренним подводом СОЖ или ружейное сверление и периодический вывод сверла.`); else if(ld>5) w.push(`Глубина ${f(ld,1)}·D: сверлите с выводом сверла для удаления стружки (цикл G83).`);
+  if(+st.ra<=0.8&&q>=8) w.push("Ra 0,8 при грубом квалитете — обычно лишнее требование; проверьте чертёж.");
+  if(D>80) w.push("Свыше 80 мм отверстия в сплошном металле обычно не сверлят: делают в заготовке и растачивают, или вырезают кольцевым сверлом.");
+  if(w.length){ $("warn").hidden=false; $("warn").textContent=w.join(" "); }
+}
+calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

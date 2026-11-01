@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/remennaya-peredacha.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Ремённая передача: длина ремня и межосевое — Основы металлообработки">
+<meta property="og:description" content="Расчёт геометрии клиноремённой и плоскоремённой передачи: передаточное число, длина ремня, стандартная длина по ГОСТ 1284.1 и уточнённое межосевое расстояние, угол обхвата, скорость ремня и число пробегов.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/remennaya-peredacha.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="remen-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Ремённая передача: длина ремня и межосевое</title>
+<meta name="description" content="Расчёт геометрии клиноремённой и плоскоремённой передачи: передаточное число, длина ремня, стандартная длина по ГОСТ 1284.1 и уточнённое межосевое расстояние, угол обхвата, скорость ремня и число пробегов.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Ремённая передача: длина ремня и межосевое</h1>
+      <p>Введите диаметры шкивов и примерное межосевое расстояние. Калькулятор посчитает длину ремня, подберёт ближайшую стандартную длину, уточнит под неё межосевое и проверит угол обхвата малого шкива и скорость ремня.</p>
+    </div>
+    <div class="std">Геометрия ремённых передач<br>Длины ремней — ГОСТ 1284.1</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="cseg" id="kind" role="group" aria-label="Тип ремня"><button type="button" data-k="v">Клиновой, поликлиновой</button><button type="button" data-k="flat">Плоский, зубчатый</button></div>
+      <div class="grid2">
+        <div class="field"><label for="d1"><span>Диаметр малого шкива d₁</span><i>мм</i></label><input type="text" id="d1" inputmode="decimal"></div>
+        <div class="field"><label for="d2"><span>Диаметр большого шкива d₂</span><i>мм</i></label><input type="text" id="d2" inputmode="decimal"></div>
+        <div class="field"><label for="a"><span>Межосевое расстояние (примерно)</span><i>мм</i></label><input type="text" id="a" inputmode="decimal"></div>
+        <div class="field"><label for="n1"><span>Обороты малого шкива</span><i>об/мин</i></label><input type="text" id="n1" inputmode="decimal"></div>
+      </div>
+      <div class="hint" id="hint"></div>
+      <div id="err" class="note bad" hidden>Проверьте поля: d₂ не меньше d₁, межосевое больше полусуммы радиусов.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Расчётная длина ремня</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Стандартные длины рядом</h2><span class="hint">Нажмите строку, чтобы взять межосевое</span></div>
+    <div class="tbl" id="tbl"></div>
+  </section>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">u = d₂ / (d₁ · (1 − ε)),  ε ≈ 0,01                — передаточное число со скольжением
+L = 2a + π(d₁ + d₂)/2 + (d₂ − d₁)² / (4a)          — длина ремня
+a = [2L − π(d₁+d₂) + √((2L − π(d₁+d₂))² − 8(d₂ − d₁)²)] / 8   — межосевое под длину L
+α₁ = 180° − 57,3° · (d₂ − d₁) / a                — угол обхвата малого шкива
+v = π · d₁ · n₁ / 60 000,  U = v / L               — скорость, м/с, и число пробегов, 1/с</div>
+      <p>Для клиновых ремней диаметры шкивов — расчётные (по нейтральному слою), длина — расчётная Lp. Рекомендуемое межосевое: от 0,55·(d₁ + d₂) + h до 2·(d₁ + d₂), где h — высота сечения ремня. Угол обхвата — не меньше 120° (для плоских ремней — 150°). Скорость клиновых ремней обычного сечения — до 25–30 м/с, число пробегов — не больше 10 в секунду.</p>
+      <p>Стандартный ряд длин здесь — ряд R20 предпочтительных чисел, по которому построен ГОСТ 1284.1. Какие длины выпускаются для конкретного сечения (Z, A, B, C…), уточняйте в стандарте или каталоге. Мощность, передаваемую одним ремнём, и число ремней берут по таблицам ГОСТ 1284.3.</p>
+      <p>Межосевое делают регулируемым: на 2 % длины ремня в сторону уменьшения для надевания и на 3–5 % в сторону увеличения для натяжения.</p>
+    </div>
+  </details>
+
+  <footer><span>Геометрический расчёт. Число ремней и передаваемая мощность — по ГОСТ 1284.3 или каталогу производителя ремней.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="raschet-vala.html">Расчёт вала</a> <a href="bolt-na-srez.html">Болт на срез</a> <a href="svarnoy-shov.html">Сварной шов</a> <a href="pruzhina-szhatiya.html">Пружина сжатия</a> <a href="progib-balki.html">Прогиб балки</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="marshrut-otverstiya.html">Маршрут отверстия</a> <a href="normirovanie.html">Нормирование</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const R20=[1,1.12,1.25,1.4,1.6,1.8,2,2.24,2.5,2.8,3.15,3.55,4,4.5,5,5.6,6.3,7.1,8,9];
+const LEN=[100,1000,10000].flatMap(m=>R20.map(x=>Math.round(x*m))).filter(x=>x>=400&&x<=18000);
+const st={kind:"v",d1:"100",d2:"200",a:"400",n1:"1450",pick:""};
+const set=C.bind("remen-v1",st,["d1","d2","a","n1"],calc);
+C.seg("kind",()=>st.kind,k=>set({kind:k}));
+function aFor(L,d1,d2){ const b=2*L-Math.PI*(d1+d2), D=b*b-8*(d2-d1)**2; return D<0?NaN:(b+Math.sqrt(D))/8; }
+function calc(){
+  const v=C.read(st,{d1:[1,1e4],d2:[1,1e4],a:[1,1e5],n1:[0,1e5]});
+  const ok=v.ok&&v.d2>=v.d1&&v.a>(v.d1+v.d2)/2;
+  if(v.ok&&!ok){ $("d2").classList.toggle("bad",v.d2<v.d1); $("a").classList.toggle("bad",v.a<=(v.d1+v.d2)/2); }
+  $("err").hidden=ok; $("warn").hidden=true;
+  const vee=st.kind==="v";
+  $("hint").textContent=vee?"Диаметры — расчётные, по нейтральному слою ремня. Малый шкив не делайте меньше минимального для сечения: Z — 63, A — 90, B — 125, C — 200 мм.":"Для плоского ремня угол обхвата должен быть не меньше 150°, межосевое — не меньше 2·(d₁ + d₂).";
+  if(!ok){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; $("tbl").innerHTML=""; return; }
+  const {d1,d2,a,n1}=v, L=2*a+Math.PI*(d1+d2)/2+(d2-d1)**2/(4*a);
+  const al=180-57.3*(d2-d1)/a, sp=Math.PI*d1*n1/60000, u=d2/(d1*0.99);
+  const iN=LEN.findIndex(x=>x>=L), cand=[LEN[iN-2],LEN[iN-1],LEN[iN],LEN[iN+1]].filter(Boolean);
+  const Ls=LEN.reduce((b,x)=>Math.abs(x-L)<Math.abs(b-L)?x:b,LEN[0]), as=aFor(Ls,d1,d2);
+  $("big").innerHTML=`${f(L,0)}<small>мм</small>`;
+  C.kpis($("kpis"),[["Стандартная длина",f(Ls,0),"мм"],["Межосевое под неё",f(as,0),"мм"],["Угол обхвата α₁",f(al,1),"°"],["Скорость ремня",f(sp,1),"м/с"]]);
+  const amin=0.55*(d1+d2), amax=2*(d1+d2);
+  C.kv($("kv"),[["Передаточное число (со скольжением 1 %)",f(u,3)],["Обороты ведомого шкива",n1?f(n1/u,0)+" об/мин":"—"],["Число пробегов ремня",f(sp/(Ls/1000),1)+" 1/с"],["Угол обхвата при стандартной длине",f(180-57.3*(d2-d1)/as,1)+"°"],"-",
+    ["Рекомендуемое межосевое",(vee?f(amin,0)+"…"+f(amax,0):"от "+f(amax,0))+" мм"],["Запас на надевание (−2 % L)",f(aFor(Ls*0.98,d1,d2),0)+" мм"],["Запас на натяжение (+3 % L)",f(aFor(Ls*1.03,d1,d2),0)+" мм"]]);
+  const alMin=vee?120:150, okA=al>=alMin, okV=sp<=(vee?30:40), okU=sp/(Ls/1000)<=(vee?10:15);
+  C.verdict($("ver"),okA&&okV&&okU,[okA?`угол обхвата ${f(al,0)}° ≥ ${alMin}°`:`угол обхвата ${f(al,0)}° меньше ${alMin}° — увеличьте межосевое или поставьте натяжной ролик`,okV?"скорость в норме":"скорость ремня слишком велика",okU?"число пробегов в норме":"слишком много пробегов — ремень быстро устанет; увеличьте длину"].join("; ")+".");
+  const w=[]; if(vee&&a<amin) w.push("Межосевое меньше рекомендуемого: малый угол обхвата и частые перегибы ремня."); if(vee&&a>amax) w.push("Межосевое больше 2·(d₁ + d₂): длинный ремень будет бить.");
+  if(u>(vee?7:5)) w.push(`Передаточное число больше ${vee?7:5} — лучше сделать две ступени.`);
+  if(w.length){ $("warn").hidden=false; $("warn").textContent=w.join(" "); }
+  $("tbl").innerHTML=`<table class="mt"><thead><tr><th class="n">Длина ремня, мм</th><th class="n">Межосевое, мм</th><th class="n">Угол обхвата</th><th class="n">Пробегов, 1/с</th></tr></thead><tbody>${cand.map(x=>{ const aa=aFor(x,d1,d2); return `<tr data-a="${Math.round(aa)}" tabindex="0" class="${x===Ls?"cur":""}" style="cursor:pointer"><td class="n">${f(x,0)}</td><td class="n">${f(aa,1)}</td><td class="n">${f(180-57.3*(d2-d1)/aa,1)}°</td><td class="n">${f(sp/(x/1000),1)}</td></tr>`; }).join("")}</tbody></table>`;
+}
+function pick(e){ const tr=e.target.closest("tr[data-a]"); if(!tr) return; set({a:tr.dataset.a}); }
+$("tbl").addEventListener("click",pick); $("tbl").addEventListener("keydown",e=>{ if(e.key==="Enter") pick(e); });
+calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

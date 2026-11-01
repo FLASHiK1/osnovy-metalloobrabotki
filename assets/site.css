@@ -90,3 +90,20 @@
   background:var(--paper,#fbfbf9);color:var(--ink,#1b2125);border:1px solid var(--line-strong,#a9b1b0);border-radius:8px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.16);font-size:14px}
 .sb-cookie a{color:var(--accent,#1d5a7a)}
 @media print{ .sb-cookie{display:none!important} }
+
+/* общие блоки калькуляторов на assets/calc.js */
+.cm{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:860px){ .cm{grid-template-columns:1fr} }
+.cbig{font-family:var(--f-num,monospace);font-size:clamp(30px,4.6vw,44px);font-weight:600;letter-spacing:-.02em;line-height:1.05;overflow-wrap:anywhere}
+.cbig small{font-size:16px;color:var(--muted,#5b656b);font-weight:400;margin-left:6px}
+.cseg{display:flex;flex-wrap:wrap;gap:6px}
+.cseg button{font:inherit;font-size:13px;border:1px solid var(--line-strong,#a9b1b0);background:var(--paper,#fff);color:var(--ink,#1b2125);border-radius:4px;padding:6px 10px;cursor:pointer}
+.cseg button:hover{border-color:var(--accent,#1d5a7a)}
+.cseg button[aria-pressed="true"]{background:var(--accent,#1d5a7a);border-color:var(--accent,#1d5a7a);color:var(--paper,#fff)}
+.verdict{font-size:14px;padding:10px 12px;border-radius:4px;line-height:1.45}
+.verdict.ok{background:var(--ok-soft,#e2efe3)}
+.verdict.ok b{color:var(--ok,#2c7a3c)}
+.verdict.no{background:var(--bad-soft,#f6e1de)}
+.verdict.no b{color:var(--bad,#b0281f)}
+.cfig{width:100%;max-width:420px;height:auto;display:block;margin:0 auto;color:var(--ink,#1b2125)}
+@media print{ .cseg button[aria-pressed="false"]{display:none!important} .verdict{border:1px solid #888} }

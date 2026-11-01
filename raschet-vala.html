@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--site:head-->
+<meta name="yandex-verification" content="68bc83a227a58ef7" />
+<meta name="google-site-verification" content="___KVWxT6K_szWcpmV_9HzAfkQ3u_j5PmIMeBGjaVME">
+<link rel="canonical" href="https://flashik1.github.io/osnovy-metalloobrabotki/raschet-vala.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5a7a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Основы металлообработки">
+<meta property="og:title" content="Расчёт вала на кручение и изгиб — Основы металлообработки">
+<meta property="og:description" content="Диаметр вала по передаваемой мощности и оборотам или по крутящему моменту, с учётом изгиба по эквивалентному моменту. Проверка напряжений и угла закручивания, округление до нормального размера ГОСТ 6636.">
+<meta property="og:url" content="https://flashik1.github.io/osnovy-metalloobrabotki/raschet-vala.html">
+<meta property="og:image" content="https://flashik1.github.io/osnovy-metalloobrabotki/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/site.css">
+<meta name="state-key" content="val-v1">
+<script src="assets/early.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113975628', 'ym');
+
+    ym(113975628, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--/site:head-->
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Расчёт вала на кручение и изгиб</title>
+<meta name="description" content="Диаметр вала по передаваемой мощности и оборотам или по крутящему моменту, с учётом изгиба по эквивалентному моменту. Проверка напряжений и угла закручивания, округление до нормального размера ГОСТ 6636.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f0; --paper:#fbfbf9; --ink:#1b2125; --muted:#5b656b; --line:#d6dad6; --line-strong:#a9b1b0;
+  --accent:#1d5a7a; --accent-soft:#e2ecf1; --hot:#a3512a; --hot-soft:#f1dccf;
+  --ok:#2c7a3c; --ok-soft:#e2efe3; --bad:#b0281f; --bad-soft:#f6e1de; --warn:#875f00; --warn-soft:#f4ecd6;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111517; --paper:#191e21; --ink:#e2e6e5; --muted:#98a2a5; --line:#2b3236; --line-strong:#465056;
+  --accent:#72b4d6; --accent-soft:#1c303a; --hot:#e3935f; --hot-soft:#3b281c;
+  --ok:#74c487; --ok-soft:#1b3022; --bad:#f08a80; --bad-soft:#3a1f1c; --warn:#e0b252; --warn-soft:#352b14; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.wrap>*{min-width:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{color:var(--accent)}
+a{color:var(--accent)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+.std{font-family:var(--f-num);font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+input,select,button{font:inherit;color:inherit}
+input[type=text],select{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:15px}
+input[type=text]{font-family:var(--f-num)}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:6px}
+.field label i{font-style:normal;font-family:var(--f-num)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.btn{border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.sm{padding:4px 10px;font-size:13px}
+a.btn{text-decoration:none;color:inherit;display:inline-block}
+.pbtn{font-size:13px;border:1px solid var(--line-strong);background:var(--paper);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-num);text-align:right;white-space:nowrap}
+dl.kv .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:2px 0}
+@media (max-width:480px){ dl.kv{grid-template-columns:minmax(0,1fr) minmax(0,auto)} dl.kv dd{white-space:normal;overflow-wrap:anywhere} }
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.kpi{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-num);font-size:clamp(20px,2.8vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow-x:auto}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.note{font-size:13px;padding:10px 12px;border-radius:4px;background:var(--accent-soft);line-height:1.45}
+.note.warn{background:var(--warn-soft)}
+.note.bad{background:var(--bad-soft)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:var(--f-num);white-space:nowrap}
+tr.cur td{background:var(--accent-soft)}
+code.dw{font-family:var(--f-num);font-size:14px;background:var(--bg);border-radius:4px;padding:6px 10px;overflow-x:auto;white-space:nowrap;max-width:100%}
+details.theory{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.theory summary{cursor:pointer;font-weight:600}
+details.theory .tbody{max-width:72ch;font-size:14px}
+.formula{font-family:var(--f-num);font-size:13px;background:var(--bg);border-radius:4px;padding:8px 10px;overflow-x:auto;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.sitemenu{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:860px){ .grid4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><a href="index.html">Основы металлообработки</a> · калькулятор</div>
+      <h1>Расчёт вала на кручение и изгиб</h1>
+      <p>Минимальный диаметр вала по мощности и оборотам или по моменту. Если на вал действует изгиб от шестерни, шкива или звёздочки, введите изгибающий момент: диаметр посчитается по эквивалентному моменту. Ниже проверка выбранного диаметра на прочность и жёсткость.</p>
+    </div>
+    <div class="std">Проектный расчёт валов<br>Ряд диаметров — ГОСТ 6636 (Ra40)</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="cseg" id="mode" role="group" aria-label="Нагрузка задана"><button type="button" data-k="pn">Мощность и обороты</button><button type="button" data-k="t">Крутящий момент</button></div>
+      <div class="grid2" id="pnBox">
+        <div class="field"><label for="p"><span>Мощность на валу</span><i>кВт</i></label><input type="text" id="p" inputmode="decimal"></div>
+        <div class="field"><label for="n"><span>Частота вращения</span><i>об/мин</i></label><input type="text" id="n" inputmode="decimal"></div>
+      </div>
+      <div class="grid2" id="tBox">
+        <div class="field"><label for="t"><span>Крутящий момент T</span><i>Н·м</i></label><input type="text" id="t" inputmode="decimal"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="m"><span>Изгибающий момент M</span><i>Н·м</i></label><input type="text" id="m" inputmode="decimal"></div>
+        <div class="field"><label for="mat">Материал (для подсказки)</label><select id="mat">
+          <option value="st45">Сталь 45, нормализация</option>
+          <option value="st45u">Сталь 45, улучшение</option>
+          <option value="40x">40Х, улучшение</option>
+          <option value="st3">Ст3, сталь 20</option>
+          <option value="own">Свои допускаемые напряжения</option></select></div>
+        <div class="field"><label for="tau"><span>Допускаемое [τ] на кручение</span><i>МПа</i></label><input type="text" id="tau" inputmode="decimal"></div>
+        <div class="field"><label for="sig"><span>Допускаемое [σ]и при изгибе</span><i>МПа</i></label><input type="text" id="sig" inputmode="decimal"></div>
+        <div class="field"><label for="l"><span>Длина участка под моментом</span><i>мм</i></label><input type="text" id="l" inputmode="decimal"></div>
+        <div class="field"><label for="d"><span>Проверить диаметр</span><i>мм</i></label><input type="text" id="d" inputmode="decimal" placeholder="как рекомендовано"></div>
+      </div>
+      <label class="hint" style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--ink)"><input type="checkbox" id="key"> На участке есть шпоночный паз (+10 % к диаметру)</label>
+      <div class="hint">[τ] здесь — пониженное допускаемое напряжение для проектного расчёта: оно с запасом учитывает изгиб, концентраторы и усталость, которые пока неизвестны. Обычно берут 15–30 МПа для выходных концов валов и 10–15 МПа для входных валов редукторов.</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным: нужны положительные числа.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Рекомендуемый диаметр (ГОСТ 6636)</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="stiff" class="note"></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">T = 9550 · P / n                      — момент, Н·м (P в кВт, n в об/мин)
+d ≥ ∛(16 · T / (π · [τ]))             — по кручению
+Mэкв = √(M² + 0,75 · T²)              — эквивалентный момент (IV теория прочности)
+d ≥ ∛(32 · Mэкв / (π · [σ]и))         — по совместному действию изгиба и кручения
+τ = 16·T/(π·d³),  σ = 32·M/(π·d³),  σэкв = √(σ² + 3τ²)
+φ = T · L / (G · Ip),  Ip = π·d⁴/32,  G = 80 000 МПа</div>
+      <p>Это проектный расчёт: по нему выбирают диаметры ступеней. Для окончательной проверки ответственного вала выполняют уточнённый расчёт на выносливость: с коэффициентами концентрации напряжений у шпоночных пазов, галтелей и посадок с натягом, масштабным фактором и запасом прочности по усталости s ≥ 1,5…2,5.</p>
+      <p>Подсказки допускаемых напряжений — ориентировочные значения из учебной литературы по деталям машин. Для изгиба [σ]и около 50–60 МПа для стали 45 и 70–80 МПа для улучшенной 40Х соответствуют симметричному циклу с запасом.</p>
+      <p>Угол закручивания для валов общего назначения ограничивают 0,5–1 ° на метр длины, для точных передач и ходовых винтов — 0,25 °/м.</p>
+    </div>
+  </details>
+
+  <footer><span>Проектная оценка. Ответственные валы проверяйте на выносливость с учётом концентраторов напряжений.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="shesterni.html">Зубчатые колёса</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a> <a href="marki-staley.html">Марки сталей</a> <a href="podshipniki.html">Подшипники</a> <a href="dopuski-formy.html">Допуски формы</a> <a href="cveta-pobezhalosti.html">Цвета побежалости</a> <a href="rezba-rezcom.html">Резьба резцом</a> <a href="edinicy.html">Конвертер единиц</a> <a href="bolt-na-srez.html">Болт на срез</a> <a href="svarnoy-shov.html">Сварной шов</a> <a href="pruzhina-szhatiya.html">Пружина сжатия</a> <a href="progib-balki.html">Прогиб балки</a> <a href="remennaya-peredacha.html">Ремённая передача</a> <a href="cepnaya-peredacha.html">Цепная передача</a> <a href="gidrocilindr.html">Гидроцилиндр</a> <a href="marshrut-otverstiya.html">Маршрут отверстия</a> <a href="normirovanie.html">Нормирование</a> <a href="glossariy.html">Глоссарий</a></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const MAT={st45:[20,55],st45u:[25,65],"40x":[30,75],st3:[15,45]};
+const st={mode:"pn",p:"7,5",n:"1450",t:"50",m:"0",mat:"st45",tau:"20",sig:"55",l:"200",d:"",key:false};
+const set=C.bind("val-v1",st,["p","n","t","m","mat","tau","sig","l","d","key"],calc);
+$("mat").addEventListener("change",()=>{ const v=MAT[st.mat]; if(v) set({tau:String(v[0]),sig:String(v[1])}); });
+["tau","sig"].forEach(id=>$(id).addEventListener("input",()=>{ if(st.mat!=="own"){ const v=MAT[st.mat]; if(!v||String(v[0])!==st.tau||String(v[1])!==st.sig){ st.mat="own"; $("mat").value="own"; } } }));
+C.seg("mode",()=>st.mode,k=>{ set({mode:k}); });
+function calc(){
+  $("pnBox").hidden=st.mode!=="pn"; $("tBox").hidden=st.mode!=="t";
+  const spec={m:[0,1e9],tau:[1,500],sig:[1,1000],l:[0,1e6]};
+  if(st.mode==="pn"){ spec.p=[1e-6,1e6]; spec.n=[1e-3,1e6]; } else spec.t=[1e-6,1e9];
+  const v=C.read(st,spec);
+  const dUser=C.num(st.d), dBad=st.d.trim()!==""&&!(dUser>0); $("d").classList.toggle("bad",dBad);
+  $("err").hidden=v.ok&&!dBad;
+  if(!v.ok||dBad){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; $("stiff").textContent=""; return; }
+  const T=st.mode==="pn"?9550*v.p/v.n:v.t, M=v.m;
+  const dT=Math.cbrt(16*T*1000/(Math.PI*v.tau));
+  const Me=Math.sqrt(M*M+0.75*T*T), dB=M>0?Math.cbrt(32*Me*1000/(Math.PI*v.sig)):0;
+  const dReq=Math.max(dT,dB)*(st.key?1.1:1);
+  const dRec=C.near(C.RA40,dReq,true);
+  const d=dUser>0?dUser:dRec;
+  $("big").innerHTML=`Ø${f(dRec,dRec%1?1:0)}<small>мм</small>`;
+  C.kpis($("kpis"),[["Крутящий момент",C.sig(T),"Н·м"],["Расчётный минимум",f(dReq,1),"мм"],["По кручению",f(dT,1),"мм"],["По изгибу с кручением",M>0?f(dB,1):"—",M>0?"мм":""]]);
+  const tau=16*T*1000/(Math.PI*d**3), sig=32*M*1000/(Math.PI*d**3), se=Math.sqrt(sig*sig+3*tau*tau);
+  const G=80000, Ip=Math.PI*d**4/32, phi=T*1000*v.l/(G*Ip)*180/Math.PI, phi1=T*1000*1000/(G*Ip)*180/Math.PI;
+  C.kv($("kv"),[["Проверяемый диаметр",f(d,d%1?1:0)+" мм"],["Касательное напряжение τ",f(tau,1)+" МПа"],["Напряжение изгиба σ",f(sig,1)+" МПа"],["Эквивалентное σэкв",f(se,1)+" МПа"],"-",
+    ["Эквивалентный момент Mэкв",C.sig(Me)+" Н·м"],["Полярный момент инерции Ip",C.sig(Ip/1e4)+" см⁴"],["Угол закручивания на длине "+f(v.l,0)+" мм",f(phi,3)+"°"],["То же на 1 м",f(phi1,2)+" °/м"]]);
+  const ok=d>=dReq*(1-1e-9), load=M>0?`σэкв ${f(se,1)} МПа при допускаемом [σ]и ${f(v.sig,0)} МПа (загрузка ${f(se/v.sig*100,0)} %)`:`τ ${f(tau,1)} МПа при допускаемом [τ] ${f(v.tau,0)} МПа (загрузка ${f(tau/v.tau*100,0)} %)`;
+  C.verdict($("ver"),ok,load+(st.key?`; с учётом шпоночного паза нужен диаметр не меньше ${f(dReq,1)} мм.`:"."));
+  $("stiff").className="note"+(phi1>1?" warn":"");
+  $("stiff").textContent=phi1>1?`Жёсткость мала: ${f(phi1,2)} °/м больше 1 °/м. Для передач с зацеплением и ходовых винтов увеличьте диаметр.`:phi1>0.5?`Жёсткость приемлема для валов общего назначения (${f(phi1,2)} °/м ≤ 1). Для точных передач нужно ≤ 0,25–0,5 °/м.`:`Жёсткость хорошая: ${f(phi1,2)} °/м ≤ 0,5.`;
+}
+calc();
+})();
+</script>
+
+<!--site:body--><noscript><div><img src="https://mc.yandex.ru/watch/113975628" style="position:absolute; left:-9999px;" alt="" /></div></noscript><script src="assets/site.js" defer></script><!--/site:body-->
+</body>
+</html>

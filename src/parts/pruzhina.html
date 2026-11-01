@@ -1,0 +1,90 @@
+<title>Расчёт пружины сжатия</title>
+<meta name="description" content="Жёсткость, осадка и напряжения цилиндрической винтовой пружины сжатия из круглой проволоки: длина под нагрузкой, длина при соприкосновении витков, проверка на прочность и устойчивость, длина и масса проволоки.">
+<!--HEAD-->
+<style>
+/*BASE*/
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Расчёт пружины сжатия</h1>
+      <p>Введите проволоку, диаметр пружины, число рабочих витков и свободную длину. Калькулятор посчитает жёсткость, длину под рабочей силой и напряжения. Затем он проверит, не перегрузится ли пружина, если её сжать до упора, и не потеряет ли она устойчивость.</p>
+    </div>
+    <div class="std">Цилиндрическая пружина сжатия<br>ГОСТ 13765, DIN EN 13906-1</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="d"><span>Диаметр проволоки d</span><i>мм</i></label><input type="text" id="d" inputmode="decimal"></div>
+        <div class="field"><label for="De"><span>Наружный диаметр пружины</span><i>мм</i></label><input type="text" id="De" inputmode="decimal"></div>
+        <div class="field"><label for="n"><span>Рабочих витков n</span></label><input type="text" id="n" inputmode="decimal"></div>
+        <div class="field"><label for="L0"><span>Свободная длина L₀</span><i>мм</i></label><input type="text" id="L0" inputmode="decimal"></div>
+        <div class="field"><label for="F"><span>Рабочая сила</span><i>Н</i></label><input type="text" id="F" inputmode="decimal"></div>
+        <div class="field"><label for="ends">Концы</label><select id="ends"><option value="g">Поджаты и сошлифованы</option><option value="u">Поджаты, не шлифованы</option></select></div>
+        <div class="field"><label for="mat">Материал</label><select id="mat"><option value="78500">Пружинная сталь (65Г, 60С2А, проволока ГОСТ 9389), G 78 500</option><option value="70000">Нержавеющая 12Х18Н10Т, G ≈ 70 000</option><option value="42000">Бронза БрКМц3-1, G ≈ 42 000</option></select></div>
+        <div class="field"><label for="Rm"><span>Предел прочности проволоки Rm</span><i>МПа</i></label><input type="text" id="Rm" inputmode="decimal"></div>
+      </div>
+      <div class="hint">Rm смотрите в сертификате на проволоку: у пружинной проволоки он 1400–2400 МПа и тем выше, чем тоньше проволока. Рабочих витков на 2 меньше полного числа: крайние витки поджаты и не работают.</div>
+      <div id="err" class="note bad" hidden>Проверьте поля, выделенные красным. Наружный диаметр должен быть больше двух диаметров проволоки.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Жёсткость пружины</div><div class="cbig" id="big">—</div></div>
+      <div class="kpis" id="kpis"></div>
+      <dl class="kv" id="kv"></dl>
+      <div id="ver" class="verdict" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <details class="theory">
+    <summary>Как считается</summary>
+    <div class="tbody">
+      <div class="formula">D = Dнар − d,  c = D / d                         — средний диаметр и индекс
+R = G · d⁴ / (8 · D³ · n)                       — жёсткость, Н/мм
+k = (4c − 1)/(4c − 4) + 0,615/c                 — коэффициент кривизны витка (Валь)
+τ = k · 8 · F · D / (π · d³)                    — напряжение под силой F
+n₁ = n + 2;  Ls ≈ n₁·d (шлифованные), (n₁ + 1,5)·d (нешлифованные)</div>
+      <p>Проверка по DIN EN 13906-1: при сжатии до соприкосновения витков напряжение без поправки на кривизну не должно превышать 0,5·Rm. Тогда пружину можно сжать до упора без остаточной осадки. Для пружин, работающих на усталость (клапанные, с миллионами циклов), допускаемые напряжения ниже и зависят от размаха хода.</p>
+      <p>Индекс c удобно держать в пределах 4–12: при меньшем пружину трудно навить, при большем она «мягкая» и путается при хранении.</p>
+      <p>Устойчивость: если L₀ / D больше примерно 2,6 (опоры на параллельных плитах), длинная пружина при большом сжатии выгибается вбок. Её ставят на оправку или в стакан.</p>
+    </div>
+  </details>
+
+  <footer><span>Расчёт для пружин из круглой проволоки при статической нагрузке. Модуль сдвига и прочность проволоки уточняйте по стандарту и сертификату.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+const RHO={78500:7.85,70000:7.9,42000:8.8};
+const st={d:"2",De:"20",n:"8",L0:"50",F:"50",ends:"g",mat:"78500",Rm:"1800"};
+C.bind("pruzhina-v1",st,["d","De","n","L0","F","ends","mat","Rm"],calc);
+function calc(){
+  const v=C.read(st,{d:[0.05,100],De:[0.2,2000],n:[0.5,500],L0:[0.5,1e4],F:[0,1e7],Rm:[100,4000]});
+  const okD=v.De>2*v.d; if(v.ok&&!okD) $("De").classList.add("bad");
+  $("err").hidden=v.ok&&okD; $("warn").hidden=true;
+  if(!v.ok||!okD){ $("big").textContent="—"; $("kpis").innerHTML=""; $("kv").innerHTML=""; $("ver").hidden=true; return; }
+  const G=+st.mat, d=v.d, D=v.De-d, c=D/d, n=v.n, n1=n+2;
+  const k=(4*c-1)/(4*c-4)+0.615/c, R=G*d**4/(8*D**3*n);
+  const Ls=st.ends==="g"?n1*d:(n1+1.5)*d, sc=v.L0-Ls, Fc=R*sc;
+  const s=v.F/R, L=v.L0-s, tau=k*8*v.F*D/(Math.PI*d**3), tc=8*Fc*D/(Math.PI*d**3), tA=0.5*v.Rm;
+  const pitch=(v.L0-(st.ends==="g"?2:3.5)*d)/n, wire=Math.PI*D*n1, mass=RHO[G]*Math.PI*d*d/4*wire/1000;
+  $("big").innerHTML=`${C.sig(R)}<small>Н/мм</small>`;
+  C.kpis($("kpis"),[["Осадка под силой",f(s,1),"мм"],["Длина под силой",f(L,1),"мм"],["Напряжение τ",f(tau,0),"МПа"],["Сила до упора",C.sig(Fc),"Н"]]);
+  C.kv($("kv"),[["Средний диаметр D",f(D,2)+" мм"],["Индекс c = D/d",f(c,2)],["Коэффициент кривизны k",f(k,3)],["Полное число витков n₁",f(n1,1)],["Длина при соприкосновении Ls",f(Ls,1)+" мм"],["Ход до упора",f(sc,1)+" мм"],["Шаг витков",f(pitch,2)+" мм"],"-",
+    ["τ при сжатии до упора",f(tc,0)+" МПа"],["Допускаемое 0,5·Rm",f(tA,0)+" МПа"],["Длина проволоки",f(wire,0)+" мм"],["Масса",f(mass,mass<10?2:1)+" г"]]);
+  const solidOk=tc<=tA, workOk=L>Ls;
+  C.verdict($("ver"),solidOk&&workOk&&sc>0,sc<=0?"свободная длина меньше длины сжатой до упора пружины — витки уже соприкасаются.":!workOk?"рабочая сила сжимает пружину до соприкосновения витков: увеличьте жёсткость или длину.":solidOk?`пружину можно сжать до упора: ${f(tc,0)} МПа ≤ ${f(tA,0)} МПа.`:`при сжатии до упора ${f(tc,0)} МПа > ${f(tA,0)} МПа — нужен ограничитель хода или более толстая проволока.`);
+  const w=[]; if(c<4) w.push("Индекс меньше 4: такую пружину трудно навить."); if(c>12) w.push("Индекс больше 12: пружина мягкая и может путаться.");
+  if(v.L0/D>2.6&&s/v.L0>0.2) w.push(`L₀/D = ${f(v.L0/D,1)}: возможна потеря устойчивости — поставьте пружину на оправку или в стакан.`);
+  if(w.length){ $("warn").hidden=false; $("warn").textContent=w.join(" "); }
+}
+calc();
+})();
+</script>

@@ -1,0 +1,116 @@
+<title>Маршрут обработки отверстия</title>
+<meta name="description" content="Как получить отверстие нужной точности: сверление, зенкерование, черновое и чистовое развёртывание или растачивание. Диаметры инструмента и припуски на каждом переходе для отверстий H7–H14 и шероховатости Ra 12,5–0,8.">
+<!--HEAD-->
+<style>
+/*BASE*/
+.route{display:flex;flex-direction:column;gap:0;counter-reset:st}
+.step{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+.step:last-child{border-bottom:0}
+.step::before{counter-increment:st;content:counter(st);grid-row:1/3;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--paper);display:grid;place-items:center;font-size:13px;font-weight:600}
+.step b{font-size:15px}
+.step .dia{font-family:var(--f-num);font-size:18px;font-weight:600;text-align:right;white-space:nowrap}
+.step .sub{grid-column:2/4;font-size:12px;color:var(--muted)}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow"><!--NAV--></div>
+      <h1>Маршрут обработки отверстия</h1>
+      <p>Задайте диаметр, квалитет и шероховатость отверстия. Калькулятор составит последовательность переходов в сплошном материале: сверление, зенкерование, развёртывание. Для каждого перехода он даст диаметр инструмента и оставляемый припуск.</p>
+    </div>
+    <div class="std">Типовые маршруты и припуски<br>Допуски — ГОСТ 25346 (ISO 286)</div>
+  </header>
+
+  <div class="cm">
+    <section class="sheet" aria-label="Исходные данные">
+      <div class="grid2">
+        <div class="field"><label for="D"><span>Диаметр отверстия</span><i>мм</i></label><input type="text" id="D" inputmode="decimal"></div>
+        <div class="field"><label for="it">Поле допуска</label><select id="it"><option value="14">H14</option><option value="13">H13</option><option value="12">H12</option><option value="11">H11</option><option value="10">H10</option><option value="9">H9</option><option value="8">H8</option><option value="7">H7</option></select></div>
+        <div class="field"><label for="ra">Шероховатость Ra, мкм</label><select id="ra"><option value="12.5">12,5</option><option value="6.3">6,3</option><option value="3.2">3,2</option><option value="1.6">1,6</option><option value="0.8">0,8</option></select></div>
+        <div class="field"><label for="len"><span>Глубина отверстия</span><i>мм</i></label><input type="text" id="len" inputmode="decimal"></div>
+        <div class="field"><label for="way">Оборудование</label><select id="way"><option value="univ">Сверлильный, токарный — мерный инструмент</option><option value="cnc">Станок с ЧПУ — можно растачивать</option></select></div>
+      </div>
+      <div class="hint">Маршрут — для отверстия в сплошном металле (сталь, чугун, цветные сплавы). Если отверстие уже есть в отливке или поковке, сверление пропускают и начинают с зенкерования или растачивания.</div>
+      <div id="err" class="note bad" hidden>Диаметр — от 1 до 200 мм, глубина — положительное число.</div>
+    </section>
+
+    <section class="sheet" aria-live="polite">
+      <div><div class="hint">Отверстие</div><div class="cbig" id="big">—</div></div>
+      <div class="hint" id="lim"></div>
+      <div class="route" id="route"></div>
+      <div id="alt" class="note" hidden></div>
+      <div id="warn" class="note warn" hidden></div>
+    </section>
+  </div>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Что даёт каждый метод</h2><span class="hint">Экономическая точность при нормальных условиях</span></div>
+    <div class="tbl"><table><thead><tr><th>Метод</th><th class="n">Квалитет</th><th class="n">Ra, мкм</th><th>Назначение</th></tr></thead><tbody>
+      <tr><td>Сверление</td><td class="n">IT12–IT14</td><td class="n">12,5–6,3</td><td>Получение отверстия в сплошном металле, крепёжные отверстия</td></tr>
+      <tr><td>Рассверливание</td><td class="n">IT12–IT13</td><td class="n">12,5–6,3</td><td>Отверстия больше 30 мм: сначала сверло меньшего диаметра</td></tr>
+      <tr><td>Зенкерование</td><td class="n">IT10–IT11</td><td class="n">6,3–3,2</td><td>Исправляет увод оси после сверла, готовит под развёртку</td></tr>
+      <tr><td>Развёртывание черновое</td><td class="n">IT8–IT9</td><td class="n">3,2–1,6</td><td>Отверстия H8–H9, подготовка к чистовой развёртке</td></tr>
+      <tr><td>Развёртывание чистовое</td><td class="n">IT7</td><td class="n">1,6–0,8</td><td>Посадочные отверстия H7 под штифты, втулки, подшипники</td></tr>
+      <tr><td>Растачивание черновое / чистовое</td><td class="n">IT9–IT11 / IT7–IT8</td><td class="n">6,3 / 1,6–0,8</td><td>Большие диаметры, точное положение оси, нестандартный размер</td></tr>
+      <tr><td>Тонкое растачивание, хонингование, раскатка</td><td class="n">IT6–IT7</td><td class="n">0,4–0,1</td><td>Гидроцилиндры, гильзы, точные посадки</td></tr></tbody></table></div>
+  </section>
+
+  <details class="theory">
+    <summary>Откуда припуски</summary>
+    <div class="tbody">
+      <p>Припуски на диаметр взяты типовыми для отверстий в сплошном материале. Под зенкер оставляют 1–3 мм в зависимости от диаметра. Под черновую развёртку — 0,15–0,3 мм. Под чистовую — 0,05–0,1 мм. Сверла выпускаются с шагом 0,1 мм, поэтому диаметр сверла округлён вниз до 0,1 мм (свыше 20 мм — до 0,5 мм).</p>
+      <p>Если оставить под развёртку слишком много, она будет рвать поверхность. Если слишком мало — не уберёт следы зенкера и будет скользить, наклёпывая металл. Для вязких сталей и алюминия припуск под чистовую развёртку берут ближе к нижней границе.</p>
+      <p>Развёртка копирует положение оси от предыдущего перехода. Если важна позиция отверстия, а не только диаметр, после сверления нужен зенкер или расточной резец, а для точных межосевых — расточка на ЧПУ или координатно-расточном станке.</p>
+    </div>
+  </details>
+
+  <footer><span>Типовой маршрут. Диаметры зенкеров и развёрток для конкретного поля допуска уточняйте по каталогу инструмента: исполнительный размер развёртки зависит от материала и разбивки.</span><nav class="sitemenu"><!--MENU--></nav></footer>
+</div>
+
+<script src="assets/calc.js"></script>
+<script>
+(function(){
+"use strict";
+const C=Calc, $=C.$, f=C.fmt;
+// допуски IT7…IT14, мкм, по интервалам размеров ГОСТ 25346
+const IV=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const IT={7:[10,12,15,18,21,25,30,35,40,46,52,57,63],8:[14,18,22,27,33,39,46,54,63,72,81,89,97],9:[25,30,36,43,52,62,74,87,100,115,130,140,155],10:[40,48,58,70,84,100,120,140,160,185,210,230,250],11:[60,75,90,110,130,160,190,220,250,290,320,360,400],12:[100,120,150,180,210,250,300,350,400,460,520,570,630],13:[140,180,220,270,330,390,460,540,630,720,810,890,970],14:[250,300,360,430,520,620,740,870,1000,1150,1300,1400,1550]};
+const itv=(q,D)=>IT[q][IV.findIndex(x=>D<=x)];
+const RA_LEVEL={"12.5":0,"6.3":1,"3.2":2,"1.6":3,"0.8":4};
+const IT_LEVEL={14:0,13:0,12:0,11:1,10:2,9:3,8:3,7:4};
+const st={D:"20",it:"7",ra:"1.6",len:"40",way:"univ"};
+C.bind("otverstie-v1",st,["D","it","ra","len","way"],calc);
+const fin=D=>D<=18?0.05:D<=50?0.07:0.1, rough=D=>D<=18?0.15:D<=30?0.2:D<=50?0.25:0.3, zen=D=>D<=14?1:D<=24?1.5:D<=50?2:3;
+const drillRound=x=>x>20?Math.floor(x*2+1e-9)/2:Math.floor(x*10+1e-9)/10;
+const n=x=>f(x,x%1===0?0:Math.round(x*100)%10===0?1:2);
+function calc(){
+  const v=C.read(st,{D:[1,200],len:[0.1,1e4]}); $("err").hidden=v.ok; $("warn").hidden=true; $("alt").hidden=true;
+  if(!v.ok){ $("big").textContent="—"; $("route").innerHTML=""; $("lim").textContent=""; return; }
+  const D=v.D, q=+st.it, T=itv(q,D)/1000, lvl=Math.max(RA_LEVEL[st.ra],IT_LEVEL[q]);
+  $("big").innerHTML=`Ø${n(D)} H${q}<small>Ra ${st.ra.replace(".",",")}</small>`;
+  $("lim").textContent=`Допуск IT${q} = ${f(T*1000,0)} мкм: от ${f(D,3)} до ${f(D+T,3)} мм`;
+  const small=D<=10, S=[]; // переходы от последнего к первому: [название, диаметр, что даёт]
+  let before=D;
+  if(lvl>=4){ S.push(["Развёртывание чистовое",D,"чистовая развёртка H7 · IT7, Ra 1,6–0,8"]); before=D-fin(D); }
+  if(lvl>=3){ S.push([lvl>=4?"Развёртывание черновое":"Развёртывание",before,(lvl>=4?"черновая развёртка":"развёртка H"+Math.max(q,8))+" · IT8–IT9, Ra 3,2–1,6"]); before=D-rough(D); }
+  else if(lvl===2&&small){ S.push(["Развёртывание",D,"развёртка H9 · IT9, Ra 3,2"]); before=D-rough(D); }
+  if(lvl>=1&&!small){ S.push(["Зенкерование",before,"зенкер"+(lvl>=3?" под развёртку":"")+" · IT10–IT11, Ra 6,3–3,2"]); before-=zen(D); }
+  const exact=lvl===0||(lvl===1&&small), dd=exact?D:drillRound(before);
+  if(dd>30){ S.push(["Рассверливание",dd,"сверло второго прохода · IT12–IT13"]); S.push(["Сверление",drillRound(Math.max(10,dd*0.5)),"первый проход сверлом примерно половины диаметра — меньше осевая сила"]); }
+  else S.push(["Сверление",dd,lvl===0?"IT12–IT14, Ra 12,5":exact?"точное короткое сверло · IT11, Ra 6,3":"спиральное сверло · IT12–IT13"]);
+  S.reverse();
+  const steps=S.map((x,i)=>[x[0],x[1],(i?`припуск ${f(x[1]-S[i-1][1],2)} мм на диаметр · `:"")+x[2]]);
+  steps.unshift(["Центрование",null,"центровочное сверло или сверло-центровка 90°: без него сверло уводит"]);
+  $("route").innerHTML=steps.map(s=>`<div class="step"><b>${s[0]}</b><span class="dia">${s[1]==null?"":"Ø"+n(s[1])}</span><span class="sub">${s[2]}</span></div>`).join("");
+  if(st.way==="cnc"&&lvl>=2&&D>=16){ $("alt").hidden=false; $("alt").textContent=`На ЧПУ вместо зенкера и развёрток можно: сверление Ø${n(drillRound(D-2))} → черновое растачивание до Ø${f(D-0.3,2)} → чистовое растачивание в размер. Растачивание исправляет положение оси и не требует мерного инструмента под каждый размер.`; }
+  else if(st.way==="cnc"&&lvl<=1&&D>=12){ $("alt").hidden=false; $("alt").textContent=`На ЧПУ отверстие H${q} можно также получить фрезерованием по винтовой интерполяции концевой фрезой — без сверла нужного диаметра.`; }
+  const w=[]; const ld=v.len/D;
+  if(ld>10) w.push(`Глубина ${f(ld,0)}·D — глубокое сверление: нужны сверла с внутренним подводом СОЖ или ружейное сверление и периодический вывод сверла.`); else if(ld>5) w.push(`Глубина ${f(ld,1)}·D: сверлите с выводом сверла для удаления стружки (цикл G83).`);
+  if(+st.ra<=0.8&&q>=8) w.push("Ra 0,8 при грубом квалитете — обычно лишнее требование; проверьте чертёж.");
+  if(D>80) w.push("Свыше 80 мм отверстия в сплошном металле обычно не сверлят: делают в заготовке и растачивают, или вырезают кольцевым сверлом.");
+  if(w.length){ $("warn").hidden=false; $("warn").textContent=w.join(" "); }
+}
+calc();
+})();
+</script>
