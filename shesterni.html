@@ -173,6 +173,11 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     <article class="pcard g2" id="g2"></article>
   </section>
 
+  <section class="sheet">
+    <div class="sheet-head"><h2>3D-модель зацепления</h2><span class="hint">эвольвентный профиль по вашим m и z; косозубые показаны как прямозубые</span></div>
+    <div id="anim"></div>
+  </section>
+
   <section class="sheet" aria-labelledby="h-find">
     <div class="sheet-head"><h2 id="h-find">Узнать модуль у готовой шестерни</h2><span class="hint">прямозубая, без смещения</span></div>
     <div class="grid3">
@@ -202,10 +207,12 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <footer><span>Геометрия без смещения исходного контура. Для колёс со смещением, внутреннего зацепления и прочностного расчёта нужен расчёт по ГОСТ 16532 и ГОСТ 21354.</span><nav class="sitemenu"><a href="index.html"><b>Все калькуляторы</b></a> <a href="posadki.html">Посадки и допуски</a> <a href="razmernye-cepi.html">Размерные цепи</a> <a href="sherokhovatost.html">Шероховатость</a> <a href="rezhimy-rezaniya.html">Режимы резания</a> <a href="rezby.html">Резьбы</a> <a href="konusy.html">Конусы</a> <a href="gibka-lista.html">Гибка листа</a> <a href="raskroy-lista.html">Раскрой листа</a> <a href="rashod-elektrodov.html">Расход на сварку</a> <a href="massa-metalla.html">Масса металла</a> <a href="analogi-staley.html">Аналоги сталей</a> <a href="dyuymy.html">Дюймы и UNC</a> <a href="sebestoimost.html">Себестоимость</a> <a href="zatyazhka.html">Момент затяжки</a> <a href="natyag.html">Сборка с натягом</a> <a href="gkody.html">G-коды</a> <a href="vybor-instrumenta.html">Выбор инструмента</a> <a href="plastiny.html">Пластины и державки</a></nav></footer>
 </div>
 
+<script src="assets/anim3d.js"></script>
 <script>
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
+let anim=null;
 const M1=[1,1.25,1.5,2,2.5,3,4,5,6,8,10,12,16,20,25], M2=[1.125,1.375,1.75,2.25,2.75,3.5,4.5,5.5,7,9,11,14,18,22];
 $("mods").innerHTML=M1.map(v=>`<option value="${String(v).replace(".",",")}">`).join("");
 function num(s){ const t=String(s==null?"":s).trim().replace(/,/g,".").replace(/\s+/g,""); if(!t) return NaN; return /^\d*\.?\d+$/.test(t)?+t:NaN; }
@@ -253,6 +260,7 @@ function calc(){
   if(beta>0) notes.push(["note",`Косозубая передача: осевое перекрытие εβ = ${fmt(eb,2)}${eb<1?" — меньше 1, увеличьте ширину венца или угол наклона":""}. Длина общей нормали для косозубых колёс считается иначе — здесь не показана.`]);
   $("notes").innerHTML=notes.map(([c,t])=>`<div class="note ${c==="note"?"":c}">${t}</div>`).join("");
   drawMesh(g1,g2,a);
+  const ap={m,z1,z2,b,alpha}; if(window.Anim3D){ if(!anim) anim=Anim3D.gears($("anim"),ap); else anim.set(ap); }
 }
 function drawMesh(g1,g2,a){
   const W=460,H=230, sc=Math.min((W-40)/(g1.da/2+a+g2.da/2), (H-44)/Math.max(g1.da,g2.da));

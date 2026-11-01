@@ -1,13 +1,13 @@
 /* Офлайн-режим: страницы и ресурсы сайта кладутся в кэш при первом визите.
    Страницы — «сначала сеть, потом кэш» (свежая версия, если есть интернет),
    остальное — «сначала кэш». При изменении файлов сайта увеличьте VERSION. */
-const VERSION = "v7";
+const VERSION = "v9";
 const CACHE = "osnovy-" + VERSION;
 const PAGES = ["./", "index.html", "posadki.html", "razmernye-cepi.html", "sherokhovatost.html", "rezhimy-rezaniya.html",
   "rezby.html", "konusy.html", "gibka-lista.html", "raskroy-lista.html", "rashod-elektrodov.html", "massa-metalla.html", "analogi-staley.html",
   "dyuymy.html", "sebestoimost.html", "zatyazhka.html", "shesterni.html", "natyag.html", "gkody.html", "plastiny.html", "vybor-instrumenta.html",
   "stati-posadka-h7-g6.html", "stati-rezba-6g-6h.html", "stati-sherokhovatost-ra-rz.html", "stati-razvertka-gibka-k-faktor.html", "stati-rezhimy-rezaniya-raschet.html", "stati-sverlo-pod-rezbu.html"];
-const ASSETS = ["assets/site.css", "assets/site.js", "assets/early.js", "assets/favicon.svg", "assets/icon-192.png", "manifest.webmanifest"];
+const ASSETS = ["assets/site.css", "assets/site.js", "assets/early.js", "assets/anim3d.js", "assets/favicon.svg", "assets/icon-192.png", "manifest.webmanifest"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(PAGES.concat(ASSETS))).then(() => self.skipWaiting()));
@@ -20,7 +20,7 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
-  const isFont = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
+  const isFont = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com" || url.hostname === "cdnjs.cloudflare.com";
   if (url.origin !== location.origin && !isFont) return;
   if (req.mode === "navigate") {
     e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); return r; })

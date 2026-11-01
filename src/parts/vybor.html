@@ -48,6 +48,12 @@ section.sheet p{margin:0;max-width:78ch;font-size:14px}
     </section>
   </div>
 
+  <section class="sheet">
+    <div class="sheet-head"><h2>Как пластина снимает металл</h2><span class="hint">упрощённая 3D-модель, не в масштабе</span></div>
+    <div id="anim"></div>
+    <p class="hint">Форма пластины, угол в плане, глубина и подача берутся из ответов выше: поменяйте операцию или «что точим» — и посмотрите, как изменится снимаемый слой и стружка.</p>
+  </section>
+
   <nav class="toc" aria-label="Разделы справочника"><a href="#s-grades">Сплавы и группы ISO</a><a href="#s-coat">Покрытия</a><a href="#s-mill">Фрезы</a><a href="#s-drill">Свёрла</a><a href="#s-tap">Метчики</a><a href="#s-cool">СОЖ</a><a href="#s-trouble">Если что-то не так</a></nav>
 
   <section class="sheet" id="s-grades">
@@ -160,10 +166,12 @@ section.sheet p{margin:0;max-width:78ch;font-size:14px}
   <footer><span>Рекомендации общего характера. Точные марки сплавов, стружколомы и режимы — в каталоге производителя инструмента.</span><nav class="sitemenu"><!--MENU--></nav></footer>
 </div>
 
+<script src="assets/anim3d.js"></script>
 <script>
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
+let anim=null;
 const Q={
  mat:[["P","Сталь"],["M","Нержавейка"],["K","Чугун"],["N","Алюминий, цветные"],["S","Жаропрочные, титан"],["H","Закалённая сталь"]],
  op:[["f","Чистовая"],["m","Получистовая"],["r","Черновая"]],
@@ -219,6 +227,10 @@ function rec(){
     ["Стартовые режимы",`подача ${String(fRange[0]).replace(".",",")}–${String(+fRange[1].toFixed(2)).replace(".",",")} мм/об, глубина ${ap}`]
   ];
   $("rec").innerHTML=rows.map(([k,v])=>`<div class="rrow"><b>${k}</b><div>${v}</div></div>`).join("");
+  const krMap={C:95,D:93,V:93,S:op==="r"?75:45,W:95,T:91,R:90};
+  const ap3={f:0.6,m:2,r:4.5}[op];
+  const aP={shape:shape,kr:krMap[shape]||95,ap:ap3,f:(fRange[0]+fRange[1])/2,re:rv,mat:mat};
+  if(window.Anim3D){ if(!anim) anim=Anim3D.turning($("anim"),aP); else anim.set(aP); }
   const mi={P:1,M:4,K:5,N:7,S:9,H:11}[mat];
   $("links").innerHTML=window.siteLink?`<a class="btn sm" href="${siteLink("plastiny.html",{kind:"ins",ins:code})}">Расшифровать ${code.split(" ")[0]} →</a><a class="btn sm" href="${siteLink("rezhimy-rezaniya.html",{op:"turn",mat:mi,tool:mat==="H"?"carb":"carb",vcManual:null,vals:{turn:{f:String(+((fRange[0]+fRange[1])/2).toFixed(2)).replace(".",","),re:String(rv).replace(".",",")}}})}">Режимы резания →</a>`:"";
 }

@@ -63,3 +63,14 @@
   .tbl,.schema,.chart{overflow:visible!important}
 }
 .results{top:calc(64px + env(safe-area-inset-top,0px))!important}
+
+/* 3D-анимации */
+.a3d{position:relative;border-radius:6px;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,var(--paper,#fbfbf9),var(--bg,#f2f3f0));min-height:220px;border:1px solid var(--line,#d6dad6)}
+.a3d canvas{display:block;width:100%!important;height:auto!important;cursor:grab}
+.a3d canvas:active{cursor:grabbing}
+.a3d-msg{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted,#5b656b);font-size:14px;padding:16px;text-align:center}
+.a3d-ui{position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:10px;pointer-events:none}
+.a3d-play{pointer-events:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line-strong,#a9b1b0);background:var(--paper,#fff);color:var(--ink,#1b2125);cursor:pointer;font-size:12px}
+.a3d-play:focus-visible{outline:2px solid var(--accent,#1d5a7a);outline-offset:2px}
+.a3d-hint{font-size:12px;color:var(--muted,#5b656b);background:color-mix(in srgb,var(--paper,#fff) 80%,transparent);padding:2px 6px;border-radius:3px}
+@media print{ .a3d{display:none!important} }
